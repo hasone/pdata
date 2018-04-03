@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.SupplierModifyLimitRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.SupplierModifyLimitRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
+    <result column="limit_money" property="limitMoney" jdbcType="REAL" />
+    <result column="operate_type" property="operateType" jdbcType="INTEGER" />
+    <result column="operate_id" property="operateId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, supplier_id, limit_money, operate_type, operate_id, create_time, delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from supplier_modify_limit_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from supplier_modify_limit_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.SupplierModifyLimitRecord" >
+    insert into supplier_modify_limit_record (id, supplier_id, limit_money, 
+      operate_type, operate_id, create_time, 
+      delete_flag)
+    values (#{id,jdbcType=BIGINT}, #{supplierId,jdbcType=BIGINT}, #{limitMoney,jdbcType=REAL}, 
+      #{operateType,jdbcType=INTEGER}, #{operateId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{deleteFlag,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.SupplierModifyLimitRecord" 
+  useGeneratedKeys="true" keyProperty="id">
+    insert into supplier_modify_limit_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="supplierId != null" >
+        supplier_id,
+      </if>
+      <if test="limitMoney != null" >
+        limit_money,
+      </if>
+      <if test="operateType != null" >
+        operate_type,
+      </if>
+      <if test="operateId != null" >
+        operate_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="supplierId != null" >
+        #{supplierId,jdbcType=BIGINT},
+      </if>
+      <if test="limitMoney != null" >
+        #{limitMoney,jdbcType=REAL},
+      </if>
+      <if test="operateType != null" >
+        #{operateType,jdbcType=INTEGER},
+      </if>
+      <if test="operateId != null" >
+        #{operateId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.SupplierModifyLimitRecord" >
+    update supplier_modify_limit_record
+    <set >
+      <if test="supplierId != null" >
+        supplier_id = #{supplierId,jdbcType=BIGINT},
+      </if>
+      <if test="limitMoney != null" >
+        limit_money = #{limitMoney,jdbcType=REAL},
+      </if>
+      <if test="operateType != null" >
+        operate_type = #{operateType,jdbcType=INTEGER},
+      </if>
+      <if test="operateId != null" >
+        operate_id = #{operateId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.SupplierModifyLimitRecord" >
+    update supplier_modify_limit_record
+    set supplier_id = #{supplierId,jdbcType=BIGINT},
+      limit_money = #{limitMoney,jdbcType=REAL},
+      operate_type = #{operateType,jdbcType=INTEGER},
+      operate_id = #{operateId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

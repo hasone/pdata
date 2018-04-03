@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.PotentialCustomerMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.PotentialCustomer">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="district_id" property="districtId" jdbcType="BIGINT"/>
+        <result column="priority" property="priority" jdbcType="INTEGER"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="CountResultMap" type="com.cmcc.vrp.province.model.CountInfo">
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="priority" property="priority" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, mobile, create_time, update_time, delete_flag, `name`,
+        district_id, priority, creator_id, status
+    </sql>
+
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        potential_customer
+        where
+        id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <update id="delete" parameterType="java.lang.Long">
+        update
+        potential_customer
+        set
+        delete_flag = 0 and
+        update_time = NOW()
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.PotentialCustomer"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into potential_customer (mobile, create_time, update_time,
+        delete_flag, `name`,
+        district_id, priority, creator_id, status)
+        values (
+        #{mobile,jdbcType=VARCHAR},
+        NOW(),
+        NOW(),
+        #{deleteFlag,jdbcType=INTEGER},
+        #{name,jdbcType=VARCHAR},
+        #{districtId,jdbcType=BIGINT},
+        #{priority,jdbcType=INTEGER},
+        #{creatorId,jdbcType=BIGINT},
+        #{status,jdbcType=INTEGER})
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.PotentialCustomer">
+        update potential_customer
+        set mobile = #{mobile,jdbcType=VARCHAR},
+        update_time = NOW(),
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        `name` = #{name,jdbcType=VARCHAR},
+        <if test="districtId != null and districtId != ''">
+            district_id = #{districtId,jdbcType=BIGINT},
+        </if>
+        priority = #{priority,jdbcType=INTEGER},
+        creator_id = #{creatorId, jdbcType=BIGINT},
+        status = #{status, jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

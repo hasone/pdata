@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.IndividualAccountMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.IndividualAccount">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="admin_id" property="adminId" jdbcType="BIGINT"/>
+        <result column="owner_id" property="ownerId" jdbcType="BIGINT"/>
+        <result column="individual_product_id" property="individualProductId" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="count" property="count" jdbcType="DECIMAL"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="expire_time" property="expireTime" jdbcType="TIMESTAMP"/>
+        <result column="current_order_id" property="currentOrderId" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, admin_id, owner_id, individual_product_id, type, count, create_time, update_time,
+        delete_flag, version, expire_time, current_order_id
+    </sql>
+    
+    <resultMap id="MembershipResultMap" type="com.cmcc.vrp.province.module.Membership">
+        <result column="count" property="count" jdbcType="BIGINT"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from individual_account
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    
+    <select id="selectByTypeAndOwnerId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from individual_account
+        where delete_flag = 0
+        and type = #{type,jdbcType=INTEGER}
+        and owner_id = #{ownerId, jdbcType=BIGINT}        
+    </select>
+    
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from individual_account
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.IndividualAccount" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into individual_account (id, admin_id, owner_id,
+        individual_product_id, type, count, 
+        create_time, update_time, delete_flag,
+        version, expire_time, current_order_id)
+        values (#{id,jdbcType=BIGINT}, #{adminId,jdbcType=BIGINT}, #{ownerId,jdbcType=BIGINT},
+        #{individualProductId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{count,jdbcType=DECIMAL},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+        #{deleteFlag,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, #{expireTime,jdbcType=TIMESTAMP},
+        #{currentOrderId,jdbcType=BIGINT})
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into individual_account (id, admin_id, owner_id,
+        individual_product_id, type, count, 
+        create_time, update_time, delete_flag,
+        version, expire_time, current_order_id)
+        values
+        <foreach collection="records" item="record" separator="," index="index">
+            (#{record.id,jdbcType=BIGINT},
+            #{record.adminId,jdbcType=BIGINT},
+            #{record.ownerId,jdbcType=BIGINT},
+            #{record.individualProductId,jdbcType=BIGINT},
+            #{record.type,jdbcType=INTEGER},
+            #{record.count,jdbcType=DECIMAL},
+            now(),
+            now(),
+            #{record.deleteFlag,jdbcType=INTEGER},
+            #{record.version,jdbcType=INTEGER},
+            #{record.expireTime,jdbcType=TIMESTAMP},
+            #{record.currentOrderId,jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.IndividualAccount" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into individual_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="adminId != null">
+                admin_id,
+            </if>
+            <if test="ownerId != null">
+                owner_id,
+            </if>
+            <if test="individualProductId != null">
+                individual_product_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+            <if test="expireTime != null">
+                expire_time,
+            </if>
+            <if test="currentOrderId != null">
+                current_order_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="adminId != null">
+                #{adminId,jdbcType=BIGINT},
+            </if>
+            <if test="ownerId != null">
+                #{ownerId,jdbcType=BIGINT},
+            </if>
+            <if test="individualProductId != null">
+                #{individualProductId,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="count != null">
+                #{count,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=INTEGER},
+            </if>
+            <if test="expireTime != null">
+                #{expireTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="currentOrderId != null">
+                #{currentOrderId,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.IndividualAccount">
+        update individual_account
+        <set>
+            <if test="adminId != null">
+                admin_id = #{adminId,jdbcType=BIGINT},
+            </if>
+            <if test="ownerId != null">
+                owner_id = #{ownerId,jdbcType=BIGINT},
+            </if>
+            <if test="individualProductId != null">
+                individual_product_id = #{individualProductId,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="count != null">
+                count = #{count,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="version != null">
+                version = #{version,jdbcType=INTEGER},
+            </if>
+            <if test="expireTime != null">
+                expire_time = #{expireTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="currentOrderId != null">
+                current_order_id = #{currentOrderId,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.IndividualAccount">
+        update individual_account
+        set admin_id = #{adminId,jdbcType=BIGINT},
+        owner_id = #{ownerId,jdbcType=BIGINT},
+        individual_product_id = #{individualProductId,jdbcType=BIGINT},
+        type = #{type,jdbcType=INTEGER},
+        count = #{count,jdbcType=DECIMAL},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        version = #{version,jdbcType=INTEGER},
+        expire_time = #{expireTime,jdbcType=TIMESTAMP},
+        current_order_id = #{currentOrderId,jdbcType=BIGINT}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="getAccountByOwnerIdAndProductId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from individual_account
+        where owner_id = #{ownerId,jdbcType=BIGINT}
+        and individual_product_id = #{productId,jdbcType=VARCHAR}
+        and type = #{type, jdbcType=INTEGER}
+        and delete_flag = 0
+    </select>
+
+    <update id="addCount">
+        update
+        individual_account
+        set
+        `count` = `count` + #{count, jdbcType = DECIMAL},
+        version = version + 1,
+        update_time = now()
+        where
+        id = #{id,jdbcType=BIGINT}
+        and delete_flag = 0
+    </update>
+
+    <update id="minusCount">
+        update
+        individual_account
+        set
+        `count` = `count` - #{count, jdbcType = DECIMAL},
+        version = version + 1,
+        update_time = now()
+        where       
+        id = #{id,jdbcType=BIGINT}
+        and delete_flag = 0
+        and `count` - #{count, jdbcType = DECIMAL}>=0
+    </update>
+    
+    <select id="getExpireAccount" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from individual_account
+        where delete_flag = 0
+        and expire_time &lt;= #{expireTime,jdbcType= TIMESTAMP}
+    </select>
+    
+    <select id="getMembershipList" resultMap="MembershipResultMap">
+        select ia.count as count, a.mobile_phone as mobile, a.create_time 
+        from individual_account ia
+        left join administer a on ia.admin_id = a.id
+        where ia.individual_product_id = #{individualProductId}
+        and ia.type = #{type}
+        <if test="mobile != null and mobile != ''">
+            and a.mobile_phone like CONCAT('%',CONCAT(#{mobile},'%'))
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and a.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and a.create_time &lt;= #{endTime}
+        </if>
+        ORDER BY a.create_time desc
+        <if test="pageNum != null and pageSize != null">
+            LIMIT
+            #{pageNum},#{pageSize}  
+        </if>        
+    </select>
+    
+    <select id="countMembershipList" resultType="java.lang.Integer">
+        select count(*)
+        from individual_account ia
+        left join administer a on ia.admin_id = a.id
+        where ia.individual_product_id = #{individualProductId}
+        and ia.type = #{type}
+        <if test="mobile != null and mobile != ''">
+            and a.mobile_phone like CONCAT('%',CONCAT(#{mobile},'%'))
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and a.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and a.create_time &lt;= #{endTime}
+        </if>
+    </select>
+
+</mapper>

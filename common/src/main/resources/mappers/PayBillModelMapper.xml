@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.PayBillModelMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.pay.model.PayBillModel" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+    <result column="originId" property="originId" jdbcType="VARCHAR" />
+    <result column="merchantId" property="merchantId" jdbcType="VARCHAR" />
+    <result column="productId" property="productId" jdbcType="VARCHAR" />
+    <result column="orderid" property="orderid" jdbcType="VARCHAR" />
+    <result column="payAmount" property="payAmount" jdbcType="VARCHAR" />
+    <result column="tradeNo" property="tradeNo" jdbcType="VARCHAR" />
+    <result column="thirdOrderid" property="thirdOrderid" jdbcType="VARCHAR" />
+    <result column="transactionId" property="transactionId" jdbcType="VARCHAR" />
+    <result column="transactionDate" property="transactionDate" jdbcType="VARCHAR" />
+    <result column="payInfo" property="payInfo" jdbcType="VARCHAR" />
+    <result column="accountCode" property="accountCode" jdbcType="VARCHAR" />
+    <result column="accountType" property="accountType" jdbcType="VARCHAR" />
+    <result column="payPeriod" property="payPeriod" jdbcType="VARCHAR" />
+    <result column="payTime" property="payTime" jdbcType="VARCHAR" />
+    <result column="proCount" property="proCount" jdbcType="VARCHAR" />
+    <result column="productName" property="productName" jdbcType="VARCHAR" />
+    <result column="orderType" property="orderType" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="thirdAmount" property="thirdAmount" jdbcType="VARCHAR" />
+    <result column="integralNum" property="integralnum" jdbcType="VARCHAR" />
+    <result column="hemiNum" property="hemiNum" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="subOrderid" property="subOrderid" jdbcType="VARCHAR" />
+    <result column="payOrderid" property="payOrderid" jdbcType="VARCHAR" />
+    <result column="subPayOrderid" property="subPayOrderid" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="BaseReconcileMap" type="com.cmcc.vrp.province.model.YqxPayReconcileRecord" >
+    <result column="orderSerialNum" property="orderSerialNum" jdbcType="VARCHAR" />
+    <result column="paySerialNum" property="paySerialNum" jdbcType="VARCHAR" />
+    <result column="payTransactionId" property="payTransactionId" jdbcType="VARCHAR" />
+    <result column="doneCode" property="doneCode" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="prdName" property="prdName" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="BIGINT" />
+    <result column="payStatus" property="payStatus" jdbcType="INTEGER" />
+    <result column="reconcileStatus" property="reconcileStatus" jdbcType="INTEGER" />
+    <result column="reconcileMsg" property="reconcileMsg" jdbcType="VARCHAR" />
+    <result column="payCreateTime" property="payCreateTime" jdbcType="TIMESTAMP" />
+    <result column="payTime" property="payTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, date, originId, merchantId, productId, orderid, payAmount, tradeNo, thirdOrderid, 
+    transactionId, transactionDate, payInfo, accountCode, accountType, payPeriod, payTime, 
+    proCount, productName, orderType, type, thirdAmount, integralNum, hemiNum, create_time,subOrderid,payOrderid,subPayOrderid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from yqx_pay_bill
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.pay.model.PayBillModel" >
+    insert into yqx_pay_bill
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="date != null" >
+        date,
+      </if>
+      <if test="originId != null" >
+        originId,
+      </if>
+      <if test="merchantId != null" >
+        merchantId,
+      </if>
+      <if test="productId != null" >
+        productId,
+      </if>
+      <if test="orderid != null" >
+        orderid,
+      </if>
+      <if test="payAmount != null" >
+        payAmount,
+      </if>
+      <if test="tradeNo != null" >
+        tradeNo,
+      </if>
+      <if test="thirdOrderid != null" >
+        thirdOrderid,
+      </if>
+      <if test="transactionId != null" >
+        transactionId,
+      </if>
+      <if test="transactionDate != null" >
+        transactionDate,
+      </if>
+      <if test="payInfo != null" >
+        payInfo,
+      </if>
+      <if test="accountCode != null" >
+        accountCode,
+      </if>
+      <if test="accountType != null" >
+        accountType,
+      </if>
+      <if test="payPeriod != null" >
+        payPeriod,
+      </if>
+      <if test="payTime != null" >
+        payTime,
+      </if>
+      <if test="proCount != null" >
+        proCount,
+      </if>
+      <if test="productName != null" >
+        productName,
+      </if>
+      <if test="orderType != null" >
+        orderType,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="thirdAmount != null" >
+        thirdAmount,
+      </if>
+      <if test="integralNum != null" >
+        integralNum,
+      </if>
+      <if test="hemiNum != null" >
+        hemiNum,
+      </if>
+      <if test="subOrderid != null" >
+        subOrderid,
+      </if>
+      <if test="payOrderid != null" >
+        payOrderid,
+      </if>
+      <if test="subPayOrderid != null" >
+        subPayOrderid,
+      </if>
+        create_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="originId != null" >
+        #{originId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantId != null" >
+        #{merchantId,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderid != null" >
+        #{orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="payAmount != null" >
+        #{payAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeNo != null" >
+        #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdOrderid != null" >
+        #{thirdOrderid,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionId != null" >
+        #{transactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionDate != null" >
+        #{transactionDate,jdbcType=VARCHAR},
+      </if>
+      <if test="payInfo != null" >
+        #{payInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCode != null" >
+        #{accountCode,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null" >
+        #{accountType,jdbcType=VARCHAR},
+      </if>
+      <if test="payPeriod != null" >
+        #{payPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=VARCHAR},
+      </if>
+      <if test="proCount != null" >
+        #{proCount,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdAmount != null" >
+        #{thirdAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="integralNum != null" >
+        #{integralNum,jdbcType=VARCHAR},
+      </if>
+      <if test="hemiNum != null" >
+        #{hemiNum,jdbcType=VARCHAR},
+      </if>
+      <if test="subOrderid != null" >
+        #{subOrderid,jdbcType=VARCHAR},
+      </if>
+      <if test="payOrderid != null" >
+        #{payOrderid,jdbcType=VARCHAR},
+      </if>
+      <if test="subPayOrderid != null" >
+        #{subPayOrderid,jdbcType=VARCHAR},
+      </if>
+        NOW(),
+    </trim>
+  </insert>
+    <select id="billRecords" resultMap="BaseReconcileMap" parameterType="java.util.Map" >
+      select 
+        yo.serial_num as orderSerialNum,
+        yp.pay_order_id as paySerialNum,
+        yb.transactionId as payTransactionId,
+        yb.payOrderid as doneCode,
+        yo.mobile as mobile,ip.name as prdName,
+        yb.payAmount*100 as price,yp.status as payStatus,
+        yp.create_time as payCreateTime,
+        ip.name as prdName,
+        yb.payTime as payTime
+      from yqx_pay_bill yb 
+        LEFT JOIN yqx_pay_record yp on yb.transactionId = yp.pay_transaction_id
+        LEFT JOIN yqx_order_record yo on yp.order_serial_num = yo.serial_num 
+        LEFT JOIN individual_product ip on ip.id = yo.individual_product_id
+      where 1=1
+    <if test="orderSerialNum != null and orderSerialNum != ''">
+      and yo.serial_num = #{orderSerialNum, jdbcType=VARCHAR}
+    </if>
+    <if test="mobile != null and mobile != ''">
+      and yo.mobile = #{mobile, jdbcType=VARCHAR}
+    </if>
+     <if test="startTime != null and startTime != ''">
+      and yp.create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and yp.create_time &lt;= #{endTime}
+    </if>
+    ORDER BY  yo.create_time DESC   
+    <if test="pageNum != null and pageSize != null">
+      LIMIT
+      #{pageNum},#{pageSize}  
+    </if>    
+  </select>
+  
+  <select id="billCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+      select 
+        count(*)
+      from yqx_pay_bill yb 
+        LEFT JOIN yqx_pay_record yp on yb.transactionId = yp.pay_transaction_id
+        LEFT JOIN yqx_order_record yo on yp.order_serial_num = yo.serial_num 
+        LEFT JOIN individual_product ip on ip.id = yo.individual_product_id
+      where 1=1
+    <if test="orderSerialNum != null and orderSerialNum != ''">
+      and yo.serial_num = #{orderSerialNum, jdbcType=VARCHAR}
+    </if>
+    <if test="mobile != null and mobile != ''">
+      and yo.mobile = #{mobile, jdbcType=VARCHAR}
+    </if>
+     <if test="startTime != null and startTime != ''">
+      and yp.create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and yp.create_time &lt;= #{endTime}
+    </if>
+   
+  </select>
+</mapper>

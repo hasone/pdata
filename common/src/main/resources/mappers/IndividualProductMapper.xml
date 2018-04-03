@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.IndividualProductMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.IndividualProduct">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="product_code" property="productCode" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="product_size" property="productSize" jdbcType="BIGINT"/>
+        <result column="default_value" property="defaultValue" jdbcType="INTEGER"/>
+        <result column="feature" property="feature" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, product_code, type, name, create_time, update_time, delete_flag, price, product_size,default_value, feature
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from individual_product
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from individual_product
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.IndividualProduct">
+        insert into individual_product (id, product_code, type,
+        name, create_time, update_time,
+        delete_flag, price, product_size,defalut_value
+        )
+        values (#{id,jdbcType=BIGINT}, #{productCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+        #{name,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=INTEGER}, #{price,jdbcType=INTEGER}, #{productSize,jdbcType=BIGINT},
+        #{defaultValue,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.IndividualProduct">
+        insert into individual_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="productCode != null">
+                product_code,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="productSize != null">
+                product_size,
+            </if>
+            <if test="defaultValue != null">
+                defalut_value,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="productCode != null">
+                #{productCode,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=INTEGER},
+            </if>
+            <if test="productSize != null">
+                #{productSize,jdbcType=BIGINT},
+            </if>
+            <if test="defaultValue != null">
+                #{defaultValue,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.IndividualProduct">
+        update individual_product
+        <set>
+            <if test="productCode != null">
+                product_code = #{productCode,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=INTEGER},
+            </if>
+            <if test="productSize != null">
+                product_size = #{productSize,jdbcType=BIGINT},
+            </if>
+            <if test="defaultValue != null">
+                default_value = #{defaultValue,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.IndividualProduct">
+        update individual_product
+        set product_code = #{productCode,jdbcType=VARCHAR},
+        type = #{type,jdbcType=INTEGER},
+        name = #{name,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        price = #{price,jdbcType=INTEGER},
+        product_size = #{productSize,jdbcType=BIGINT},
+        default_value = #{defaultValue,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectByDefaultValue" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from individual_product
+        where default_value = #{defaultValue,jdbcType=INTEGER}
+        and delete_flag = 0
+        order by product_size
+    </select>
+    <select id="selectByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from individual_product
+        where type = #{type,jdbcType=INTEGER}
+        and delete_flag = 0
+        order by product_size
+    </select>
+
+    <select id="getProductsByAdminIdAndType" resultMap="BaseResultMap">
+        select
+        ip.id, ip.product_code, ip.type, ip.name, ip.create_time, ip.update_time, ip.delete_flag,
+        ip.price, ip.product_size, ip.default_value, ip.feature
+        from
+        individual_product ip
+        left join
+        individual_product_map ipm
+        on
+        ip.id = ipm.individual_product_id
+        where
+        ipm.admin_id = #{adminId,jdbcType=BIGINT}
+        and ip.type = #{type,jdbcType=INTEGER}
+        and ipm.delete_flag = 0
+    </select>
+    
+    <select id="selectByProductCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from individual_product
+        where product_code = #{productCode,jdbcType=VARCHAR}
+    </select>
+</mapper>

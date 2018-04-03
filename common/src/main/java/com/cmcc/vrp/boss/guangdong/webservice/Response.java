@@ -1,0 +1,171 @@
+/**
+ * Response.java
+ * <p>
+ * This file was auto-generated from WSDL
+ * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
+ */
+
+package com.cmcc.vrp.boss.guangdong.webservice;
+
+/**
+* <p>Title: </p>
+* <p>Description: </p>
+* @author lgk8023
+* @date 2017年1月22日 上午9:59:51
+*/
+public class Response implements java.io.Serializable {
+    // Type metadata
+    private static org.apache.axis.description.TypeDesc typeDesc =
+        new org.apache.axis.description.TypeDesc(Response.class, true);
+
+    static {
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://adc.ecinterface/", "Response"));
+        org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("rspCode");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://adc.ecinterface/", "RspCode"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("rspDesc");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://adc.ecinterface/", "RspDesc"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+    }
+
+    private String rspCode;
+    private String rspDesc;
+    private Object __equalsCalc = null;
+    private boolean __hashCodeCalc = false;
+
+
+    public Response() {
+    }
+
+
+    public Response(
+        String rspCode,
+        String rspDesc) {
+        this.rspCode = rspCode;
+        this.rspDesc = rspDesc;
+    }
+
+    /**
+     * Return type metadata object
+     */
+    public static org.apache.axis.description.TypeDesc getTypeDesc() {
+        return typeDesc;
+    }
+
+    /**
+     * Get Custom Serializer
+     */
+    public static org.apache.axis.encoding.Serializer getSerializer(
+        String mechType,
+        Class _javaType,
+        javax.xml.namespace.QName _xmlType) {
+        return
+            new org.apache.axis.encoding.ser.BeanSerializer(
+                _javaType, _xmlType, typeDesc);
+    }
+
+    /**
+     * Get Custom Deserializer
+     */
+    public static org.apache.axis.encoding.Deserializer getDeserializer(
+        String mechType,
+        Class _javaType,
+        javax.xml.namespace.QName _xmlType) {
+        return
+            new org.apache.axis.encoding.ser.BeanDeserializer(
+                _javaType, _xmlType, typeDesc);
+    }
+
+    /**
+     * Gets the rspCode value for this Response.
+     *
+     * @return rspCode
+     */
+    public String getRspCode() {
+        return rspCode;
+    }
+
+    /**
+     * Sets the rspCode value for this Response.
+     *
+     * @param rspCode
+     */
+    public void setRspCode(String rspCode) {
+        this.rspCode = rspCode;
+    }
+
+    /**
+     * Gets the rspDesc value for this Response.
+     *
+     * @return rspDesc
+     */
+    public String getRspDesc() {
+        return rspDesc;
+    }
+
+    /**
+     * Sets the rspDesc value for this Response.
+     *
+     * @param rspDesc
+     */
+    public void setRspDesc(String rspDesc) {
+        this.rspDesc = rspDesc;
+    }
+
+    /**
+     *  (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public synchronized boolean equals(Object obj) {
+        if (!(obj instanceof Response)) {
+            return false;
+        }
+        Response other = (Response) obj;
+        //if (obj == null) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (__equalsCalc != null) {
+            return (__equalsCalc == obj);
+        }
+        __equalsCalc = obj;
+        boolean _equals;
+        _equals = ((this.rspCode == null && other.getRspCode() == null) ||
+                (this.rspCode != null &&
+                    this.rspCode.equals(other.getRspCode()))) &&
+            ((this.rspDesc == null && other.getRspDesc() == null) ||
+                (this.rspDesc != null &&
+                    this.rspDesc.equals(other.getRspDesc())));
+        __equalsCalc = null;
+        return _equals;
+    }
+
+    /**
+     *  (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    public synchronized int hashCode() {
+        if (__hashCodeCalc) {
+            return 0;
+        }
+        __hashCodeCalc = true;
+        int _hashCode = 1;
+        if (getRspCode() != null) {
+            _hashCode += getRspCode().hashCode();
+        }
+        if (getRspDesc() != null) {
+            _hashCode += getRspDesc().hashCode();
+        }
+        __hashCodeCalc = false;
+        return _hashCode;
+    }
+
+}

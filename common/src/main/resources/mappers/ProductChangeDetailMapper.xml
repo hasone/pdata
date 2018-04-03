@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ProductChangeDetailMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ProductChangeDetail">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="request_id" property="requestId" jdbcType="BIGINT"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="operate" property="operate" jdbcType="INTEGER"/>
+        <result column="discount" property="discount" jdbcType="INTEGER"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        
+        <result column="old_product_template_id" property="oldProductTemplateId" jdbcType="BIGINT"/>
+        <result column="new_product_template_id" property="newProductTemplateId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="ExtendedResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ProductChangeDetail">
+        <result column="isp" property="isp" jdbcType="VARCHAR"/>
+        <result column="prdName" property="prdName" jdbcType="VARCHAR"/>
+        <result column="prdCode" property="prdCode" jdbcType="VARCHAR"/>
+        <result column="productSize" property="productSize" jdbcType="BIGINT"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="ownershipRegion" property="ownershipRegion" jdbcType="VARCHAR"/>
+        <result column="roamingRegion" property="roamingRegion" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, request_id, product_id, operate, discount, delete_flag, 
+        old_product_template_id, new_product_template_id
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from product_change_detail
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from product_change_detail
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ProductChangeDetail">
+        insert into product_change_detail (id, request_id, product_id,
+        operate, discount, delete_flag
+        )
+        values (#{id,jdbcType=BIGINT}, #{requestId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT},
+        #{operate,jdbcType=INTEGER}, #{discount,jdbcType=INTEGER}, #{deleteFlag,jdbcType=INTEGER}
+        )
+    </insert>
+
+    <!-- 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into product_change_detail ( request_id, product_id,
+        operate, discount, delete_flag, old_product_template_id, 
+        new_product_template_id
+        )
+        values
+        <foreach collection="productChangeDetails" item="record" separator="," index="index">
+            (
+            #{record.requestId,jdbcType=BIGINT},
+            #{record.productId,jdbcType=BIGINT},
+            #{record.operate,jdbcType=INTEGER},
+            #{record.discount,jdbcType=INTEGER},
+            #{record.deleteFlag,jdbcType=INTEGER},
+            #{record.oldProductTemplateId,jdbcType=BIGINT},
+            #{record.newProductTemplateId,jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+
+
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.ProductChangeDetail">
+        insert into product_change_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="requestId != null">
+                request_id,
+            </if>
+            <if test="productId != null">
+                product_id,
+            </if>
+            <if test="operate != null">
+                operate,
+            </if>
+            <if test="discount != null">
+                discount,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="requestId != null">
+                #{requestId,jdbcType=BIGINT},
+            </if>
+            <if test="productId != null">
+                #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="operate != null">
+                #{operate,jdbcType=INTEGER},
+            </if>
+            <if test="discount != null">
+                #{discount,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.ProductChangeDetail">
+        update product_change_detail
+        <set>
+            <if test="requestId != null">
+                request_id = #{requestId,jdbcType=BIGINT},
+            </if>
+            <if test="productId != null">
+                product_id = #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="operate != null">
+                operate = #{operate,jdbcType=INTEGER},
+            </if>
+            <if test="discount != null">
+                discount = #{discount,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ProductChangeDetail">
+        update product_change_detail
+        set request_id = #{requestId,jdbcType=BIGINT},
+        product_id = #{productId,jdbcType=BIGINT},
+        operate = #{operate,jdbcType=INTEGER},
+        discount = #{discount,jdbcType=INTEGER},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="getProductChangeDetailsByRequestId" parameterType="java.lang.Long" resultMap="ExtendedResultMap">
+        select
+        t1.*,
+        t2.id as productId,
+        t2.isp as isp,
+        t2.name AS prdName,
+        t2.product_code AS prdCode,
+        t2.product_size as productSize,
+        t2.price as price,
+        t2.ownership_region as ownershipRegion,
+        t2.roaming_region as roamingRegion
+        from
+        product_change_detail t1
+        LEFT JOIN
+        product t2 ON t1.product_id = t2.id
+        where
+        t1.request_id = #{requestId,jdbcType=BIGINT} and
+        t1.delete_flag = 0
+    </select>
+
+</mapper>

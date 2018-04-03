@@ -1,0 +1,206 @@
+.gray-text {
+    color: #cccccc;
+    font-size: 12px;
+}
+
+.mr-40 {
+    margin-right: 40px;
+}
+
+.mr-30 {
+    margin-right: 30px;
+}
+
+.mr-20 {
+    margin-right: 20px;
+}
+
+.mr-15 {
+    margin-right: 15px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.mr-5 {
+    margin-right: 5px;
+}
+
+.mt-50 {
+    margin-top: 50px;
+}
+
+.mt-45 {
+    margin-top: 45px;
+}
+
+.mt-40 {
+    margin-top: 40px;
+}
+
+.mt-30 {
+    margin-top: 30px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mt-15 {
+    margin-top: 15px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mt-5 {
+    margin-top: 5px;
+}
+
+.mt-0 {
+    margin-top: 0px;
+}
+
+.mb-50 {
+    margin-bottom: 50px;
+}
+
+.mb-40 {
+    margin-bottom: 40px;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.mb-15 {
+    margin-bottom: 15px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.mb-0 {
+    margin-bottom: 0px;
+}
+
+.ml-40 {
+    margin-left: 40px;
+}
+
+.ml-30 {
+    margin-left: 30px;
+}
+
+.ml-20 {
+    margin-left: 20px;
+}
+
+.ml-15 {
+    margin-left: 15px;
+}
+
+.ml-10 {
+    margin-left: 10px;
+}
+
+.tile {
+    background: white;
+    padding: 0 32px 30px 32px;
+    margin-bottom: 8px;
+}
+
+.tile-header {
+    font-size: 16px;
+    color: #333333;
+    line-height: 60px;
+}
+
+.tile-content {
+    border: 2px solid #eef2f5;
+    border-radius: 3px;
+    padding: 20px 30px;
+    font-size: 14px;
+    color: #666666;
+}
+
+.btn.btn-cyan {
+    background: #05bca6 !important;
+    color: white;
+}
+
+.btn.btn-cyan:hover,
+.btn.btn-cyan:active,
+.btn.btn-cyan:link {
+    color: white;
+    text-decoration: none;
+}
+
+.btn.btn-cyan:hover {
+    background: #048a7a !important;
+}
+
+.table thead tr {
+    background: #eef2f5;
+    color: #7e8389;
+    height: 40px;
+    font-size: 12px;
+}
+
+.table > thead > tr > th {
+    border-bottom: none;
+    line-height: 28px;
+    font-weight: 400;
+}
+
+.text-center.table > thead > tr > th {
+    text-align: center;
+}
+
+.file-box {
+    position: relative;
+    display: inline-block;
+}
+
+.file-helper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 240px;
+    padding: 3px 10px;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.form textarea {
+    width: 190px;
+    resize: none;
+}
+
+.dialog-btn {
+    min-width: 100px;
+}
+
+.error-tip {
+    color: red;
+    margin-left: 10px;
+}
+
+.dialog-sm .modal-dialog {
+    width: 350px;
+}
+
+.dialog-md .modal-dialog {
+    width: 500px;
+}
+
+.dialog-lg .modal-dialog {
+    width: 700px;
+}

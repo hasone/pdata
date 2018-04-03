@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ApprovalRecordMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ApprovalRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="request_id" property="requestId" jdbcType="BIGINT"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+        <result column="operator_id" property="operatorId" jdbcType="BIGINT"/>
+        <result column="manager_id" property="managerId" jdbcType="BIGINT"/>
+        <result column="comment" property="comment" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_new" property="isNew" jdbcType="INTEGER"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="ExtendedResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ApprovalRecord">
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="userName" property="userName" jdbcType="VARCHAR"/>
+        <result column="managerName" property="managerName" jdbcType="VARCHAR"/>
+        <result column="roleName" property="roleName" jdbcType="VARCHAR"/>
+        <result column="result" property="result" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="entCode" property="entCode" jdbcType="VARCHAR"/>
+        <result column="entId" property="entId" jdbcType="BIGINT"/>
+        <result column="commitDate" property="commitDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, request_id, creator_id, operator_id, manager_id, comment, description, create_time, update_time,
+        is_new, delete_flag
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from approval_record
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByRequestId" resultMap="ExtendedResultMap" parameterType="java.lang.Long">
+        select
+        t1.*,
+        t3.name as entName,
+        ad.user_name as userName,
+        t5.name as managerName,
+        t6.name as roleName
+        from
+        approval_record t1
+        left join
+        approval_request t2 on t2.id = t1.request_id
+        left join
+        enterprises t3 on t2.ent_id = t3.id
+        left join
+        administer ad on ad.id = t1.operator_id
+        left join
+        manager t5 on t1.manager_id = t5.id
+        LEFT JOIN
+        role t6 ON t6.role_id = t5.role_id
+        where
+        t2.id = #{requestId,jdbcType=BIGINT} and
+        t1.delete_flag=0
+    </select>
+
+
+    <select id="selectByRequestIdAll" resultMap="ExtendedResultMap" parameterType="java.lang.Long">
+        select
+        t1.*,
+        t3.name as entName,
+        ad.user_name as userName,
+        t5.name as managerName,
+        t6.name as roleName
+        from
+        approval_record t1
+        left join
+        approval_request t2 on t2.id = t1.request_id
+        left join
+        enterprises t3 on t2.ent_id = t3.id
+        left join
+        administer ad on ad.id = t1.operator_id
+        left join
+        manager t5 on t1.manager_id = t5.id
+        LEFT JOIN
+        role t6 ON t6.role_id = t5.role_id
+        where
+        t2.id = #{requestId,jdbcType=BIGINT} and
+        t1.delete_flag=0
+    </select>
+
+    <select id="selectByMap" resultMap="ExtendedResultMap" parameterType="java.util.Map">
+        select
+        t1.*,
+        t3.name as entName,
+        ad.user_name as userName,
+        t5.name as managerName,
+        t6.name as roleName
+        from
+        approval_record t1
+        left join
+        approval_request t2 on t2.id = t1.request_id
+        left join
+        enterprises t3 on t2.ent_id = t3.id
+        left join
+        administer ad on ad.id = t1.operator_id
+        left join
+        manager t5 on t1.manager_id = t5.id
+        left join
+        role t6 ON t6.role_id = t5.role_id
+        where
+        t1.delete_flag=0
+        <if test="approvalRequests != null">
+            and t2.id in
+            <foreach collection="approvalRequests" item="approvalRequest" index="index" open="(" close=")"
+                     separator=",">
+                #{approvalRequest.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="activityApprovalDetails != null">
+            AND t2.id IN
+            <foreach collection="activityApprovalDetails" item="activityApprovalDetail" index="index" open="(" close=")"
+                     separator=",">
+                #{activityApprovalDetail.requestId, jdbcType=BIGINT}
+            </foreach>
+        </if>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from approval_record
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.MdrcActiveDetail" >
+        insert into mdrc_active_detail
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="deleteFlag != null" >
+                delete_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="requestId != null" >
+                #{requestId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null" >
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ApprovalRecord">
+        insert into approval_record
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="requestId != null" >
+                request_id,
+            </if>
+            <if test="creatorId != null" >
+                creator_id,
+            </if>
+            <if test="operatorId != null" >
+                operator_id,
+            </if>
+            <if test="managerId != null" >
+                manager_id,
+            </if>
+            <if test="comment != null" >
+                comment,
+            </if>
+            <if test="description != null" >
+                description,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="updateTime != null" >
+                update_time,
+            </if>
+            <if test="isNew != null" >
+                is_new,
+            </if>
+            <if test="deleteFlag != null" >
+                delete_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="requestId != null" >
+                #{requestId,jdbcType=BIGINT},
+            </if>
+            <if test="creatorId != null" >
+                #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="operatorId != null" >
+                #{operatorId,jdbcType=BIGINT},
+            </if>
+            <if test="managerId != null" >
+                #{managerId,jdbcType=BIGINT},
+            </if>
+            <if test="comment != null" >
+                #{comment,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isNew != null" >
+                #{isNew,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null" >
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateApprovalRecord" parameterType="com.cmcc.vrp.province.model.ApprovalRecord">
+        update
+        approval_record
+        <set>
+            <if test="operatorId != null">
+                operator_id = #{operatorId,jdbcType=BIGINT},
+            </if>
+            <if test="managerId != null">
+                manager_id = #{managerId,jdbcType=BIGINT},
+            </if>
+            <if test="comment != null">
+                comment = #{comment,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isNew != null">
+                is_new = #{isNew,jdbcType=INTEGER},
+            </if>
+        </set>
+        where
+        id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ApprovalRecord">
+        update approval_record
+        set request_id = #{requestId,jdbcType=BIGINT},
+        creator_id = #{creatorId,jdbcType=BIGINT},
+        operator_id = #{operatorId,jdbcType=BIGINT},
+        manager_id = #{managerId,jdbcType=BIGINT},
+        comment = #{comment,jdbcType=VARCHAR},
+        description = #{description,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        is_new = #{isNew,jdbcType=INTEGER},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectNewRecordByRequestId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        approval_record
+        where
+        request_id = #{requestId,jdbcType=BIGINT} AND
+        is_new = 1 AND
+        creator_id != #{currUserId,jdbcType=BIGINT}
+    </select>
+       
+    <select id="getRecords" resultMap="ExtendedResultMap" parameterType="java.util.Map">
+        select
+        record.*,
+        e.id as entId,
+        e.name as entName,
+        e.code as entCode,
+        ad.user_name as userName,
+        m.name as managerName,
+        r.name as roleName,
+        request.result as result,
+        definition.type as type,
+        request.create_time as commitDate        
+        from
+        approval_record record
+        left join
+        approval_request request on request.id = record.request_id
+        left join
+        approval_process_definition definition on definition.id = request.process_id        
+        left join
+        enterprises e on request.ent_id = e.id
+        left join
+        administer ad on ad.id = record.operator_id
+        left join
+        manager m on record.manager_id = m.id
+        left join
+        role r ON r.role_id = m.role_id
+        where
+        record.delete_flag=0
+        <if test="entName != null and entName !=''">
+            AND e.name like CONCAT('%',CONCAT(#{entName},'%'))
+        </if>
+       	<if test="entCode != null and entCode !=''">
+            AND e.code = #{entCode,jdbcType=VARCHAR}
+        </if>
+        <if test="result != null">
+            AND request.result = #{result,jdbcType=INTEGER}
+        </if>
+        <if test="type != null">
+            AND definition.type = #{type,jdbcType=INTEGER}
+        </if>
+        <if test="adminId != null">
+           AND ad.id = #{adminId,jdbcType=BIGINT}
+        </if>
+        order by
+        record.update_time DESC,
+        record.create_time desc
+        <if test="pageNum != null and pageSize !=null">
+        LIMIT
+        	#{pageNum},#{pageSize}
+        </if>
+    </select>
+    
+    
+    <select id="countRecords" resultType="java.lang.Long" parameterType="java.util.Map">
+        select
+			count(record.id)      
+        from
+        approval_record record
+        left join
+        approval_request request on request.id = record.request_id
+        left join
+        approval_process_definition definition on definition.id = request.process_id        
+        left join
+        enterprises e on request.ent_id = e.id
+        left join
+        administer ad on ad.id = record.operator_id
+        left join
+        manager m on record.manager_id = m.id
+        left join
+        role r ON r.role_id = m.role_id
+        where
+        record.delete_flag=0
+        <if test="entName != null and entName !=''">
+            AND e.name like CONCAT('%',CONCAT(#{entName},'%'))
+        </if>
+       	<if test="entCode != null and entCode !=''">
+            AND e.code = #{entCode,jdbcType=VARCHAR}
+        </if>
+        <if test="result != null">
+            AND request.result = #{result,jdbcType=INTEGER}
+        </if>
+        <if test="type != null">
+            AND definition.type = #{type,jdbcType=INTEGER}
+        </if>
+        <if test="adminId != null">
+           AND ad.id = #{adminId,jdbcType=BIGINT}
+        </if>
+    </select>
+</mapper>

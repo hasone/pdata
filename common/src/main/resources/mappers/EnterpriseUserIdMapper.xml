@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.EnterpriseUserIdMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.EnterpriseUserId">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        code,
+        user_id,
+        create_time
+    </sql>
+
+    <insert id="insert"
+            useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.cmcc.vrp.province.model.EnterpriseUserId">
+        insert into enterprise_user_id(
+        code,
+        user_id,
+        create_time)
+        values (
+        #{code,jdbcType=VARCHAR},
+        #{userId,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <select id="getUserIdByEnterpriseCode" resultType="java.lang.String" parameterType="java.lang.String">
+        select
+        user_id
+        from enterprise_user_id
+        where code = #{code,jdbcType=BIGINT}
+    </select>
+
+</mapper>

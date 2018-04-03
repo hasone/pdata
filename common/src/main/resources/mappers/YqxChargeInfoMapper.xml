@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.YqxChargeInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.YqxChargeInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="serial_num" property="serialNum" jdbcType="VARCHAR" />
+    <result column="return_system_num" property="returnSystemNum" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, serial_num, return_system_num
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from yqx_charge_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from yqx_charge_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.YqxChargeInfo" >
+    insert into yqx_charge_info (id, serial_num, return_system_num
+      )
+    values (#{id,jdbcType=BIGINT}, #{serialNum,jdbcType=VARCHAR}, #{returnSystemNum,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.YqxChargeInfo" >
+    insert into yqx_charge_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="serialNum != null" >
+        serial_num,
+      </if>
+      <if test="returnSystemNum != null" >
+        return_system_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="serialNum != null" >
+        #{serialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="returnSystemNum != null" >
+        #{returnSystemNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.YqxChargeInfo" >
+    update yqx_charge_info
+    <set >
+      <if test="serialNum != null" >
+        serial_num = #{serialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="returnSystemNum != null" >
+        return_system_num = #{returnSystemNum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.YqxChargeInfo" >
+    update yqx_charge_info
+    set serial_num = #{serialNum,jdbcType=VARCHAR},
+      return_system_num = #{returnSystemNum,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <update id="updateReturnSystemNum" parameterType="com.cmcc.vrp.province.model.YqxChargeInfo">
+    UPDATE
+    yqx_charge_info
+    <set>
+        <if test="serialNum != null">
+            serial_num = #{serialNum, jdbcType = VARCHAR},
+        </if>
+        <if test="returnSystemNum !=null">
+            return_system_num = #{returnSystemNum,jdbcType=VARCHAR},
+        </if>
+    </set>
+    WHERE
+    serial_num = #{serialNum, jdbcType = VARCHAR}
+ </update>
+ 
+ <select id="selectByReturnSystemNum" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from yqx_charge_info
+    where return_system_num = #{returnSystemNum,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectBySerialNum" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from yqx_charge_info
+    where serial_num = #{serialNum,jdbcType=VARCHAR}
+  </select>
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AdminDistrictMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.AdminDistrict">
+        <result column="admin_id" property="adminId" jdbcType="BIGINT"/>
+        <result column="district_id" property="districtId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="districtIds" type="java.lang.Long">
+        <result column="district_id" property="districtId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        admin_id, district_id
+    </sql>
+    <select id="selectAdminDistrictByAdminId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_district
+        where admin_id = #{adminId,jdbcType=BIGINT}
+    </select>
+
+    <delete id="delete" parameterType="com.cmcc.vrp.province.model.AdminDistrict">
+        delete from admin_district
+        where admin_id = #{adminId,jdbcType=BIGINT} and district_id = #{districtId,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.AdminDistrict">
+        insert into admin_district (admin_id, district_id)
+        values (#{adminId,jdbcType=BIGINT}, #{districtId,jdbcType=BIGINT})
+    </insert>
+
+    <delete id="deleteByAdminId" parameterType="java.lang.Long">
+        delete from admin_district
+        where admin_id = #{adminId,jdbcType=BIGINT}
+    </delete>
+
+    <select id="selectADByadminId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM admin_district
+        WHERE
+        admin_id = #{adminId,jdbcType=BIGINT}
+    </select>
+
+    <update id="updateDistricByAdminId">
+        UPDATE
+        admin_district
+        SET
+        district_id = #{districtId,jdbcType=BIGINT}
+        WHERE
+        admin_id = #{adminId,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectAdminDistrictByDistId">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        admin_district
+        WHERE
+        district_id = #{districtId,jdbcType=BIGINT}
+    </select>
+
+</mapper>

@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.MdrcBatchConfigMapper">
+	<resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.MdrcBatchConfig">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="config_name" property="configName" jdbcType="VARCHAR" />
+		<result column="manager_id" property="managerId" jdbcType="BIGINT" />
+		<result column="cardmaker_id" property="cardmakerId" jdbcType="BIGINT" />
+		<result column="template_id" property="templateId" jdbcType="BIGINT" />
+		<result column="amount" property="amount" jdbcType="BIGINT" />
+		<result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+		<result column="this_year" property="thisYear" jdbcType="VARCHAR" />
+		<result column="serial_number" property="serialNumber" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+		<result column="status" property="status" jdbcType="BIT" />
+		<result column="download_time" property="downloadTime" jdbcType="TIMESTAMP" />
+		<result column="download_ip" property="downloadIp" jdbcType="VARCHAR" />
+		<result column="excel_password" property="excelPassword" jdbcType="VARCHAR" />
+		<result column="noti_flag" property="notiFlag" jdbcType="BIT" />
+		<result column="noti_time" property="notiTime" jdbcType="TIMESTAMP" />
+		<result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT" />
+		<result column="product_id" property="productId" jdbcType="BIGINT" />
+		<result column="config_info_id" property="configInfoId" jdbcType="BIGINT" />
+
+		<!-- 增加字段 生效日期和失效日期 -->
+		<result column="effective_time" property="effectiveTime" jdbcType="TIMESTAMP" />
+		<result column="expiry_time" property="expiryTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+
+	<resultMap id="ExtendBaseResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.MdrcBatchConfig">
+		<result column="productSize" property="productSize" jdbcType="BIGINT" />
+		<result column="productName" property="productName" jdbcType="VARCHAR" />
+		<result column="startCardNumer" property="startCardNumer" jdbcType="VARCHAR" />
+		<result column="endCardNumber" property="endCardNumber" jdbcType="VARCHAR" />
+		<result column="canBeActivatedCount" property="canBeActivatedCount" jdbcType="BIGINT" />
+		<result column="receiverName" property="receiverName" jdbcType="VARCHAR" />
+		<result column="receiverMobile" property="receiverMobile" jdbcType="VARCHAR" />
+		<result column="receiveKey" property="receiveKey" jdbcType="VARCHAR" />
+		<result column="receiveFileName" property="receiveFileName" jdbcType="VARCHAR" />
+		<result column="expressEntName" property="expressEntName" jdbcType="VARCHAR" />
+		<result column="expressNumber" property="expressNumber" jdbcType="VARCHAR" />
+		<result column="enterpriseName" property="enterpriseName" jdbcType="VARCHAR" />
+		<result column="customerServicePhone" property="customerServicePhone" jdbcType="VARCHAR" />
+		<result column="frontImage" property="frontImage" jdbcType="VARCHAR" />
+		<result column="rearImage" property="rearImage" jdbcType="VARCHAR" />
+		<result column="templateType" property="templateType" jdbcType="INTEGER" />
+		<result column="qrcodeName" property="qrcodeName" jdbcType="VARCHAR" />
+		<result column="qrcodeKey" property="qrcodeKey" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, manager_id,
+		config_name,
+		cardmaker_id,
+		template_id,
+		amount,
+		province_code,
+		this_year,
+		serial_number,
+		create_time,
+		creator_id,
+		status,
+		download_time,
+		download_ip,
+		excel_password,
+		noti_flag,
+		noti_time,
+		enterprise_id,
+		product_id,
+		config_info_id,
+		effective_time,
+		expiry_time
+	</sql>
+
+	<!-- 根据创建者ID和状态查询 -->
+	<select id="selectByCreatorIdAndStatus" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from mdrc_batch_config t
+		where
+		t.`creator_id` = #{creatorId,jdbcType=BIGINT}
+		AND t.`status` = #{status,jdbcType=BIGINT}
+	</select>
+
+	<!--根据map查询 -->
+	<select id="selectByMap" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		mdrc_batch_config
+		WHERE
+		1=1
+		<if test="templateId != null and templateId != ''">
+			and template_id = #{templateId,jdbcType=BIGINT}
+		</if>
+		<if test="status != null and status != ''">
+			and status = #{status,jdbcType=BIGINT}
+		</if>
+	</select>
+
+	<!--根据年份和省份编码查询 -->
+	<select id="selectByYearAndProvinceCode" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from mdrc_batch_config t
+		where
+		t.`this_year` = #{year,jdbcType=VARCHAR}
+		AND t.`province_code` = #{provinceCode,jdbcType=VARCHAR}
+		ORDER BY t.serial_number DESC
+		LIMIT 1
+	</select>
+
+	<!-- 制卡商唯一性校验 -->
+	<select id="checkUnique" resultType="java.lang.Integer"
+		parameterType="com.cmcc.vrp.province.model.MdrcBatchConfig">
+		SELECT
+		count(*)
+		FROM
+		mdrc_batch_config
+		<where>
+			1=1
+			<if test="configName != null and configName != ''">
+				and config_name = #{configName,jdbcType=VARCHAR}
+			</if>
+			<if test="managerId != null and managerId != ''">
+				and manager_id = #{managerId,jdbcType=BIGINT}
+			</if>
+			<if test="cardmakerId != null and cardmakerId != ''">
+				and cardmaker_id = #{cardmakerId,jdbcType=BIGINT}
+			</if>
+			<if test="templateId != null and templateId != ''">
+				and template_id = #{templateId,jdbcType=BIGINT}
+			</if>
+			<if test="serialNumber != null and serialNumber != ''">
+				and serial_number = #{serialNumber,jdbcType=VARCHAR}
+			</if>
+			<if test="creatorId != null and creatorId != ''">
+				and creator_id = #{creatorId,jdbcType=BIGINT}
+			</if>
+		</where>
+	</select>
+
+	<!-- 根据主键联合查询 -->
+	<select id="selectModuleByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		SELECT
+		t1.config_name,
+		t2.name as cardmakerName,
+		t2.id as cardMakerId,
+		t1.id,
+		t1.manager_id,
+		t1.cardmaker_id,
+		t1.amount,
+		t1.province_code,
+		t1.this_year,
+		t1.serial_number,
+		t1.create_time,
+		t1.creator_id,
+		t1.status,
+		t1.download_time,
+		t1.download_ip,
+		t1.creator_id,
+		t1.excel_password,
+		t1.noti_flag,
+		t1.noti_time,
+		t1.template_id
+		FROM
+		mdrc_batch_config t1,
+		mdrc_cardmaker t2
+		WHERE
+		t1.cardmaker_id=t2.id
+		AND t1.`id` = #{id,jdbcType=BIGINT}
+	</select>
+
+	<!-- 查询条数 -->
+	<select id="queryCounts" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		SELECT
+		COUNT(t1.id)
+		FROM
+		mdrc_batch_config t1
+		LEFT JOIN
+		enterprises t2 on t1.enterprise_id = t2.id
+		LEFT JOIN
+		product t3 on t1.product_id = t3.id
+		<where>
+			<if test="adminId != null and adminId != ''">
+				and t1.creator_id = #{adminId, jdbcType = BIGINT}
+			</if>
+			<if test = "serialNumber != null and serialNumber != ''">
+				AND t1.serial_number = #{serialNumber, jdbcType = VARCHAR}
+			</if>
+ 			<if test = "statusList != null and statusList.size() > 0">
+ 				AND t1.`status` IN
+				<foreach collection="statusList" item="item" open="(" close=")" separator="," index="">
+					#{item,jdbcType=INTEGER}
+ 				</foreach>
+			</if>
+			<if test="enterpriseName != null and enterpriseName != ''">
+				AND t2.name LIKE CONCAT('%',CONCAT(#{enterpriseName, jdbcType = VARCHAR},'%'))
+			</if>
+			<if test="enterprises != null">
+            	and t1.enterprise_id in
+	            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+	                #{enterprise.id,jdbcType=BIGINT}
+	            </foreach>
+        	</if>
+		</where>
+	</select>
+
+	<select id="queryPagination" resultMap="ExtendBaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		t1.*,
+		t2.name as enterpriseName,
+		t3.product_size as productSize
+		FROM
+		mdrc_batch_config t1
+		LEFT JOIN
+		enterprises t2 on t1.enterprise_id = t2.id
+		LEFT JOIN
+		product t3 on t1.product_id = t3.id
+		<where>
+			<if test="adminId != null and adminId != ''">
+				and t1.creator_id = #{adminId, jdbcType = BIGINT}
+			</if>
+			<if test = "serialNumber != null and serialNumber != ''">
+				AND t1.serial_number = #{serialNumber, jdbcType = VARCHAR}
+			</if>
+ 			<if test = "statusList != null and statusList.size() > 0">
+ 				AND t1.`status` IN
+				<foreach collection="statusList" item="item" open="(" close=")" separator="," index="">
+					#{item,jdbcType=INTEGER}
+ 				</foreach>
+			</if>
+			<if test="enterpriseName != null and enterpriseName != ''">
+				AND t2.name LIKE CONCAT('%',CONCAT(#{enterpriseName, jdbcType = VARCHAR},'%'))
+			</if>
+			<if test="enterprises != null">
+            	and t1.enterprise_id in
+	            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+	                #{enterprise.id,jdbcType=BIGINT}
+	            </foreach>
+        	</if>
+		</where>
+		ORDER BY
+		t1.id DESC
+		<if test="pageNum != null and pageSize != null">
+			LIMIT
+			#{pageNum},
+			#{pageSize}
+		</if>
+	</select>
+
+	<select id="selectByCardmaker" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		T1.*
+		FROM
+		mdrc_batch_config T1
+		LEFT JOIN
+		mdrc_cardmaker T2 ON T1.cardmaker_id=T2.id
+		WHERE
+		1=1
+		<if test="operatorId != null">
+			AND T2.operator_id = #{operatorId, jdbcType=VARCHAR}
+		</if>
+		<if test="configId != null">
+			AND T1.`id` = #{configId,jdbcType=BIGINT}
+		</if>
+		<if test="status != null">
+			AND t1.`status` = #{status,jdbcType=BIT}
+		</if>
+		<if test="serialNumber != null and serialNumber != ''">
+			AND T1.`serial_number` LIKE CONCAT('%',CONCAT(#{serialNumber},'%'))
+		</if>
+		ORDER BY
+		T1.create_time desc
+		<if test="pageNum != null and pageSize != null">
+			LIMIT
+			#{pageNum},
+			#{pageSize}
+		</if>
+	</select>
+
+	<select id="countByCardmaker" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		SELECT
+		count(*)
+		FROM
+		mdrc_batch_config t1
+		LEFT JOIN
+		mdrc_cardmaker t2 ON T1.cardmaker_id=t2.id
+		WHERE
+		t2.operator_id = #{operatorId, jdbcType=VARCHAR}
+		<if test="configId != null">
+			AND t1.`id` = #{configId,jdbcType=BIGINT}
+		</if>
+		<if test="status != null">
+			AND t1.`status` = #{status,jdbcType=BIT}
+		</if>
+		<if test="serialNumber != null and serialNumber != ''">
+			AND t1.`serial_number` LIKE CONCAT('%',CONCAT(#{serialNumber},'%'))
+		</if>
+
+	</select>
+
+	<!-- 查询所有配置规则 -->
+	<select id="selectAllConfig" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		mdrc_batch_config
+	</select>
+
+	<!-- 根据主键查询 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from
+		mdrc_batch_config
+		where
+		id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<!-- 根据主键查询 -->
+	<select id="select" resultMap="ExtendBaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		t1.*,t2.pro_size as productSize
+		from
+		mdrc_batch_config t1
+		LEFT JOIN
+		mdrc_template t2 ON t1.template_id = t2.id
+		where
+		t1.id =#{id,jdbcType=BIGINT}
+	</select>
+
+
+	<!-- 删除记录 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete
+		from mdrc_batch_config
+		where
+		id = #{id,jdbcType=BIGINT}
+	</delete>
+
+	<!-- 插入记录，并返回主键ID -->
+	<insert id="insert" parameterType="com.cmcc.vrp.province.model.MdrcBatchConfig">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+
+		insert into
+		mdrc_batch_config (
+		id,
+		config_name,
+		manager_id,
+		cardmaker_id,
+		template_id,
+		amount,
+		province_code,
+		this_year,
+		serial_number,
+		create_time,
+		creator_id,
+		status,
+		download_time,
+		download_ip,
+		excel_password,
+		noti_flag,
+		noti_time
+		)
+		values (
+		#{id,jdbcType=BIGINT},
+		#{configName,jdbcType=VARCHAR},
+		#{managerId,jdbcType=BIGINT},
+		#{cardmakerId,jdbcType=BIGINT},
+		#{templateId,jdbcType=BIGINT},
+		#{amount,jdbcType=BIGINT},
+		#{provinceCode,jdbcType=VARCHAR},
+		#{thisYear,jdbcType=VARCHAR},
+		#{serialNumber,jdbcType=INTEGER},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{creatorId,jdbcType=BIGINT},
+		#{status,jdbcType=BIT},
+		#{downloadTime,jdbcType=TIMESTAMP},
+		#{downloadIp,jdbcType=VARCHAR},
+		#{excelPassword,jdbcType=VARCHAR}
+		#{notiFlag,jdbcType=BIT},
+		#{notiTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<!-- 插入记录 -->
+	<insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.MdrcBatchConfig"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="java.lang.Long" keyProperty="id"
+			order="AFTER">
+			SELECT @@IDENTITY
+		</selectKey>
+
+		insert into
+		mdrc_batch_config
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="configName != null">
+				config_name,
+			</if>
+			<if test="managerId != null">
+				manager_id,
+			</if>
+			<if test="cardmakerId != null">
+				cardmaker_id,
+			</if>
+			<if test="templateId != null">
+				template_id,
+			</if>
+			<if test="amount != null">
+				amount,
+			</if>
+			<if test="provinceCode != null">
+				province_code,
+			</if>
+			<if test="thisYear != null">
+				this_year,
+			</if>
+			<if test="serialNumber != null">
+				serial_number,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="creatorId != null">
+				creator_id,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="downloadTime != null">
+				download_time,
+			</if>
+			<if test="downloadIp != null">
+				download_ip,
+			</if>
+			<if test="excelPassword != null">
+				excel_password,
+			</if>
+			<if test="notiFlag != null">
+				noti_flag,
+			</if>
+			<if test="notiTime != null">
+				noti_time,
+			</if>
+
+			<if test="enterpriseId != null">
+				enterprise_id,
+			</if>
+			<if test="productId != null">
+				product_id,
+			</if>
+			<if test="configInfoId != null">
+				config_info_id,
+			</if>
+			<if test="effectiveTime != null">
+				effective_time,
+			</if>
+			<if test="expiryTime != null">
+				expiry_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="configName != null">
+				#{configName,jdbcType=VARCHAR},
+			</if>
+
+			<if test="managerId != null">
+				#{managerId,jdbcType=BIGINT},
+			</if>
+			<if test="cardmakerId != null">
+				#{cardmakerId,jdbcType=BIGINT},
+			</if>
+			<if test="templateId != null">
+				#{templateId,jdbcType=BIGINT},
+			</if>
+			<if test="amount != null">
+				#{amount,jdbcType=BIGINT},
+			</if>
+			<if test="provinceCode != null">
+				#{provinceCode,jdbcType=VARCHAR},
+			</if>
+			<if test="thisYear != null">
+				#{thisYear,jdbcType=VARCHAR},
+			</if>
+			<if test="serialNumber != null">
+				#{serialNumber,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creatorId != null">
+				#{creatorId,jdbcType=BIGINT},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=BIT},
+			</if>
+			<if test="downloadTime != null">
+				#{downloadTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="downloadIp != null">
+				#{downloadIp,jdbcType=VARCHAR},
+			</if>
+			<if test="excelPassword != null">
+				#{excelPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="notiFlag != null">
+				#{notiFlag,jdbcType=BIT},
+			</if>
+			<if test="notiTime != null">
+				#{notiTime,jdbcType=TIMESTAMP},
+			</if>
+
+			<if test="enterpriseId != null">
+				#{enterpriseId,jdbcType=BIGINT},
+			</if>
+			<if test="productId != null">
+				#{productId,jdbcType=BIGINT},
+			</if>
+			<if test="configInfoId != null">
+				#{configInfoId,jdbcType=BIGINT},
+			</if>
+			<if test="effectiveTime != null">
+				#{effectiveTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expiryTime != null">
+				#{expiryTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 更新记录 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.MdrcBatchConfig">
+		update
+		mdrc_batch_config
+		<set>
+			<if test="configName != null">
+				config_name = #{configName,jdbcType=VARCHAR},
+			</if>
+			<if test="managerId != null">
+				manager_id = #{managerId,jdbcType=BIGINT},
+			</if>
+			<if test="cardmakerId != null">
+				cardmaker_id = #{cardmakerId,jdbcType=BIGINT},
+			</if>
+			<if test="templateId != null">
+				template_id = #{templateId,jdbcType=BIGINT},
+			</if>
+			<if test="amount != null">
+				amount = #{amount,jdbcType=BIGINT},
+			</if>
+			<if test="provinceCode != null">
+				province_code = #{provinceCode,jdbcType=VARCHAR},
+			</if>
+			<if test="thisYear != null">
+				this_year = #{thisYear,jdbcType=VARCHAR},
+			</if>
+			<if test="serialNumber != null">
+				serial_number = #{serialNumber,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creatorId != null">
+				creator_id = #{creatorId,jdbcType=BIGINT},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=BIT},
+			</if>
+			<if test="downloadTime != null">
+				download_time = #{downloadTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="downloadIp != null">
+				download_ip = #{downloadIp,jdbcType=VARCHAR},
+			</if>
+			<if test="excelPassword != null">
+				excel_password = #{excelPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="notiFlag != null">
+				noti_flag = #{notiFlag,jdbcType=BIT},
+			</if>
+			<if test="notiTime != null">
+				noti_time = #{notiTime,jdbcType=TIMESTAMP},
+			</if>
+
+			<if test="enterpriseId != null">
+				enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+			</if>
+			<if test="productId != null">
+				product_id = #{productId,jdbcType=BIGINT},
+			</if>
+			<if test="configInfoId != null">
+				config_info_id = #{configInfoId,jdbcType=BIGINT},
+			</if>
+			<if test="effectiveTime != null">
+				effective_time = #{effectiveTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expiryTime != null">
+				expiry_time = #{expiryTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where
+		id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<!-- 根据主键更新记录 -->
+	<update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.MdrcBatchConfig">
+		update
+		mdrc_batch_config
+		set
+		manager_id = #{managerId,jdbcType=BIGINT},
+		cardmaker_id = #{cardmakerId,jdbcType=BIGINT},
+		template_id = #{templateId,jdbcType=BIGINT},
+		amount = #{amount,jdbcType=BIGINT},
+		province_code = #{provinceCode,jdbcType=VARCHAR},
+		this_year = #{thisYear,jdbcType=VARCHAR},
+		serial_number = #{serialNumber,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		creator_id = #{creatorId,jdbcType=BIGINT},
+		status = #{status,jdbcType=BIT},
+		download_time = #{downloadTime,jdbcType=TIMESTAMP},
+		download_ip = #{downloadIp,jdbcType=VARCHAR},
+		excel_password = #{excelPassword,jdbcType=VARCHAR},
+		noti_flag = #{notiFlag,jdbcType=BIT},
+		noti_time = #{notiTime,jdbcType=TIMESTAMP}
+		where
+		id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="countAllConfigByPagination" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		SELECT
+		count(*)
+		FROM
+		mdrc_batch_config t1
+		WHERE
+		1 =1
+		<!--  
+		<if test="cardStatus != null">
+			AND t1.`status` IN (${cardStatus})
+		</if>
+		-->
+		<if test="configName != null and configName != ''">
+			AND t1.`config_name` LIKE
+			CONCAT('%',CONCAT(#{configName},'%'))
+		</if>
+	</select>
+
+	<select id="selectAllConfigByPagination" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		T1.*
+		FROM
+		mdrc_batch_config T1
+		WHERE
+		1 =1
+		<!--  
+		<if test="cardStatus != null">
+			AND t1.`status` IN (${cardStatus})
+		</if>
+		-->
+		<if test="configName != null and configName != ''">
+			AND T1.`config_name` LIKE
+			CONCAT('%',CONCAT(#{configName},'%'))
+		</if>
+		ORDER BY
+		T1.create_time desc
+		<if test="pageNum != null and pageSize != null">
+			LIMIT
+			#{pageNum},
+			#{pageSize}
+		</if>
+	</select>
+
+	<select id="selectBySerialNum" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		mdrc_batch_config
+		where
+		serial_number = #{serialNum,jdbcType=VARCHAR} AND
+		this_year = #{year,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByEntIdAndStatus" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from
+		mdrc_batch_config
+		<where>
+			<if test="status != null">
+				and enterprise_id = #{entId,jdbcType=BIGINT}
+			</if>
+			<if test="status != null">
+				and status = #{status,jdbcType=BIGINT}
+			</if>
+		</where>
+	</select>
+
+	<select id="getConfigDetailsByIdAndStatus" resultMap="ExtendBaseResultMap"
+		parameterType="java.util.Map">
+		select
+		t1.*,
+		min(t2.card_number) as startCardNumer,
+		max(t2.card_number) as endCardNumber,
+		t3.name as productName,
+		t3.product_size as productSize,
+		count(*) as canBeActivatedCount
+		from
+		mdrc_batch_config t1
+		left join
+		mdrc_card_info_${year} t2 on t1.id = t2.config_id
+		left join
+		product t3 on t3.id = t1.product_id
+		where
+		t1.id = #{configId,jdbcType=BIGINT}
+		and
+		t2.status = #{status,jdbcType=BIGINT}
+	</select>
+
+	<select id="getConfigDetailsById" resultMap="ExtendBaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		t1.*,
+		t2.receiver_name as receiverName,
+		t2.receiver_mobile as receiverMobile,
+		t2.receive_key as receiveKey,
+		t2.receive_file_name as receiveFileName,
+		t2.qrcode_key as qrcodeKey,
+		t2.qrcode_name as qrcodeName,
+		t2.customer_service_phone as customerServicePhone,
+		t2.express_ent_name as expressEntName,
+		t2.express_number as expressNumber,
+		min(t3.card_number) as startCardNumer,
+		max(t3.card_number) as endCardNumber,
+		t4.name as productName,
+		t4.product_size as productSize,
+		t5.id as enterpriseId,
+		t5.name enterpriseName,
+		t6.front_image as frontImage,
+		t6.rear_image as rearImage,
+		t7.type as templateType
+		from
+		mdrc_batch_config t1
+		left join
+		mdrc_template t7 on t7.id = t1.template_id
+		left join
+		mdrc_batch_config_info t2 on t1.config_info_id = t2.id
+		left join
+		mdrc_card_info_${year} t3 on t1.id = t3.config_id
+		left join
+		product t4 on t4.id = t1.product_id
+		left join
+		enterprises t5 on t5.id = t1.enterprise_id
+		left join
+		mdrc_template t6 on t6.id = t1.template_id
+		where
+		t1.id = #{configId,jdbcType=BIGINT}
+	</select>
+
+</mapper>

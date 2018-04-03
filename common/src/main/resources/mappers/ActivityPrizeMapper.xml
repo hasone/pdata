@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ActivityPrizeMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ActivityPrize">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="id_prefix" property="idPrefix" jdbcType="VARCHAR"/>
+        <result column="rank_name" property="rankName" jdbcType="VARCHAR"/>
+        <result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="count" property="count" jdbcType="BIGINT"/>
+        <result column="probability" property="probability" jdbcType="VARCHAR"/>
+        <result column="activity_id" property="activityId" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="prize_name" property="prizeName" jdbcType="VARCHAR"/>
+        <result column="size" property="size" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="discount" property="discount" jdbcType="INTEGER"/>
+    </resultMap>
+    
+    <!-- 扩展属性，含产品详情 -->
+    <resultMap id="PrizeDetailResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ActivityPrize">
+        <result column="productCode" property="productCode" jdbcType="VARCHAR"/><!-- 产品编码-->
+        <result column="productName" property="productName" jdbcType="VARCHAR"/><!-- 产品名称 -->
+    	<result column="price" property="price" jdbcType="BIGINT"/><!-- 价格-->
+    	<result column="productSize" property="productSize" jdbcType="BIGINT"/><!-- 产品大小 -->
+    </resultMap>
+
+    <!-- 扩展属性 -->
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ActivityPrize">
+        <result column="enterpriseCode" property="enterpriseCode" jdbcType="VARCHAR"/><!-- 企业编码 -->
+        <result column="enterpriseName" property="enterpriseName" jdbcType="VARCHAR"/><!-- 企业名称 -->
+        <result column="productCode" property="productCode" jdbcType="VARCHAR"/><!-- 产品编码-->
+        <result column="productName" property="productName" jdbcType="VARCHAR"/><!-- 产品名称 -->
+        <result column="productSize" property="productSize" jdbcType="BIGINT"/><!-- 产品大小 -->
+        <result column="isp" property="isp" jdbcType="VARCHAR"/><!-- 运营商 -->
+        <result column="ownershipRegion" property="ownershipRegion" jdbcType="VARCHAR"/><!-- 使用范围 -->
+        <result column="roamingRegion" property="roamingRegion" jdbcType="VARCHAR"/><!-- 漫游范围 -->
+        <result column="price" property="price" jdbcType="BIGINT"/><!-- 价格-->
+        <result column="flowType" property="flowType" jdbcType="INTEGER"/><!-- 流量类型-->
+    </resultMap>
+
+
+    <!-- 属性列表 -->
+    <sql id="Base_Column_List">
+        id, id_prefix, rank_name, enterprise_id, product_id, count, probability, activity_id,
+        create_time, update_time, delete_flag, prize_name, size, type, discount
+    </sql>
+
+    <!-- 根据主键ID查询未删除的记录 -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        activity_prize
+        where
+        id = #{id,jdbcType=BIGINT}
+        and
+        delete_flag = 0 <!-- 删除标记：0未删除；1已删除 -->
+    </select>
+    
+    <!-- 根据主键ID查询未删除的记录详情，包括产品详情 -->
+    <select id="selectPrizeDetailByPrimaryKey" resultMap="PrizeDetailResultMap" parameterType="java.lang.Long">
+        select
+        	t1.id, 
+        	t1.id_prefix, 
+        	t1.rank_name, 
+        	t1.enterprise_id, 
+        	t1.product_id, 
+        	t1.count, 
+        	t1.probability, 
+        	t1.activity_id,
+        	t1.create_time, 
+        	t1.update_time, 
+        	t1.delete_flag, 
+        	t1.prize_name, 
+        	t1.size, 
+        	t1.type, 
+        	t1.discount,
+        	t2.product_code as productCode,
+        	t2.name as productName,
+        	t2.product_size as productSize,
+        	t2.price as price
+        from
+        activity_prize t1
+        left join 
+        product t2 on t1.product_id = t2.id
+        where
+        t1.id = #{id,jdbcType=BIGINT}
+        and
+        t1.delete_flag = 0 <!-- 删除标记：0未删除；1已删除 -->
+    </select>
+
+    <!-- 根据活动ID查询未删除的记录 -->
+    <select id="selectByActivityId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        activity_prize
+        where
+        activity_id = #{activityId,jdbcType=VARCHAR}
+        and
+        delete_flag = 0 <!-- 删除标记：0未删除；1已删除 -->
+    </select>
+
+    <select id="selectByActivityIdForIndividual" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        activity_prize
+        WHERE
+        activity_id = #{activityId,jdbcType=VARCHAR}
+        AND
+        delete_flag = 0
+    </select>
+
+    <!-- 根据活动ID查询奖项的详细信息包括企业名称、产品编码、产品名称未删除的记录 -->
+    <select id="getDetailByActivityId" resultMap="ExtendsResultMap" parameterType="java.lang.String">
+        select
+        t1.*,
+        t2.code as enterpriseCode,
+        t2.name as enterpriseName,
+        t3.name as productName,
+        t3.product_code as productCode,
+        t3.isp as isp,
+        t3.roaming_region as roamingRegion,
+        t3.ownership_region as ownershipRegion,
+        t3.product_size as productSize,
+        t3.price as price,
+        t3.type as flowType
+        from
+        activity_prize t1
+        inner join
+        enterprises t2
+        on
+        t1.enterprise_id = t2.id
+        inner join
+        product t3
+        on
+        t1.product_id = t3.id
+        where
+        t1.activity_id = #{activityId,jdbcType=VARCHAR}
+        and
+        t1.delete_flag = 0 <!-- 删除标记：0未删除；1已删除 -->
+    </select>
+
+
+    <!-- 根据主键ID逻辑删除记录 -->
+    <update id="deleteByActivityId" parameterType="java.lang.String">
+        update
+        activity_prize
+        set
+        delete_flag = 1 <!-- 删除标记：0未删除；1已删除 -->
+        where
+        activity_id = #{activityId,jdbcType=VARCHAR}
+        and
+        delete_flag = 0 <!-- 删除标记：0未删除；1已删除 -->
+    </update>
+
+    <!-- 根据主键ID逻辑删除记录 -->
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update
+        activity_prize
+        set
+        delete_flag = 1 <!-- 删除标记：0未删除；1已删除 -->
+        where
+        id = #{id,jdbcType=BIGINT}
+        and
+        delete_flag = 0<!-- 删除标记：0未删除；1已删除 -->
+    </update>
+
+    <!-- 插入记录 -->
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ActivityPrize">
+        insert into activity_prize (id, id_prefix, rank_name,
+        enterprise_id, product_id, count,
+        probability, activity_id, create_time,
+        update_time, delete_flag,prize_name,size)
+        values (#{id,jdbcType=BIGINT}, #{idPrefix,jdbcType=VARCHAR}, #{rankName,jdbcType=VARCHAR},
+        #{enterpriseId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, #{count,jdbcType=BIGINT},
+        #{probability,jdbcType=VARCHAR}, #{activityId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER},#{prizeName,jdbcType=VARCHAR},
+        #{size,jdbcType=BIGINT})
+    </insert>
+
+    <insert id="insertForRedpacket" useGeneratedKeys="true"
+            keyProperty="id" parameterType="com.cmcc.vrp.province.model.ActivityPrize">
+        insert into
+        activity_prize
+        (
+        id,
+        enterprise_id,
+        count,
+        activity_id,
+        create_time,
+        update_time,
+        delete_flag,
+        size,
+        prize_name,
+        product_id
+        )
+        values
+        (
+        #{id,jdbcType=BIGINT},
+        #{enterpriseId,jdbcType=BIGINT},
+        #{count,jdbcType=BIGINT},
+        #{activityId,jdbcType=VARCHAR},
+        now(),
+        now(),
+        0,
+        #{size,jdbcType=BIGINT},
+        #{prizeName,jdbcType=VARCHAR},
+        #{productId,jdbcType=BIGINT}
+        )
+    </insert>
+
+	<!-- 批量插入 -->
+    <insert id="batchInsertForCrowdFunding" parameterType="java.util.Map">
+        insert into
+        activity_prize
+        (
+        id,
+        id_prefix,
+        rank_name,
+        enterprise_id,
+        product_id,
+        count,
+        probability,
+        activity_id,
+        create_time,
+        update_time,
+        delete_flag,
+        prize_name,
+        size,
+        type,
+        discount
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=BIGINT},
+            #{item.idPrefix,jdbcType=VARCHAR},
+            #{item.rankName,jdbcType=VARCHAR},
+            #{item.enterpriseId,jdbcType=BIGINT},
+            #{item.productId,jdbcType=BIGINT},
+            #{item.count,jdbcType=BIGINT},
+            #{item.probability,jdbcType=VARCHAR},
+            #{item.activityId,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateTime,jdbcType=TIMESTAMP},
+            #{item.deleteFlag,jdbcType=INTEGER},
+            #{item.prizeName,jdbcType=VARCHAR},
+            #{item.size,jdbcType=BIGINT},
+            #{item.type,jdbcType=INTEGER},
+            #{item.discount,jdbcType=INTEGER}
+            )
+        </foreach>
+    </insert>
+    
+    <!-- 批量插入 -->
+    <insert id="batchInsert" parameterType="java.util.Map">
+        insert into
+        activity_prize
+        (
+        id,
+        id_prefix,
+        rank_name,
+        enterprise_id,
+        product_id,
+        count,
+        probability,
+        activity_id,
+        create_time,
+        update_time,
+        delete_flag,
+        prize_name,
+        size,
+        type
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.id,jdbcType=BIGINT},
+            #{item.idPrefix,jdbcType=VARCHAR},
+            #{item.rankName,jdbcType=VARCHAR},
+            #{item.enterpriseId,jdbcType=BIGINT},
+            #{item.productId,jdbcType=BIGINT},
+            #{item.count,jdbcType=BIGINT},
+            #{item.probability,jdbcType=VARCHAR},
+            #{item.activityId,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateTime,jdbcType=TIMESTAMP},
+            #{item.deleteFlag,jdbcType=INTEGER},
+            #{item.prizeName,jdbcType=VARCHAR},
+            #{item.size,jdbcType=BIGINT},
+            #{item.type,jdbcType=INTEGER}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 根据主键ID更新未删除的记录 -->
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ActivityPrize">
+        update
+        activity_prize
+        set
+        id_prefix = #{idPrefix,jdbcType=VARCHAR},
+        rank_name = #{rankName,jdbcType=VARCHAR},
+        enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+        product_id = #{productId,jdbcType=BIGINT},
+        count = #{count,jdbcType=BIGINT},
+        probability = #{probability,jdbcType=VARCHAR},
+        activity_id = #{activityId,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        prize_name = #{prizeName,jdbcType=VARCHAR}
+        where
+        id = #{id,jdbcType=BIGINT}
+        and
+        delete_flag = 0<!-- 删除标记：0未删除；1已删除 -->
+    </update>
+
+    <!-- 根据主键ID更新产品个数未删除的记录 -->
+    <update id="updateCountByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ActivityPrize">
+        update
+        activity_prize
+        set
+        count = #{count,jdbcType=BIGINT}
+        where
+        id = #{id,jdbcType=BIGINT}
+        and
+        delete_flag = 0<!-- 删除标记：0未删除；1已删除 -->
+    </update>
+
+    <!-- 删除产品-->
+    <update id="deleteActivityPrize">
+        UPDATE
+        activity_prize
+        SET
+        delete_flag = 1
+        WHERE
+        activity_id = #{activityId,jdbcType=VARCHAR} AND
+        product_id IN
+        <foreach collection="delProdIds" item="delProdId" open="(" close=")" separator="," index="">
+            #{delProdId,jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+    <!-- 批量更新奖品信息 -->
+    <update id="batchUpdateSelective" parameterType="java.util.Map">
+        UPDATE
+          activity_prize
+        SET
+          product_id =
+        CASE id
+        <foreach collection="activityPrizes" item="item" separator="">
+            WHEN #{item.id, jdbcType=BIGINT} THEN #{item.productId, jdbcType=BIGINT}
+        </foreach>
+        END,
+          count =
+        CASE id
+        <foreach collection="activityPrizes" item="item" separator="">
+            WHEN #{item.id, jdbcType=BIGINT} THEN #{item.count, jdbcType=BIGINT}
+        </foreach>
+        END,
+          probability =
+        CASE id
+        <foreach collection="activityPrizes" item="item" separator="">
+            WHEN #{item.id, jdbcType=BIGINT} THEN #{item.probability, jdbcType=VARCHAR}
+        </foreach>
+        END,
+        prize_name =
+        CASE id
+        <foreach collection="activityPrizes" item="item" separator="">
+            WHEN #{item.id, jdbcType=BIGINT} THEN #{item.prizeName, jdbcType=VARCHAR}
+        </foreach>
+        END,
+        update_time = now()
+        WHERE
+        id in
+        <foreach collection="activityPrizes" item="item" separator="," open="(" close=")">
+            #{item.id, jdbcType=BIGINT}
+        </foreach>
+    </update>
+    
+    <!-- 批量更新奖品信息,用于广东流量众筹 -->
+    <update id="batchUpdateDiscount" parameterType="java.util.Map">
+        UPDATE
+          activity_prize
+        SET
+          discount =
+        CASE id
+        <foreach collection="activityPrizes" item="item" separator="">
+            WHEN #{item.id, jdbcType=BIGINT} THEN #{item.discount, jdbcType=BIGINT}
+        </foreach>
+        END,
+          id_prefix =
+        CASE id
+        <foreach collection="activityPrizes" item="item" separator="">
+            WHEN #{item.id, jdbcType=BIGINT} THEN #{item.idPrefix, jdbcType=VARCHAR}
+        </foreach>
+        END,
+        update_time = now()
+        WHERE
+        id in
+        <foreach collection="activityPrizes" item="item" separator="," open="(" close=")">
+            #{item.id, jdbcType=BIGINT}
+        </foreach>
+    </update>
+
+</mapper>

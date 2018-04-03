@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.RuleTemplateMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.RuleTemplate">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="image" property="image" jdbcType="VARCHAR"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+        <result column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="image_cnt" property="imageCnt" jdbcType="INTEGER"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="people" property="people" jdbcType="VARCHAR"/>
+        <result column="activityDes" property="activityDes" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, image, creator_id, role_id, create_time, update_time, image_cnt,
+        delete_flag, status, title, description, people, activityDes
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        FROM
+        rule_template
+        where
+        id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from rule_template
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.RuleTemplate" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into rule_template (id, name, image,
+        creator_id, role_id, create_time, update_time, image_cnt,
+        delete_flag, status, title, description, people, activityDes
+        )
+        values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR},
+        #{creatorId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{imageCnt,jdbcType=INTEGER},
+        #{deleteFlag,jdbcType=INTEGER}, #{status,jdbcType=INTEGER},
+        #{title,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{people,jdbcType=VARCHAR},
+        #{activityDes,jdbcType=VARCHAR}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.RuleTemplate" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into rule_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="image != null">
+                image,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="roleId != null">
+                role_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="imageCnt != null">
+                image_cnt,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+
+
+            <if test="title != null">
+                title,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="people != null">
+                people,
+            </if>
+            <if test="activityDes != null">
+                activityDes,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="image != null">
+                #{image,jdbcType=VARCHAR},
+            </if>
+
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="roleId != null">
+                #{roleId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="imageCnt != null">
+                #{imageCnt,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+
+
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="people != null">
+                #{people,jdbcType=VARCHAR},
+            </if>
+            <if test="activityDes != null">
+                #{activityDes,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.RuleTemplate">
+        update rule_template
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="image != null">
+                image = #{image,jdbcType=VARCHAR},
+            </if>
+
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="roleId != null">
+                role_id = #{roleId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="imageCnt != null">
+                image_cnt = #{imageCnt,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+
+
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="people != null">
+                people = #{people,jdbcType=VARCHAR},
+            </if>
+            <if test="activityDes != null">
+                activityDes = #{activityDes,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.RuleTemplate">
+        update rule_template
+        set name = #{name,jdbcType=VARCHAR},
+        image = #{image,jdbcType=VARCHAR},
+
+        creator_id = #{creatorId,jdbcType=BIGINT},
+        role_id = #{roleId,jdbcType=BIGINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        image_cnt = #{imageCnt,jdbcType=INTEGER},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        status = #{status,jdbcType=INTEGER},
+
+
+        title= #{title,jdbcType=VARCHAR},
+        description =#{description,jdbcType=VARCHAR},
+        people = #{people,jdbcType=VARCHAR},
+        activityDes= #{activityDes,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="count" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM
+        rule_template
+        <where>
+            delete_flag != 1
+            <if test="name != null">
+                and name LIKE CONCAT(CONCAT('%', #{name, jdbcType=VARCHAR}), '%')
+            </if>
+
+            <if test="creatorId != null and roleId != null">
+                and (creator_id = #{creatorId,jdbcType=BIGINT} or role_id = 1)
+            </if>
+
+
+            <choose>
+                <!-- 上架状态 -->
+                <when test="status == 'on'">
+                    and status = 1
+                </when>
+
+                <!-- 下架状态 -->
+                <when test="status == 'off'">
+                    and status = 0
+                </when>
+            </choose>
+
+        </where>
+    </select>
+
+    <select id="listRuleTemplate" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        rule_template
+        <where>
+            delete_flag != 1
+            <if test="name != null">
+                and name LIKE CONCAT(CONCAT('%', #{name, jdbcType=VARCHAR}), '%')
+            </if>
+
+            <if test="creatorId != null and roleId != null">
+                and (creator_id = #{creatorId,jdbcType=BIGINT} or role_id = 1)
+            </if>
+
+            <choose>
+                <!-- 上架状态 -->
+                <when test="status == 1">
+                    and status = 1
+                </when>
+
+                <!-- 下架状态 -->
+                <when test="status == 0">
+                    and status = 0
+                </when>
+            </choose>
+
+            ORDER BY create_time DESC,update_time DESC
+
+            <if test="pageSize != null and pageNum!=null">
+                LIMIT #{pageNum}, #{pageSize}
+            </if>
+
+        </where>
+
+    </select>
+
+    <select id="getRuleTemplateByCreatorId" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        rule_template
+        <where>
+            <if test="creatorId != null and roleId != null">
+                and (creator_id = #{creatorId,jdbcType=BIGINT} or role_id = 1)
+            </if>
+            <if test="status != null">
+                and status = #{status,jdbcType=BIGINT}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AdminEnterMapper">
+    <resultMap id="EnterpriseBaseResultMap" type="com.cmcc.vrp.province.model.Enterprise">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="ent_name" property="entName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.AdminEnter">
+        <result column="admin_id" property="adminId" jdbcType="BIGINT"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.AdminEnter">
+        insert into admin_enter (admin_id, enter_id)
+        values (#{adminId,jdbcType=BIGINT}, #{enterId,jdbcType=BIGINT})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.AdminEnter">
+        insert into admin_enter
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="adminId != null">
+                admin_id,
+            </if>
+            <if test="enterId != null">
+                enter_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="adminId != null">
+                #{adminId,jdbcType=BIGINT},
+            </if>
+            <if test="enterId != null">
+                #{enterId,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectCountByQuery" parameterType="com.cmcc.vrp.province.model.AdminEnter"
+            resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM admin_enter t
+        <where>
+            <if test="adminId != null">
+                AND t.admin_id = #{adminId,jdbcType=BIGINT}
+            </if>
+            <if test="enterId != null">
+                AND t.enter_id = #{enterId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectCountByAdminIdEntId" parameterType="com.cmcc.vrp.province.model.AdminEnter"
+            resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM admin_enter t
+        <where>
+            <if test="adminId != null">
+                AND t.admin_id = #{adminId,jdbcType=BIGINT}
+            </if>
+            <if test="enterId != null">
+                AND t.enter_id = #{enterId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectByAdminId" parameterType="java.lang.Long"
+            resultType="java.lang.String">
+        SELECT
+        d.name as eName
+        FROM
+        admin_enter t,
+        enterprises d
+        where
+        t.enter_id=d.id
+        AND t.admin_id = #{adminId,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByAdminId" parameterType="java.lang.Long">
+        delete
+        from
+        admin_enter
+        where
+        admin_id = #{adminId,jdbcType=BIGINT};
+    </delete>
+
+    <delete id="deleteByEnterId" parameterType="java.lang.Long">
+        delete
+        from
+        admin_enter
+        where
+        enter_id = #{enterId,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteAdminEnter" parameterType="com.cmcc.vrp.province.model.AdminEnter">
+        delete
+        from
+        admin_enter
+        where admin_id = #{adminId,jdbcType=BIGINT} and
+        enter_id = #{enterId,jdbcType=BIGINT}
+    </delete>
+
+    <select id="selecteEntIdByAdminId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT t.enter_id FROM admin_enter t
+        where
+        t.admin_id = #{adminId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectAdminIdByEntId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT
+        ae.admin_id
+        FROM admin_enter ae
+        WHERE
+        ae.enter_id=#{entId,jdbcType=BIGINT}
+    </select>
+
+
+    <select id="selecteEntByAdminId" parameterType="java.lang.Long" resultMap="EnterpriseBaseResultMap">
+        select
+        e.id,
+        e.name,
+        e.code,
+        e.phone,
+        e.creator_id,
+        e.create_time,
+        e.update_time,
+        e.delete_flag,
+        e.ent_name
+        FROM
+        admin_enter t,
+        enterprises e
+        where
+        t.enter_id = e.id and
+        t.admin_id = #{adminId,jdbcType=BIGINT} and
+        e.delete_flag = 0
+        and
+        now() &gt;= e.start_time and
+        now() &lt;= e.end_time
+
+    </select>
+
+    <update id="updateAdminByEntId">
+        UPDATE
+        admin_enter
+        SET
+        admin_id = #{adminId,jdbcType=BIGINT}
+        WHERE
+        enter_id=#{entId,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectAdminEntByPhone" resultMap="BaseResultMap">
+        SELECT
+        ae.admin_id,
+        ae.enter_id
+        FROM
+        admin_enter ae
+        RIGHT JOIN administer adm
+        ON ae.admin_id = adm.id
+        WHERE
+        adm.mobile_phone = #{mobilePhone,jdbcType= VARCHAR} AND
+        adm.delete_flag = 0
+    </select>
+</mapper>

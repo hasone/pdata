@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.DistrictMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.District">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="level" property="level" jdbcType="INTEGER"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        name,
+        level,
+        parent_id,
+        code
+    </sql>
+
+    <select id="selectByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        district
+        where 1=1
+        <if test="name != null and name != ''">
+            AND name LIKE "%"#{name, jdbcType = VARCHAR}"%"
+        </if>
+        <if test="level != null">
+            AND level = #{level,jdbcType=INTEGER}
+        </if>
+        <if test="parentId != null">
+            AND parent_id = #{parentId,jdbcType=BIGINT}
+        </if>
+        <if test="id != null">
+            AND id = #{id,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="selectFullDistrictNameById" resultType="java.lang.String" parameterType="java.lang.Long">
+        select CONCAT(IFNULL(d1.name,""),IFNULL(d2.name,""),IFNULL(d3.name,"")) from district d3
+        left join district d2 on d3.parent_id=d2.id
+        left join district d1 on d1.id = d2.parent_id
+        WHERE d3.id=#{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectNodeById" resultType="java.lang.Long" parameterType="java.lang.Long">
+        select
+        id
+        from
+        district where parent_id=#{id,jdbcType=BIGINT} or id= #{id,jdbcType=BIGINT}
+        UNION
+        select
+        id
+        from
+        district WHERE parent_id IN (select id from district where parent_id=#{id,jdbcType=BIGINT})
+    </select>
+
+    <select id="selectNodeByIds" resultType="java.lang.Long" parameterType="java.util.List">
+        select
+        id
+        from
+        district where id = 0
+        <foreach collection="adminDistrictds" item="item" open="" close="" index="index" separator="">
+            UNION
+            select
+            id
+            from
+            district where parent_id=#{item.districtId,jdbcType=BIGINT} or id= #{item.districtId,jdbcType=BIGINT}
+            UNION
+            select
+            id
+            from
+            district WHERE parent_id IN (select id from district where parent_id=#{item.districtId,jdbcType=BIGINT})
+        </foreach>
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        district
+        where
+        id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="list" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        district
+    </select>
+
+    <select id="selectDisByParentId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM district
+        WHERE parent_id = #{parentId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectDisBySonId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM district
+        WHERE id= #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectChildByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        d2.*
+        FROM district d1
+        inner join district d2 on d1.id = d2.parent_id
+        WHERE d1.name = #{name}
+    </select>
+
+    <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM district
+        WHERE name = #{name}
+    </select>
+
+    <select id="selectByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM district
+        WHERE parent_id = #{parent_id}
+    </select>
+
+</mapper>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.HistoryEnterpriseFileMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.HistoryEnterpriseFile" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="request_id" property="requestId" jdbcType="BIGINT" />
+    <result column="ent_id" property="entId" jdbcType="BIGINT" />
+    <result column="customerfile_name" property="customerfileName" jdbcType="VARCHAR" />
+    <result column="image_name" property="imageName" jdbcType="VARCHAR" />
+    <result column="contract_name" property="contractName" jdbcType="VARCHAR" />
+    <result column="business_licence" property="businessLicence" jdbcType="VARCHAR" />
+    <result column="authorization_certificate" property="authorizationCertificate" jdbcType="VARCHAR" />
+    <result column="identification_card" property="identificationCard" jdbcType="VARCHAR" />
+    <result column="identification_back" property="identificationBack" jdbcType="VARCHAR" />
+    <result column="customerfile_key" property="customerfileKey" jdbcType="VARCHAR" />
+    <result column="image_key" property="imageKey" jdbcType="VARCHAR" />
+    <result column="contract_key" property="contractKey" jdbcType="VARCHAR" />
+    <result column="licence_key" property="licenceKey" jdbcType="VARCHAR" />
+    <result column="authorization_key" property="authorizationKey" jdbcType="VARCHAR" />
+    <result column="identification_key" property="identificationKey" jdbcType="VARCHAR" />
+    <result column="identification_back_key" property="identificationBackKey" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, request_id, ent_id, customerfile_name, image_name, contract_name, business_licence, 
+    authorization_certificate, identification_card, identification_back, customerfile_key, 
+    image_key, contract_key, licence_key, authorization_key, identification_key, identification_back_key, 
+    create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from history_enterprise_file
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <!--根据请求审核id查找-->
+  <select id="selectByRequestId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from history_enterprise_file
+    where request_id = #{requestId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from history_enterprise_file
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.HistoryEnterpriseFile" >
+    insert into history_enterprise_file (id, request_id, ent_id, 
+      customerfile_name, image_name, contract_name, 
+      business_licence, authorization_certificate, 
+      identification_card, identification_back, 
+      customerfile_key, image_key, contract_key, 
+      licence_key, authorization_key, identification_key, 
+      identification_back_key, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{requestId,jdbcType=BIGINT}, #{entId,jdbcType=BIGINT}, 
+      #{customerfileName,jdbcType=VARCHAR}, #{imageName,jdbcType=VARCHAR}, #{contractName,jdbcType=VARCHAR}, 
+      #{businessLicence,jdbcType=VARCHAR}, #{authorizationCertificate,jdbcType=VARCHAR}, 
+      #{identificationCard,jdbcType=VARCHAR}, #{identificationBack,jdbcType=VARCHAR}, 
+      #{customerfileKey,jdbcType=VARCHAR}, #{imageKey,jdbcType=VARCHAR}, #{contractKey,jdbcType=VARCHAR}, 
+      #{licenceKey,jdbcType=VARCHAR}, #{authorizationKey,jdbcType=VARCHAR}, #{identificationKey,jdbcType=VARCHAR}, 
+      #{identificationBackKey,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.HistoryEnterpriseFile" >
+    insert into history_enterprise_file
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="requestId != null" >
+        request_id,
+      </if>
+      <if test="entId != null" >
+        ent_id,
+      </if>
+      <if test="customerfileName != null" >
+        customerfile_name,
+      </if>
+      <if test="imageName != null" >
+        image_name,
+      </if>
+      <if test="contractName != null" >
+        contract_name,
+      </if>
+      <if test="businessLicence != null" >
+        business_licence,
+      </if>
+      <if test="authorizationCertificate != null" >
+        authorization_certificate,
+      </if>
+      <if test="identificationCard != null" >
+        identification_card,
+      </if>
+      <if test="identificationBack != null" >
+        identification_back,
+      </if>
+      <if test="customerfileKey != null" >
+        customerfile_key,
+      </if>
+      <if test="imageKey != null" >
+        image_key,
+      </if>
+      <if test="contractKey != null" >
+        contract_key,
+      </if>
+      <if test="licenceKey != null" >
+        licence_key,
+      </if>
+      <if test="authorizationKey != null" >
+        authorization_key,
+      </if>
+      <if test="identificationKey != null" >
+        identification_key,
+      </if>
+      <if test="identificationBackKey != null" >
+        identification_back_key,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="requestId != null" >
+        #{requestId,jdbcType=BIGINT},
+      </if>
+      <if test="entId != null" >
+        #{entId,jdbcType=BIGINT},
+      </if>
+      <if test="customerfileName != null" >
+        #{customerfileName,jdbcType=VARCHAR},
+      </if>
+      <if test="imageName != null" >
+        #{imageName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractName != null" >
+        #{contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicence != null" >
+        #{businessLicence,jdbcType=VARCHAR},
+      </if>
+      <if test="authorizationCertificate != null" >
+        #{authorizationCertificate,jdbcType=VARCHAR},
+      </if>
+      <if test="identificationCard != null" >
+        #{identificationCard,jdbcType=VARCHAR},
+      </if>
+      <if test="identificationBack != null" >
+        #{identificationBack,jdbcType=VARCHAR},
+      </if>
+      <if test="customerfileKey != null" >
+        #{customerfileKey,jdbcType=VARCHAR},
+      </if>
+      <if test="imageKey != null" >
+        #{imageKey,jdbcType=VARCHAR},
+      </if>
+      <if test="contractKey != null" >
+        #{contractKey,jdbcType=VARCHAR},
+      </if>
+      <if test="licenceKey != null" >
+        #{licenceKey,jdbcType=VARCHAR},
+      </if>
+      <if test="authorizationKey != null" >
+        #{authorizationKey,jdbcType=VARCHAR},
+      </if>
+      <if test="identificationKey != null" >
+        #{identificationKey,jdbcType=VARCHAR},
+      </if>
+      <if test="identificationBackKey != null" >
+        #{identificationBackKey,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.HistoryEnterpriseFile" >
+    update history_enterprise_file
+    <set >
+      <if test="requestId != null" >
+        request_id = #{requestId,jdbcType=BIGINT},
+      </if>
+      <if test="entId != null" >
+        ent_id = #{entId,jdbcType=BIGINT},
+      </if>
+      <if test="customerfileName != null" >
+        customerfile_name = #{customerfileName,jdbcType=VARCHAR},
+      </if>
+      <if test="imageName != null" >
+        image_name = #{imageName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractName != null" >
+        contract_name = #{contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicence != null" >
+        business_licence = #{businessLicence,jdbcType=VARCHAR},
+      </if>
+      <if test="authorizationCertificate != null" >
+        authorization_certificate = #{authorizationCertificate,jdbcType=VARCHAR},
+      </if>
+      <if test="identificationCard != null" >
+        identification_card = #{identificationCard,jdbcType=VARCHAR},
+      </if>
+      <if test="identificationBack != null" >
+        identification_back = #{identificationBack,jdbcType=VARCHAR},
+      </if>
+      <if test="customerfileKey != null" >
+        customerfile_key = #{customerfileKey,jdbcType=VARCHAR},
+      </if>
+      <if test="imageKey != null" >
+        image_key = #{imageKey,jdbcType=VARCHAR},
+      </if>
+      <if test="contractKey != null" >
+        contract_key = #{contractKey,jdbcType=VARCHAR},
+      </if>
+      <if test="licenceKey != null" >
+        licence_key = #{licenceKey,jdbcType=VARCHAR},
+      </if>
+      <if test="authorizationKey != null" >
+        authorization_key = #{authorizationKey,jdbcType=VARCHAR},
+      </if>
+      <if test="identificationKey != null" >
+        identification_key = #{identificationKey,jdbcType=VARCHAR},
+      </if>
+      <if test="identificationBackKey != null" >
+        identification_back_key = #{identificationBackKey,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.HistoryEnterpriseFile" >
+    update history_enterprise_file
+    set request_id = #{requestId,jdbcType=BIGINT},
+      ent_id = #{entId,jdbcType=BIGINT},
+      customerfile_name = #{customerfileName,jdbcType=VARCHAR},
+      image_name = #{imageName,jdbcType=VARCHAR},
+      contract_name = #{contractName,jdbcType=VARCHAR},
+      business_licence = #{businessLicence,jdbcType=VARCHAR},
+      authorization_certificate = #{authorizationCertificate,jdbcType=VARCHAR},
+      identification_card = #{identificationCard,jdbcType=VARCHAR},
+      identification_back = #{identificationBack,jdbcType=VARCHAR},
+      customerfile_key = #{customerfileKey,jdbcType=VARCHAR},
+      image_key = #{imageKey,jdbcType=VARCHAR},
+      contract_key = #{contractKey,jdbcType=VARCHAR},
+      licence_key = #{licenceKey,jdbcType=VARCHAR},
+      authorization_key = #{authorizationKey,jdbcType=VARCHAR},
+      identification_key = #{identificationKey,jdbcType=VARCHAR},
+      identification_back_key = #{identificationBackKey,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

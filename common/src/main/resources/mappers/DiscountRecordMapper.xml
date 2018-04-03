@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmcc.vrp.province.dao.DiscountRecordMapper">
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.DiscountRecord">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="prd_code" jdbcType="VARCHAR" property="prdCode" />
+    <result column="discount" jdbcType="INTEGER" property="discount" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
+    <result column="validate_time" jdbcType="TIMESTAMP" property="createTime" />
+    
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, prd_code, discount, create_time, update_time, delete_flag, validate_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from discount_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from discount_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+   <insert id="batchInsert" parameterType="java.util.List">
+      insert into discount_record (user_id, prd_code, 
+		discount, create_time, update_time, 
+      	delete_flag, validate_time)
+      values
+        <foreach collection="records" item="record" separator="," index="index">
+            (#{record.userId,jdbcType=VARCHAR},
+            #{record.prdCode,jdbcType=VARCHAR},
+            #{record.discount,jdbcType=INTEGER},
+            #{record.createTime,jdbcType=TIMESTAMP},
+            #{record.updateTime,jdbcType=TIMESTAMP},
+            #{record.deleteFlag,jdbcType=INTEGER},
+            #{record.validateTime,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+  
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.DiscountRecord">
+    insert into discount_record (id, user_id, prd_code, 
+      discount, create_time, update_time, 
+      delete_flag, validate_time)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{prdCode,jdbcType=VARCHAR}, 
+      #{discount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{deleteFlag,jdbcType=INTEGER}, #{validateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.DiscountRecord">
+    insert into discount_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="prdCode != null">
+        prd_code,
+      </if>
+      <if test="discount != null">
+        discount,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag,
+      </if>
+      <if test="validateTime != null">
+        validate_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="prdCode != null">
+        #{prdCode,jdbcType=VARCHAR},
+      </if>
+      <if test="discount != null">
+        #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null">
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="validateTime != null">
+        #{validateTime,jdbcType=TIMESTAMP},
+      </if>      
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.DiscountRecord">
+    update discount_record
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="prdCode != null">
+        prd_code = #{prdCode,jdbcType=VARCHAR},
+      </if>
+      <if test="discount != null">
+        discount = #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="validateTime != null">
+        validate_time = #{validateTime,jdbcType=TIMESTAMP},
+      </if>  
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.DiscountRecord">
+    update discount_record
+    set user_id = #{userId,jdbcType=VARCHAR},
+      prd_code = #{prdCode,jdbcType=VARCHAR},
+      discount = #{discount,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      validate_time = #{validateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getOneDayDiscount" resultMap="BaseResultMap" >
+    select * from 
+    ((SELECT * from discount_record where user_id = #{userid,jdbcType=VARCHAR} and prd_code = #{prdCode,jdbcType=VARCHAR} and create_time &gt;= #{startTime,jdbcType=TIMESTAMP} and create_time &lt;= #{endTime,jdbcType=TIMESTAMP} ORDER BY create_time desc)
+    UNION
+    (SELECT * from discount_record where user_id = #{userid,jdbcType=VARCHAR} and prd_code = #{prdCode,jdbcType=VARCHAR} and create_time &lt;#{startTime,jdbcType=TIMESTAMP}  ORDER BY create_time desc limit 0,1)) as a
+    ORDER BY create_time desc
+  </select>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.YqxVpmnDiscountMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.YqxVpmnDiscount" >
+    <result column="start" property="start" jdbcType="INTEGER" />
+    <result column="end" property="end" jdbcType="INTEGER" />
+    <result column="discount" property="discount" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    start, end, discount
+  </sql>
+
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.YqxVpmnDiscount" >
+    insert into yqx_vpmn_discount (start, end, discount
+      )
+    values (#{start,jdbcType=INTEGER}, #{end,jdbcType=INTEGER}, #{discount,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.YqxVpmnDiscount" >
+    insert into yqx_vpmn_discount
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="start != null" >
+        start,
+      </if>
+      <if test="end != null" >
+        end,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="start != null" >
+        #{start,jdbcType=INTEGER},
+      </if>
+      <if test="end != null" >
+        #{end,jdbcType=INTEGER},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getAllDiscount" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from yqx_vpmn_discount
+  </select>
+  
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.UserInfo">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        mobile,
+        create_time,
+        update_time,
+        delete_flag
+    </sql>
+
+    <!-- 根据ID获取对象 -->
+    <select id="get" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        user_info
+        where
+        id = #{id, jdbcType=BIGINT}
+    </select>
+
+    <!-- 由手机号获取用户 -->
+    <select id="getByMobile" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        user_info
+        where
+        mobile = #{mobile, jdbcType=VARCHAR}
+    </select>
+
+    <!-- 插入用户 -->
+    <insert id="insert"
+            useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.cmcc.vrp.province.model.UserInfo">
+        insert into user_info (
+        mobile,
+        create_time,
+        update_time,
+        delete_flag)
+        values(
+        #{mobile,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=INTEGER})
+    </insert>
+
+    <!-- 逻辑删除 -->
+    <update id="delete" parameterType="java.lang.Long">
+        update
+        user_info
+        set
+        delete_flag = 1
+        where
+        id=#{id, jdbcType=BIGINT}
+    </update>
+
+    <!-- 根据手机号删除对象 -->
+    <update id="deleteByMobile" parameterType="java.lang.String">
+        update
+        user_info
+        set
+        delete_flag = 1
+        where
+        mobile=#{mobile, jdbcType=VARCHAR}
+    </update>
+</mapper>

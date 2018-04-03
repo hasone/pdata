@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.CrowdfundingQueryUrlMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.CrowdfundingQueryUrl" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="crowdfunding_activity_detail_id" property="crowdfundingActivityDetailId" jdbcType="BIGINT" />
+    <result column="query_url" property="queryUrl" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    <result column="delete_flag" property="deleteFlag" jdbcType="TINYINT"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, crowdfunding_activity_detail_id, query_url, create_time, update_time, delete_flag
+  </sql>
+
+  <!--根据id查询-->
+  <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from crowdfunding_query_url
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <!--根据crowdfundingActivityDetailId查询-->
+
+  <select id="getByCrowdfundingActivityDetailId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from crowdfunding_query_url
+    where crowdfunding_activity_detail_id = #{crowdfundingActivityDetailId,jdbcType=BIGINT}
+  </select>
+
+
+  <update id="delete" parameterType="java.lang.Long" >
+    update crowdfunding_query_url
+    set
+    delete_flag = 1,
+    where crowdfunding_activity_detail_id = #{crowdfundingActivityDetailId,jdbcType=BIGINT}
+  </update>
+
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.CrowdfundingQueryUrl" >
+    insert into crowdfunding_query_url (crowdfunding_activity_detail_id, query_url, 
+      create_time, update_time, delete_flag)
+    values (#{crowdfundingActivityDetailId,jdbcType=BIGINT}, #{queryUrl,jdbcType=VARCHAR}, 
+      NOW(), NOW(),    
+      #{deleteFlag,jdbcType=INTEGER})
+  </insert>
+  
+  <update id="updateByCrowdfundingActivityDetailId" parameterType="com.cmcc.vrp.province.model.CrowdfundingQueryUrl" >
+    update crowdfunding_query_url
+    <set >
+      <if test="queryUrl != null and queryUrl != ''" >
+        query_url = #{queryUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null and deleteFlag != ''" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>    
+    </set>
+    where crowdfunding_activity_detail_id = #{crowdfundingActivityDetailId,jdbcType=BIGINT}
+  </update>
+ 
+  
+</mapper>

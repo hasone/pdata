@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.EnterpriseSmsTemplateMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.EnterpriseSmsTemplate">
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="sms_template_id" property="smsTemplateId" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="smsTemplateIds" type="java.lang.Long">
+        <result column="sms_template_id" property="smsTemplateId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.EnterpriseSmsTemplate">
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.EnterpriseSmsTemplate">
+        insert into enterprise_sms_template (enter_id, sms_template_id, status)
+        values (#{enterId,jdbcType=BIGINT}, #{smsTemplateId,jdbcType=BIGINT},#{status,jdbcType=INTEGER})
+    </insert>
+
+    <select id="selectByEnterId" parameterType="java.lang.Long" resultMap="smsTemplateIds">
+        select sms_template_id from enterprise_sms_template
+        where enter_id=#{enterId}
+    </select>
+
+    <delete id="deleteByEnterId" parameterType="java.lang.Long">
+        delete from enterprise_sms_template
+        where enter_id = #{enterId,jdbcType=BIGINT}
+    </delete>
+
+    <select id="selectSmsTemplateByEnterId" parameterType="java.lang.Long" resultMap="ExtendsResultMap">
+        select est.*,
+        st.name,st.content
+        from enterprise_sms_template est
+        left join sms_template st on est.sms_template_id = st.id
+        where est.enter_id=#{enterId}
+    </select>
+
+    <update id="updateStatus">
+        update enterprise_sms_template
+        set status = #{status}
+        where enter_id = #{enterId} and sms_template_id = #{smsTemplateId}
+    </update>
+
+    <select id="getChoosedSmsTemplate" parameterType="java.lang.Long" resultMap="ExtendsResultMap">
+        select est.*,
+        st.name,st.content
+        from enterprise_sms_template est
+        left join sms_template st on est.sms_template_id = st.id
+        where est.enter_id=#{enterId} and status=1
+    </select>
+
+</mapper>

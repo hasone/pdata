@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.HistoryEnterprisesMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.HistoryEnterprises" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="request_id" property="requestId" jdbcType="BIGINT" />
+    <result column="ent_id" property="entId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+    <result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+    <result column="app_secret" property="appSecret" jdbcType="VARCHAR" />
+    <result column="ent_name" property="entName" jdbcType="VARCHAR" />
+    <result column="district_id" property="districtId" jdbcType="BIGINT" />
+    <result column="customer_type_id" property="customerTypeId" jdbcType="BIGINT" />
+    <result column="benefit_grade_id" property="benefitGradeId" jdbcType="BIGINT" />
+    <result column="discount" property="discount" jdbcType="BIGINT" />
+    <result column="business_type_id" property="businessTypeId" jdbcType="BIGINT" />
+    <result column="pay_type_id" property="payTypeId" jdbcType="BIGINT" />
+    <result column="interface_flag" property="interfaceFlag" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="app_key" property="appKey" jdbcType="VARCHAR" />
+    <result column="licence_start_time" property="licenceStartTime" jdbcType="TIMESTAMP" />
+    <result column="licence_end_time" property="licenceEndTime" jdbcType="TIMESTAMP" />
+    <result column="cm_email" property="cmEmail" jdbcType="VARCHAR" />
+    <result column="cm_phone" property="cmPhone" jdbcType="VARCHAR" />
+    <result column="fcsms_flag" property="fcsmsFlag" jdbcType="INTEGER" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="give_money_id" property="giveMoneyId" jdbcType="BIGINT" />
+    <result column="discountName" property="discountName" jdbcType="VARCHAR" />
+    <result column="giveMoneyName" property="giveMoneyName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, request_id, ent_id, name, code, phone, email, create_time, update_time, status, 
+    delete_flag, creator_id, app_secret, ent_name, district_id, customer_type_id, benefit_grade_id, 
+    discount, business_type_id, pay_type_id, interface_flag, start_time, end_time, app_key,
+    licence_start_time, licence_end_time, cm_email, cm_phone, fcsms_flag, comment, give_money_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from history_enterprises
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <!--根据请求审核id查找-->
+  <select id="selectByRequestId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from history_enterprises
+    where request_id = #{requestId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from history_enterprises
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.HistoryEnterprises" >
+    insert into history_enterprises (id, request_id, ent_id, 
+      name, code, phone, 
+      email, create_time, update_time, 
+      status, delete_flag, creator_id, 
+      app_secret, ent_name, district_id, 
+      customer_type_id, benefit_grade_id, discount, 
+      business_type_id, pay_type_id, interface_flag,
+      start_time, end_time, app_key, 
+      licence_start_time, licence_end_time, cm_email, 
+      cm_phone, fcsms_flag, comment, give_money_id)
+    values (#{id,jdbcType=BIGINT}, #{requestId,jdbcType=BIGINT}, #{entId,jdbcType=BIGINT}, 
+      #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=TINYINT}, #{deleteFlag,jdbcType=INTEGER}, #{creatorId,jdbcType=BIGINT}, 
+      #{appSecret,jdbcType=VARCHAR}, #{entName,jdbcType=VARCHAR}, #{districtId,jdbcType=BIGINT}, 
+      #{customerTypeId,jdbcType=BIGINT}, #{benefitGradeId,jdbcType=BIGINT}, #{discount,jdbcType=BIGINT}, 
+      #{businessTypeId,jdbcType=BIGINT}, #{payTypeId,jdbcType=BIGINT}, #{interfaceFlag,jdbcType=INTEGER},
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{appKey,jdbcType=VARCHAR}, 
+      #{licenceStartTime,jdbcType=TIMESTAMP}, #{licenceEndTime,jdbcType=TIMESTAMP}, #{cmEmail,jdbcType=VARCHAR}, 
+      #{cmPhone,jdbcType=VARCHAR}, #{fcsmsFlag,jdbcType=INTEGER}, #{comment,jdbcType=VARCHAR},
+      #{giveMoneyId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.HistoryEnterprises" >
+    insert into history_enterprises
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="requestId != null" >
+        request_id,
+      </if>
+      <if test="entId != null" >
+        ent_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+      <if test="creatorId != null" >
+        creator_id,
+      </if>
+      <if test="appSecret != null" >
+        app_secret,
+      </if>
+      <if test="entName != null" >
+        ent_name,
+      </if>
+      <if test="districtId != null" >
+        district_id,
+      </if>
+      <if test="customerTypeId != null" >
+        customer_type_id,
+      </if>
+      <if test="benefitGradeId != null" >
+        benefit_grade_id,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+      <if test="businessTypeId != null" >
+        business_type_id,
+      </if>
+      <if test="payTypeId != null" >
+        pay_type_id,
+      </if>
+      <if test="interfaceFlag != null" >
+        interface_flag,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="appKey != null" >
+        app_key,
+      </if>
+      <if test="licenceStartTime != null" >
+        licence_start_time,
+      </if>
+      <if test="licenceEndTime != null" >
+        licence_end_time,
+      </if>
+      <if test="cmEmail != null" >
+        cm_email,
+      </if>
+      <if test="cmPhone != null" >
+        cm_phone,
+      </if>
+      <if test="fcsmsFlag != null" >
+        fcsms_flag,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+	  <if test="giveMoneyId != null" >
+        give_money_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="requestId != null" >
+        #{requestId,jdbcType=BIGINT},
+      </if>
+      <if test="entId != null" >
+        #{entId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="appSecret != null" >
+        #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="entName != null" >
+        #{entName,jdbcType=VARCHAR},
+      </if>
+      <if test="districtId != null" >
+        #{districtId,jdbcType=BIGINT},
+      </if>
+      <if test="customerTypeId != null" >
+        #{customerTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="benefitGradeId != null" >
+        #{benefitGradeId,jdbcType=BIGINT},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=BIGINT},
+      </if>
+      <if test="businessTypeId != null" >
+        #{businessTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="payTypeId != null" >
+        #{payTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="interfaceFlag != null" >
+        #{interfaceFlag,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appKey != null" >
+        #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="licenceStartTime != null" >
+        #{licenceStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="licenceEndTime != null" >
+        #{licenceEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cmEmail != null" >
+        #{cmEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="cmPhone != null" >
+        #{cmPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="fcsmsFlag != null" >
+        #{fcsmsFlag,jdbcType=INTEGER},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+	  <if test="giveMoneyId != null" >
+        #{giveMoneyId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.HistoryEnterprises" >
+    update history_enterprises
+    <set >
+      <if test="requestId != null" >
+        request_id = #{requestId,jdbcType=BIGINT},
+      </if>
+      <if test="entId != null" >
+        ent_id = #{entId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="creatorId != null" >
+        creator_id = #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="appSecret != null" >
+        app_secret = #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="entName != null" >
+        ent_name = #{entName,jdbcType=VARCHAR},
+      </if>
+      <if test="districtId != null" >
+        district_id = #{districtId,jdbcType=BIGINT},
+      </if>
+      <if test="customerTypeId != null" >
+        customer_type_id = #{customerTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="benefitGradeId != null" >
+        benefit_grade_id = #{benefitGradeId,jdbcType=BIGINT},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=BIGINT},
+      </if>
+      <if test="businessTypeId != null" >
+        business_type_id = #{businessTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="payTypeId != null" >
+        pay_type_id = #{payTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="interfaceFlag != null" >
+        interface_flag = #{interfaceFlag,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appKey != null" >
+        app_key = #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="licenceStartTime != null" >
+        licence_start_time = #{licenceStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="licenceEndTime != null" >
+        licence_end_time = #{licenceEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cmEmail != null" >
+        cm_email = #{cmEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="cmPhone != null" >
+        cm_phone = #{cmPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="fcsmsFlag != null" >
+        fcsms_flag = #{fcsmsFlag,jdbcType=INTEGER},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="giveMoneyId != null" >
+        give_money_id = #{giveMoneyId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.HistoryEnterprises" >
+    update history_enterprises
+    set request_id = #{requestId,jdbcType=BIGINT},
+      ent_id = #{entId,jdbcType=BIGINT},
+      name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=TINYINT},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      creator_id = #{creatorId,jdbcType=BIGINT},
+      app_secret = #{appSecret,jdbcType=VARCHAR},
+      ent_name = #{entName,jdbcType=VARCHAR},
+      district_id = #{districtId,jdbcType=BIGINT},
+      customer_type_id = #{customerTypeId,jdbcType=BIGINT},
+      benefit_grade_id = #{benefitGradeId,jdbcType=BIGINT},
+      discount = #{discount,jdbcType=BIGINT},
+      business_type_id = #{businessTypeId,jdbcType=BIGINT},
+      pay_type_id = #{payTypeId,jdbcType=BIGINT},
+      interface_flag = #{interfaceFlag,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      app_key = #{appKey,jdbcType=VARCHAR},
+      licence_start_time = #{licenceStartTime,jdbcType=TIMESTAMP},
+      licence_end_time = #{licenceEndTime,jdbcType=TIMESTAMP},
+      cm_email = #{cmEmail,jdbcType=VARCHAR},
+      cm_phone = #{cmPhone,jdbcType=VARCHAR},
+      fcsms_flag = #{fcsmsFlag,jdbcType=INTEGER},
+      comment = #{comment,jdbcType=VARCHAR},
+      give_money_id = #{giveMoneyId, jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!--根据请求审核id查找-->
+  <select id="selectHistoryEnterpriseByRequestId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    	he.id, he.request_id, he.ent_id, he.name, he.code, he.phone, he.email, he.create_time, he.update_time, he.status, 
+    	he.delete_flag, he.creator_id, he.app_secret, he.ent_name, he.district_id, he.customer_type_id, he.benefit_grade_id, 
+    	he.discount, he.business_type_id, he.pay_type_id, he.interface_flag, he.start_time, he.end_time, he.app_key,
+    	he.licence_start_time, he.licence_end_time, he.cm_email, he.cm_phone, he.fcsms_flag, he.comment, he.give_money_id, 
+    	d.name as discountName, gm.name as giveMoneyName
+    from history_enterprises he
+   		left join discount d on he.discount = d.id
+   		left join give_money gm on he.give_money_id = gm.id
+    where request_id = #{requestId,jdbcType=BIGINT}
+  </select>
+  
+  <update id="updateStatusByRequestId" parameterType="com.cmcc.vrp.province.model.HistoryEnterprises" >
+    update history_enterprises
+    set 
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where request_id = #{requestId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByEntIdAndStatus" resultMap="BaseResultMap">
+    SELECT
+      <include refid="Base_Column_List"/>
+    FROM
+    history_enterprises
+    WHERE
+    delete_flag = #{status,jdbcType=INTEGER}
+    AND
+    ent_id = #{entId,jdbcType=BIGINT}
+  </select>
+</mapper>

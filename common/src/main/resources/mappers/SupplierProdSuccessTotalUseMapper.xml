@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.SupplierProdSuccessTotalUseMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.SupplierProdSuccessTotalUse" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="supplier_product_id" property="supplierProductId" jdbcType="BIGINT" />
+    <result column="total_use" property="totalUse" jdbcType="REAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, supplier_product_id, total_use, create_time, update_time, delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from supplier_prod_success_total_use
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from supplier_prod_success_total_use
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.SupplierProdSuccessTotalUse" >
+    insert into supplier_prod_success_total_use (id, supplier_product_id, total_use, 
+      create_time, update_time, delete_flag
+      )
+    values (#{id,jdbcType=BIGINT}, #{supplierProductId,jdbcType=BIGINT}, #{totalUse,jdbcType=REAL}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.SupplierProdSuccessTotalUse" >
+    insert into supplier_prod_success_total_use
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="supplierProductId != null" >
+        supplier_product_id,
+      </if>
+      <if test="totalUse != null" >
+        total_use,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="supplierProductId != null" >
+        #{supplierProductId,jdbcType=BIGINT},
+      </if>
+      <if test="totalUse != null" >
+        #{totalUse,jdbcType=REAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.SupplierProdSuccessTotalUse" >
+    update supplier_prod_success_total_use
+    <set >
+      <if test="supplierProductId != null" >
+        supplier_product_id = #{supplierProductId,jdbcType=BIGINT},
+      </if>
+      <if test="totalUse != null" >
+        total_use = #{totalUse,jdbcType=REAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.SupplierProdSuccessTotalUse" >
+    update supplier_prod_success_total_use
+    set supplier_product_id = #{supplierProductId,jdbcType=BIGINT},
+      total_use = #{totalUse,jdbcType=REAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

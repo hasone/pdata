@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.EntProductMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.EntProduct">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="enterprize_id" property="enterprizeId" jdbcType="BIGINT"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="discount" property="discount" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, product_id, enterprize_id, delete_flag, discount, create_time, update_time
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from ent_product
+        where id = #{id,jdbcType=BIGINT} and delete_flag = 0
+    </select>
+
+    <select id="selectByEnterpriseID" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from ent_product
+        where enterprize_id = #{enterprizeId,jdbcType=BIGINT} and delete_flag = 0
+    </select>
+
+    <select id="selectByProductID" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from ent_product
+        where product_id = #{productId,jdbcType=BIGINT} and delete_flag = 0
+    </select>
+
+
+    <select id="selectByProductIDAndEnterprizeID" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        ent_product.id,
+        ent_product.product_id,
+        ent_product.enterprize_id,
+        ent_product.delete_flag,
+        ent_product.discount,
+        ent_product.create_time,
+        ent_product.update_time
+        from ent_product, product
+        where ent_product.product_id = #{productId,jdbcType=BIGINT} and
+        ent_product.enterprize_id = #{enterpriseId,jdbcType=BIGINT} and ent_product.delete_flag = 0
+        and ent_product.product_id = product.id
+        and product.delete_flag = 0
+        and product.status = 1
+    </select>
+
+
+    <update id="deleteByProductID" parameterType="java.lang.Long">
+        update ent_product set delete_flag = 1
+        where product_id = #{productId,jdbcType=BIGINT}
+    </update>
+
+    <update id="deleteByEnterpriseID" parameterType="java.lang.Long">
+        update ent_product set delete_flag = 1
+        where enterprize_id = #{enterpriseId,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from ent_product
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.EntProduct">
+        insert into ent_product (id, product_id, enterprize_id,
+        delete_flag, discount, create_time,
+        update_time)
+        values (#{id,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, #{enterprizeId,jdbcType=BIGINT},
+        #{deleteFlag,jdbcType=INTEGER}, #{discount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.EntProduct">
+        insert into ent_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="productId != null">
+                product_id,
+            </if>
+            <if test="enterprizeId != null">
+                enterprize_id,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="discount != null">
+                discount,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="productId != null">
+                #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="enterprizeId != null">
+                #{enterprizeId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="discount != null">
+                #{discount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.EntProduct">
+        update ent_product
+        <set>
+            <if test="productId != null">
+                product_id = #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="enterprizeId != null">
+                enterprize_id = #{enterprizeId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="discount != null">
+                discount = #{discount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.EntProduct">
+        update ent_product
+        set product_id = #{productId,jdbcType=BIGINT},
+        enterprize_id = #{enterprizeId,jdbcType=BIGINT},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        discount = #{discount,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into ent_product (product_id,enterprize_id,delete_flag, discount, create_time,
+        update_time)
+        values
+        <foreach collection="records" item="record" separator="," index="index">
+            (#{record.productId,jdbcType=BIGINT},
+            #{record.enterprizeId,jdbcType=BIGINT},
+            #{record.deleteFlag,jdbcType=INTEGER},
+            #{record.discount,jdbcType=INTEGER},
+            #{record.createTime,jdbcType=TIMESTAMP},
+            #{record.updateTime,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+
+    <update id="updateByProIdEnterId" parameterType="com.cmcc.vrp.province.model.EntProduct">
+        update
+        ent_product
+        set
+        discount = #{discount,jdbcType=INTEGER},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where
+        product_id = #{productId,jdbcType=BIGINT} and
+        enterprize_id = #{enterprizeId,jdbcType=BIGINT} and
+        delete_flag=0
+    </update>
+
+    <update id="deleteByProIdEnterId" parameterType="com.cmcc.vrp.province.model.EntProduct">
+        update
+        ent_product
+        set
+        delete_flag = 1,
+        update_time=#{updateTime,jdbcType=TIMESTAMP}
+        where
+        enterprize_id = #{enterprizeId,jdbcType=BIGINT} and
+        product_id = #{productId,jdbcType=BIGINT} and
+        delete_flag = 0
+    </update>
+
+	<!-- 根据企业id查询企业关联的上架产品 -->
+    <select id="selectProductByEnterId" resultMap="com.cmcc.vrp.province.dao.ProductMapper.ExtendResultMap"
+            parameterType="java.lang.Long">
+        select
+        p.*,
+        ep.discount
+        from ent_product ep
+        left join product p
+        on p.id = ep.product_id
+        where ep.enterprize_id = #{enterId,jdbcType=BIGINT}
+        and ep.delete_flag = 0 and p.delete_flag = 0 and p.status=1 and p.type!=0
+    </select>
+    
+    <!-- 根据企业id查询企业关联的所有产品 -->
+    <select id="selectAllProductByEnterId" resultMap="com.cmcc.vrp.province.dao.ProductMapper.ExtendResultMap"
+            parameterType="java.lang.Long">
+        select
+        p.*,
+        ep.discount
+        from ent_product ep
+        left join product p
+        on p.id = ep.product_id
+        where ep.enterprize_id = #{enterId,jdbcType=BIGINT}
+        and ep.delete_flag = 0 and p.delete_flag = 0 and p.type!=0
+    </select>
+
+    <select id="selectProductCodeByEnterId" resultType="java.lang.String" parameterType="java.lang.Long">
+        select
+        p.product_code
+        from ent_product ep
+        left join product p
+        on p.id = ep.product_id
+        where ep.enterprize_id = #{enterId,jdbcType=BIGINT} and ep.delete_flag = 0
+        and p.status=1 and p.delete_flag=0
+    </select>
+
+    <update id="updateDiscountByEnterId">
+        update ent_product
+        set discount = #{discount,jdbcType=INTEGER}
+        where enterprize_id = #{enterId,jdbcType=BIGINT}
+        and delete_flag = 0
+    </update>
+
+    <select id="productAvailableByEnterId" parameterType="java.util.Map"
+            resultMap="com.cmcc.vrp.province.dao.ProductMapper.ExtendResultMap">
+        select
+        p.*
+        from product p
+        where p.delete_flag = 0 and p.status=1
+        and p.id not in(
+        select t2.id
+        from ent_product t1 left join product t2 on t1.product_id = t2.id
+        where t1.enterprize_id = #{enterId,jdbcType=BIGINT} and t1.delete_flag = 0 and t2.delete_flag = 0 and
+        t2.status=1
+        )
+    </select>
+    
+    <update id="batchDeleteByEnterIdAndProductId" parameterType="java.util.List">
+    	UPDATE
+			ent_product
+		SET
+			delete_flag = 1,
+			update_time = NOW()
+		WHERE
+			(delete_flag,enterprize_id,product_id) 
+			in 
+				<foreach collection="entProducts" item="item" open="(" close=")" separator=",">
+					(0, #{item.enterprizeId, jdbcType = BIGINT},#{item.productId,jdbcType=BIGINT})
+				</foreach>
+    </update>
+    
+    <update id="batchDeleteByEnterId" parameterType="java.util.List">
+    	UPDATE
+			ent_product
+		SET
+			delete_flag = 1,
+			update_time = NOW()
+		WHERE
+			delete_flag = 0 AND
+			enterprize_id IN
+			<foreach collection="productTemplateEnterpriseMaps" item="item" open="(" close=")" separator=",">
+				#{item.enterpriseId, jdbcType = BIGINT}
+			</foreach>
+    </update>
+
+    <update id="batchUpdate" parameterType="java.util.List">
+        UPDATE
+          ent_product
+        SET
+          product_id = CASE
+          <foreach collection="list" item="item" close="ELSE `product_id` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.productId, jdbcType = BIGINT}
+          </foreach>
+          ,enterprize_id = CASE
+          <foreach collection="list" item="item" close="ELSE `enterprize_id` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.enterprizeId, jdbcType = BIGINT}
+          </foreach>
+          ,delete_flag = CASE
+          <foreach collection="list" item="item" close="ELSE `delete_flag` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.deleteFlag, jdbcType = INTEGER}
+          </foreach>
+          ,discount = CASE
+          <foreach collection="list" item="item" close="ELSE `discount` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.discount, jdbcType = INTEGER}
+          </foreach>
+          ,create_time = CASE
+          <foreach collection="list" item="item" close="ELSE `create_time` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.createTime, jdbcType = TIMESTAMP}
+          </foreach>
+          ,update_time = CASE
+          <foreach collection="list" item="item" close="ELSE `update_time` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.updateTime, jdbcType = TIMESTAMP}
+          </foreach>
+        WHERE
+          id in
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item.id, jdbcType = BIGINT}
+            </foreach>
+   </update>
+
+   <select id="selectByProductIDWithoutDeleteFlag" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from ent_product
+        where product_id = #{productId,jdbcType=BIGINT}
+    </select>
+
+</mapper>

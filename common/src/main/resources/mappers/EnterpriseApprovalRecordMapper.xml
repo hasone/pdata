@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.EnterpriseApprovalRecordMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.EnterpriseApprovalRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="ent_id" property="entId" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="operator_id" property="operatorId" jdbcType="BIGINT"/>
+        <result column="operator_comment" property="operatorComment" jdbcType="VARCHAR"/>
+        <result column="serial_number" property="serialNumber" jdbcType="VARCHAR"/>
+        <result column="origin_status" property="originStatus" jdbcType="INTEGER"/>
+        <result column="new_status" property="newStatus" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="isNew" property="isnew" jdbcType="TINYINT"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="TINYINT"/>
+
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="is_cooperate" property="isCooperate" jdbcType="INTEGER"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+
+        <result column="version" property="version" jdbcType="INTEGER"/>
+
+    </resultMap>
+
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap"
+               type="com.cmcc.vrp.province.model.EnterpriseApprovalRecord">
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="cityName" property="cityName" jdbcType="VARCHAR"/>
+        <result column="districName" property="districName" jdbcType="VARCHAR"/>
+        <result column="provinceName" property="provinceName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, ent_id, type, operator_id, operator_comment, serial_number, origin_status, new_status,
+        create_time, update_time, isNew, delete_flag, description , is_cooperate, creator_id, version
+    </sql>
+
+    <select id="selectByEntId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        enterprise_approval_record
+        where
+        ent_id = #{entId,jdbcType=BIGINT}
+        and delete_flag = 0
+    </select>
+
+    <!-- 企业审核列表数量 -->
+    <select id="getApprovalEntCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select
+        count(1)
+        from
+        enterprise_approval_record t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        left join
+        district d3 on t2.district_id = d3.id
+        left join
+        district d2 on d3.parent_id=d2.id
+        left join
+        district d1 on d1.id = d2.parent_id
+        where
+        1=1
+        <if test="code != null and code != ''">
+            and t2.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and t2.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="newStatus != null and newStatus != ''">
+            and t1.new_status in
+            <foreach collection="newStatus" item="item" index="index"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="isnew != null and isnew != ''">
+            and t1.isNew = #{isnew}
+        </if>
+        <if test="districtIds != null and districtIds != ''">
+            and t2.district_id in
+            <foreach collection="districtIds" item="districtId" open="(" close=")" index="index" separator=",">
+                #{districtId,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="creatorId != null and creatorId !='' ">
+            and t1.creator_id != #{creatorId}
+        </if>
+
+        and t1.delete_flag = 0
+    </select>
+
+
+    <!-- 待审核企业列表-->
+    <select id="getApprovalEntList" resultMap="ExtendsResultMap"
+            parameterType="java.util.Map">
+
+        select
+        t1.id,
+        t1.ent_id,
+        t1.type,
+        t1.operator_id,
+        t1.operator_comment,
+        t1.serial_number,
+        t1.origin_status,
+        t1.new_status,
+        t1.create_time,
+        t1.update_time,
+        t1.isNew,
+        t1.delete_flag,
+        t1.description,
+        t1.is_cooperate,
+        t1.creator_id,
+
+        t2.name as name,
+        t2.code as code,
+
+        d3.name as districtName,
+        d2.name as cityName,
+        d1.name as provinceName
+
+        from
+        enterprise_approval_record t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        left join
+        district d3 on t2.district_id = d3.id
+        left join
+        district d2 on d3.parent_id=d2.id
+        left join
+        district d1 on d1.id = d2.parent_id
+
+        where
+        1=1
+        <if test="code != null and code != ''">
+            and t2.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and t2.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="newStatus != null and newStatus != ''">
+            and t1.new_status in
+            <foreach collection="newStatus" item="item" index="index"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="isnew != null and isnew != ''">
+            and t1.isNew = #{isnew}
+        </if>
+        <if test="districtIds != null and districtIds != ''">
+            and t2.district_id in
+            <foreach collection="districtIds" item="districtId" open="(" close=")" index="index" separator=",">
+                #{districtId,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="creatorId != null and creatorId !='' ">
+            and t1.creator_id != #{creatorId}
+        </if>
+
+        and t1.delete_flag = 0
+
+        order by
+        t1.create_time DESC,
+        t1.update_time desc
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <!-- 获取待更新记录 -->
+    <select id="getEnterpriseApprovalRecordNeedUpdate" resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+        from
+        enterprise_approval_record
+        where
+        isNew = 1 and
+        new_status = #{newStatus} and
+        ent_id = #{entId} and
+        delete_flag = 0
+
+        order by
+        create_time DESC
+    </select>
+
+    <!--客户经理 企业审核列表数量 -->
+    <select id="getApprovalEntCountForCustomerManager" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select
+        count(1)
+        from
+        enterprise_approval_record t1
+        left join enterprises t2 on t1.ent_id = t2.id
+        left join admin_manager_enter t3 on t1.ent_id = t3.enter_id
+        where
+        1=1
+        <if test="adminId != null and adminId != ''">
+            and t3.admin_id = #{adminId}
+        </if>
+        <if test="code != null and code != ''">
+            and t2.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and t2.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="newStatus != null and newStatus != ''">
+            and t1.new_status in
+            <foreach collection="newStatus" item="item" index="index"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="isnew != null and isnew != ''">
+            and t1.isNew = #{isnew}
+        </if>
+        and t1.delete_flag = 0
+    </select>
+
+
+    <!--客户经理 待审核企业列表-->
+    <select id="getApprovalEntListForCustomerManager" resultMap="ExtendsResultMap"
+            parameterType="java.util.Map">
+
+        select
+        t1.id,
+        t1.ent_id,
+        t1.type,
+        t1.operator_id,
+        t1.operator_comment,
+        t1.serial_number,
+        t1.origin_status,
+        t1.new_status,
+        t1.create_time,
+        t1.update_time,
+        t1.isNew,
+        t1.delete_flag,
+        t1.description,
+        t1.is_cooperate,
+        t1.creator_id,
+
+        t2.name as name,
+        t2.code as code,
+
+        d3.name as districtName,
+        d2.name as cityName,
+        d1.name as provinceName
+
+        from
+        enterprise_approval_record t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        left join
+        district d3 on t2.district_id = d3.id
+        left join
+        district d2 on d3.parent_id=d2.id
+        left join
+        district d1 on d1.id = d2.parent_id
+        left join admin_manager_enter t3 on t1.ent_id = t3.enter_id
+
+        where
+        1=1
+        <if test="adminId != null and adminId != ''">
+            and t3.admin_id = #{adminId}
+        </if>
+        <if test="code != null and code != ''">
+            and t2.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and t2.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="newStatus != null and newStatus != ''">
+            and t1.new_status in
+            <foreach collection="newStatus" item="item" index="index"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="isnew != null and isnew != ''">
+            and t1.isNew = #{isnew}
+        </if>
+        and t1.delete_flag = 0
+
+        order by
+        t1.create_time DESC,
+        t1.update_time desc
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <!-- 获取某个企业历史审核记录 -->
+    <select id="getHistoryRecordByEntId" resultMap="ExtendsResultMap"
+            parameterType="java.util.Map">
+        select
+        t1.id,
+        t1.ent_id,
+        t1.type,
+        t1.operator_id,
+        t1.operator_comment,
+        t1.serial_number,
+        t1.origin_status,
+        t1.new_status,
+        t1.create_time,
+        t1.update_time,
+        t1.isNew,
+        t1.delete_flag,
+        t1.description,
+        t1.is_cooperate,
+        t1.creator_id,
+
+        t2.name as name
+        from
+        enterprise_approval_record t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        where
+        t1.ent_id = #{entId}
+        and t1.delete_flag = 0
+
+        order by t1.id
+    </select>
+    <!-- 批量插入审批记录 -->
+    <insert id="insertList" parameterType="java.util.List">
+        insert into
+        enterprise_approval_record
+        (
+        ent_id,
+        type,
+        operator_id,
+        operator_comment,
+        serial_number,
+        origin_status,
+        new_status,
+        create_time,
+        update_time,
+        isNew,
+        delete_flag,
+        description,
+        is_cooperate,
+        creator_id,
+        version)
+        values
+        <foreach collection="list" item="item" separator="," index="index">
+            ( #{item.entId,jdbcType=BIGINT},
+            #{item.type,jdbcType=TINYINT},
+            #{item.operatorId,jdbcType=BIGINT},
+            #{item.operatorComment,jdbcType=VARCHAR},
+            #{item.serialNumber,jdbcType=VARCHAR},
+            #{item.originStatus,jdbcType=INTEGER},
+            #{item.newStatus,jdbcType=INTEGER},
+            #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateTime,jdbcType=TIMESTAMP},
+            #{item.isnew,jdbcType=TINYINT},
+            #{item.deleteFlag,jdbcType=TINYINT},
+            #{item.description,jdbcType=VARCHAR},
+            #{item.isCooperate,jdbcType=INTEGER},
+            #{item.creatorId,jdbcType=BIGINT},
+            #{item.version,jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 将已经处理的审批记录状态(isNew)变成0 -->
+    <update id="changeIsNewToZero" parameterType="java.lang.Long">
+        update
+        enterprise_approval_record
+        set
+        isNew = 0
+        where
+        id = #{approvalRecordId}
+    </update>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.EnterpriseApprovalRecord">
+        insert into
+        enterprise_approval_record
+        (
+        ent_id,
+        type,
+        operator_id,
+        operator_comment,
+        serial_number,
+        origin_status,
+        new_status,
+        create_time,
+        update_time,
+        isNew,
+        delete_flag,
+        description,
+        is_cooperate,
+        creator_id,
+        version
+        )
+        values
+        (
+        #{entId,jdbcType=BIGINT},
+        #{type,jdbcType=TINYINT},
+        #{operatorId,jdbcType=BIGINT},
+        #{operatorComment,jdbcType=VARCHAR},
+        #{serialNumber,jdbcType=VARCHAR},
+        #{originStatus,jdbcType=INTEGER},
+        #{newStatus,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{isnew,jdbcType=TINYINT},
+        #{deleteFlag,jdbcType=TINYINT},
+        #{description,jdbcType=VARCHAR},
+        #{isCooperate,jdbcType=INTEGER},
+        #{creatorId,jdbcType=BIGINT},
+        #{version,jdbcType=BIGINT}
+        )
+    </insert>
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from enterprise_approval_record
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据企业id获取未审核的记录 -->
+    <select id="getNeedApprovalByEntId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        enterprise_approval_record
+        where
+        ent_id = #{entId,jdbcType=BIGINT} and
+        isNew = 1 and
+        delete_flag = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from enterprise_approval_record
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+
+    <!-- 更新审批记录 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.EnterpriseApprovalRecord">
+        update
+        enterprise_approval_record
+        <set>
+            <if test="entId != null">
+                ent_id = #{entId,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="operatorId != null">
+                operator_id = #{operatorId,jdbcType=BIGINT},
+            </if>
+            <if test="operatorComment != null">
+                operator_comment = #{operatorComment,jdbcType=VARCHAR},
+            </if>
+            <if test="serialNumber != null">
+                serial_number = #{serialNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="originStatus != null">
+                origin_status = #{originStatus,jdbcType=INTEGER},
+            </if>
+            <if test="newStatus != null">
+                new_status = #{newStatus,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isnew != null">
+                isNew = #{isnew,jdbcType=TINYINT},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=TINYINT},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="isCooperate != null">
+                is_cooperate = #{isCooperate,jdbcType=INTEGER},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=BIGINT},
+            </if>
+            version = version + 1
+        </set>
+        where id = #{id,jdbcType=BIGINT} and
+        version = #{version, jdbcType = INTEGER}
+    </update>
+
+
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.EnterpriseApprovalRecord">
+        update
+        enterprise_approval_record
+        set
+        ent_id = #{entId,jdbcType=BIGINT},
+        type = #{type,jdbcType=TINYINT},
+        operator_id = #{operatorId,jdbcType=BIGINT},
+        operator_comment = #{operatorComment,jdbcType=VARCHAR},
+        serial_number = #{serialNumber,jdbcType=VARCHAR},
+        origin_status = #{originStatus,jdbcType=INTEGER},
+        new_status = #{newStatus,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        isNew = #{isnew,jdbcType=TINYINT},
+        delete_flag = #{deleteFlag,jdbcType=TINYINT},
+        version = version + 1
+        where
+        id = #{id,jdbcType=BIGINT} and
+        version = #{oldVersion, jdbcType = INTEGER}
+    </update>
+
+    <update id="updateIsNew" parameterType="java.lang.Long">
+        update enterprise_approval_record
+        set isNew = 0
+        where ent_id = #{entId,jdbcType=BIGINT} and isNew = 1
+    </update>
+
+    <!-- 将过期企业进行逻辑删除 -->
+    <update id="deleteExpireRecord" parameterType="com.cmcc.vrp.province.model.EnterpriseApprovalRecord">
+        update
+        enterprise_approval_record
+        set
+        isNew = #{isnew,jdbcType=TINYINT},
+        new_status = #{newStatus,jdbcType=INTEGER},
+        description = #{description,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where
+        id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="getEnterpriseApprovalForEntMans" resultMap="ExtendsResultMap" parameterType="java.util.Map">
+        SELECT
+        ear.id,
+        ear.ent_id,
+        ear.type,
+        ear.operator_id,
+        ear.operator_comment,
+        ear.serial_number,
+        ear.origin_status,
+        ear.new_status,
+        ear.create_time,
+        ear.update_time,
+        ear.isNew,
+        ear.delete_flag,
+        ear.description,
+        ear.is_cooperate,
+        ear.creator_id,
+
+        ent.name as name,
+        ent.code as code
+        FROM enterprise_approval_record ear
+        RIGHT JOIN enterprises ent
+        ON ear.ent_id = ent.id
+        RIGHT JOIN ent_manager entm
+        ON ent.id = entm.enter_id
+        WHERE
+        <if test="code != null and code != ''">
+            ent.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            AND ent.name LIKE CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="isnew != null and isnew != ''">
+            AND ear.isNew = #{isnew}
+        </if>
+        <if test="newStatus != null and newStatus != ''">
+            and ear.new_status in
+            <foreach collection="newStatus" item="item" index="index"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="entManagerIds != null and entManagerIds != ''">
+            and entm.manager_id in
+            <foreach collection="entManagerIds" item="item" open="(" close=")" index="index" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        and ear.delete_flag = 0
+        order by
+        ear.create_time DESC,
+        ear.update_time desc
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="getEnterpriseApprovalCountForEntMans" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(1)
+        FROM enterprise_approval_record ear
+        RIGHT JOIN enterprises ent
+        ON ear.ent_id = ent.id
+        RIGHT JOIN ent_manager entm
+        ON ent.id = entm.enter_id
+        WHERE
+        <if test="code != null and code != ''">
+            ent.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            AND ent.name LIKE CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="isnew != null and isnew != ''">
+            AND ear.isNew = #{isnew}
+        </if>
+        <if test="newStatus != null and newStatus != ''">
+            and ear.new_status in
+            <foreach collection="newStatus" item="item" index="index"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="entManagerIds != null and entManagerIds != ''">
+            and entm.manager_id in
+            <foreach collection="entManagerIds" item="item" open="(" close=")" index="index" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        and ear.delete_flag = 0
+    </select>
+
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AccountChangeApprovalRecordMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.AccountChangeApprovalRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="account_change_request_id" property="accountChangeRequestId" jdbcType="BIGINT"/>
+        <result column="operator_id" property="operatorId" jdbcType="BIGINT"/>
+        <result column="operator_comment" property="operatorComment" jdbcType="VARCHAR"/>
+        <result column="serial_num" property="serialNum" jdbcType="VARCHAR"/>
+        <result column="operator_result" property="operatorResult" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="TINYINT"/>
+        <result column="roleName" property="roleName" jdbcType="VARCHAR"/>
+        <result column="userName" property="userName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, account_change_request_id, operator_id, operator_comment, serial_num, operator_result,
+        create_time, update_time, delete_flag
+    </sql>
+
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        account_change_approval_record
+        where
+        id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.AccountChangeApprovalRecord"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into account_change_approval_record (
+        account_change_request_id, operator_id,
+        operator_comment, serial_num, operator_result,
+        create_time, update_time, delete_flag)
+        values (#{accountChangeRequestId,jdbcType=BIGINT},
+        #{operatorId,jdbcType=BIGINT},
+        #{operatorComment,jdbcType=VARCHAR},
+        #{serialNum,jdbcType=VARCHAR},
+        #{operatorResult,jdbcType=INTEGER},
+        NOW(),
+        NOW(),
+        #{deleteFlag,jdbcType=TINYINT})
+    </insert>
+
+    <select id="getByRequestId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        acar.*,a.user_name as userName,r.name as roleName
+        FROM
+        account_change_approval_record acar
+        left join administer a on a.id=acar.operator_id
+        left join admin_manager am on am.admin_id = acar.operator_id
+        left join manager m on m.id = am.admin_id
+        left join role r on r.role_id = m.role_id
+        WHERE
+        acar.account_change_request_id = #{requestId, jdbcType = BIGINT}
+    </select>
+</mapper>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.MdrcMakecardRequestConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.MdrcMakecardRequestConfig" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="config_id" property="configId" jdbcType="BIGINT" />
+    <result column="request_id" property="requestId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap type="com.cmcc.vrp.province.model.MdrcMakecardRequestConfig" extends="BaseResultMap" id="ExtendedResultMap">
+  	<result column="fileName" property="fileName" jdbcType="VARCHAR" />
+  	<result column="cardmakeStatus" property="cardmakeStatus" jdbcType="INTEGER" />
+  	
+  	<result column="mdrcCardmakeDetailId" property="mdrcCardmakeDetailId" jdbcType="BIGINT" />
+    <result column="cardmakerId" property="cardmakerId" jdbcType="BIGINT" />
+    <result column="templateId" property="templateId" jdbcType="BIGINT" />
+    <result column="amount" property="amount" jdbcType="BIGINT" />
+    <result column="startTime" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="enterpriseId" property="enterpriseId" jdbcType="BIGINT"/>
+    <result column="productId" property="productId" jdbcType="BIGINT"/>
+    <result column="configInfoId" property="configInfoId" jdbcType="BIGINT"/>
+    
+    <result column="trackingNumber" property="trackingNumber" jdbcType="VARCHAR"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, config_id, request_id, create_time, delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from mdrc_makecard_request_config
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByRequestId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from mdrc_makecard_request_config
+    where request_id = #{requestId,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectByConfigId" resultMap="ExtendedResultMap" parameterType="java.lang.Long" >
+    select
+    	t1.id, 
+    	t1.config_id, 
+    	t1.request_id, 
+    	t1.create_time, 
+    	t1.delete_flag,
+    	t2.file_name as fileName,
+    	t2.cardmake_status as cardmakeStatus,
+    	
+    	t2.id as mdrcCardmakeDetailId,
+    	t2.cardmaker_id as cardmakerId,
+    	t2.template_id as templateId,
+    	t2.amount as amount,
+    	t2.start_time as startTime,
+    	t2.end_time as endTime,
+    	t2.enterprise_id as enterpriseId,
+    	t2.product_id as productId,
+    	t2.config_info_id as configInfoId,
+    	t2.tracking_number as trackingNumber
+    from 
+    	mdrc_makecard_request_config t1
+    left join 
+    	mdrc_cardmake_detail t2 on t2.request_id = t1.request_id
+    where t1.config_id = #{configId,jdbcType=BIGINT} and t1.delete_flag = 0
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from mdrc_makecard_request_config
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.MdrcMakecardRequestConfig" >
+    insert into mdrc_makecard_request_config (id, config_id, request_id, 
+      create_time, delete_flag)
+    values (#{id,jdbcType=BIGINT}, #{configId,jdbcType=BIGINT}, #{requestId,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.MdrcMakecardRequestConfig" >
+    insert into mdrc_makecard_request_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="configId != null" >
+        config_id,
+      </if>
+      <if test="requestId != null" >
+        request_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="configId != null" >
+        #{configId,jdbcType=BIGINT},
+      </if>
+      <if test="requestId != null" >
+        #{requestId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.MdrcMakecardRequestConfig" >
+    update mdrc_makecard_request_config
+    <set >
+      <if test="configId != null" >
+        config_id = #{configId,jdbcType=BIGINT},
+      </if>
+      <if test="requestId != null" >
+        request_id = #{requestId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.MdrcMakecardRequestConfig" >
+    update mdrc_makecard_request_config
+    set config_id = #{configId,jdbcType=BIGINT},
+      request_id = #{requestId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

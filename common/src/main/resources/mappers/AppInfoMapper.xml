@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AppInfoMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.AppInfo">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT"/>
+        <result column="enterprise_code" property="enterpriseCode" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="enterprise_name" property="enterpriseName" jdbcType="VARCHAR"/>
+        <result column="app_key" property="appKey" jdbcType="VARCHAR"/>
+        <result column="app_secret" property="appSecret" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, enterprise_id, enterprise_code, name, app_key, app_secret, status, create_time,
+        update_time, delete_flag, version
+    </sql>
+
+    <select id="selectByAppId" resultMap="BaseResultMap"
+            parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from app_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByEnterpriseId" resultMap="BaseResultMap"
+            parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from app_info
+        where enterprise_id = #{enterpriseId,jdbcType=BIGINT}
+        order by create_time desc, update_time DESC
+    </select>
+
+    <select id="selectByAppKey" resultMap="BaseResultMap"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from app_info
+        where app_key = #{appKey,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByEnterpriseCode" resultMap="BaseResultMap"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from app_info
+        where app_key = #{appKey,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByQuery" resultMap="BaseResultMap"
+            parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from app_info
+        <where>
+            <if test="enterpriseId != null">
+                AND enterprise_id = #{enterpriseId,jdbcType=BIGINT}
+            </if>
+            <if test="appKey != null">
+                AND app_key = #{appKey,jdbcType=VARCHAR}
+            </if>
+            <if test="appSecret != null">
+                AND app_secret = #{appSecret,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null">
+                AND status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateTime != null">
+                AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="deleteFlag != null">
+                AND delete_flag = #{deleteFlag,jdbcType=INTEGER}
+            </if>
+        </where>
+        ORDER BY app_key ASC
+    </select>
+
+    <delete id="deleteByEnterpriseId" parameterType="java.lang.Long">
+        delete from
+        app_info
+        where enterprise_id = #{enterpriseId,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.AppInfo">
+        insert into app_info (name, enterprise_id, enterprise_code, app_key, app_secret,
+        status, create_time, update_time, delete_flag)
+        values (#{name,jdbcType=VARCHAR}, #{enterpriseId,jdbcType=BIGINT}, #{enterpriseCode,jdbcType=VARCHAR},
+        #{appKey,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR},
+        #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=INTEGER})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.AppInfo">
+        insert into app_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="enterpriseId != null">
+                enterprise_id,
+            </if>
+
+            <if test="name != null">
+                name,
+            </if>
+
+            <if test="appKey != null">
+                app_key,
+            </if>
+            <if test="appSecret != null">
+                app_secret,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="enterpriseId != null">
+                #{enterpriseId,jdbcType=BIGINT},
+            </if>
+
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+
+            <if test="appKey != null">
+                #{appKey,jdbcType=VARCHAR},
+            </if>
+            <if test="appSecret != null">
+                #{appSecret,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.AppInfo">
+        update app_info
+        set enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+        enterprise_code = #{enterpriseCode,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        app_key = #{appKey,jdbcType=VARCHAR},
+        app_secret = #{appSecret,jdbcType=VARCHAR},
+        status = #{status,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        version = version + 1
+        where enterprise_id = #{enterpriseId,jdbcType=BIGINT} AND version = #{version,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByAppKey" parameterType="com.cmcc.vrp.province.model.AppInfo">
+        update app_info
+        set enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+        enterprise_code = #{enterpriseCode,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        app_key = #{appKey,jdbcType=VARCHAR},
+        app_secret = #{appSecret,jdbcType=VARCHAR},
+        status = #{status,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        version = version + 1
+        where app_key = #{appKey,jdbcType=BIGINT} AND version = #{version,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByAppId" parameterType="com.cmcc.vrp.province.model.AppInfo">
+        update app_info
+        set enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+        name = #{name,jdbcType=VARCHAR},
+        enterprise_code = #{enterpriseCode,jdbcType=VARCHAR},
+        app_key = #{appKey,jdbcType=VARCHAR},
+        app_secret = #{appSecret,jdbcType=VARCHAR},
+        status = #{status,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        version = version + 1
+        where id = #{id,jdbcType=INTEGER} AND version = #{version,jdbcType=INTEGER}
+    </update>
+
+
+    <select id="queryEnterpriseAppIdCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        SELECT COUNT(app_key) FROM app_info t
+        <where>
+            <if test="enterpriseId != null">
+                AND t.enterprise_id = #{enterpriseId,jdbcType=BIGINT}
+            </if>
+            <if test="1==1">
+                AND t.delete_flag = 0
+            </if>
+        </where>
+    </select>
+
+
+    <select id="showAppInfoForPageResult" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from app_info a
+        where
+        delete_flag = 0<!-- 查询未删除的数据 -->
+
+        order by
+        a.create_time DESC,
+        a.update_time desc
+        LIMIT
+        #{pageNum},#{pageSize}
+
+
+    </select>
+
+
+    <select id="showAppInfoForPageResultCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select
+        count(1)
+        from
+        app_info
+        where delete_flag = 0<!-- 查询未删除的数据 -->
+    </select>
+
+
+    <select id="showAppInfoForPage" parameterType="com.cmcc.vrp.province.model.AppInfo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from app_info
+        where
+        delete_flag = 0<!-- 查询未删除的数据 -->
+
+        order by create_time desc, update_time DESC
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from app_info where delete_flag=0 and status = 1
+    </select>
+
+    <!--
+    <select id="QueryAppInfoPages" resultMap="BaseResultMap" parameterType="java.util.Map">
+      select
+          a.id, a.enterprise_id, a.name, u.enterprise_name, a.app_key, a.app_secret, a.status, a.create_time,
+          a.update_time, a.delete_flag
+
+        from app_info a,unionflow_enterprises u
+        where
+            a.delete_flag = 0
+
+            and a.enterprise_id = u.id
+
+        <if test="enterpriseId != null">
+                  AND enterprise_id = #{enterpriseId,jdbcType=BIGINT}
+      </if>
+
+        order by a.create_time DESC, a.update_time desc
+        LIMIT #{index,jdbcType=BIGINT}, #{pageSize,jdbcType=BIGINT}
+    </select> -->
+
+
+    <select id="queryAppInfoCount" resultType="int" parameterType="java.util.Map">
+        select
+        count(0)
+        from app_info
+        where
+        delete_flag = 0<!-- 查询未删除的数据 -->
+        <if test="enterpriseId != null">
+            AND enterprise_id = #{enterpriseId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <update id="updateAppDeletFlag" parameterType="java.lang.Long">
+        update app_info set delete_flag=1
+        where enterprise_id=#{enterpriseId,jdbcType=BIGINT}
+    </update>
+
+    <update id="deleteAppByEnterpriseCode" parameterType="java.lang.String">
+        delete from app_info
+        where enterprise_code=#{code,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

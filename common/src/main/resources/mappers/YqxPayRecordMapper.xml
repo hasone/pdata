@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.YqxPayRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.YqxPayRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_serial_num" property="orderSerialNum" jdbcType="VARCHAR" />
+    <result column="pay_order_id" property="payOrderId" jdbcType="VARCHAR" />
+    <result column="pay_transaction_id" property="payTransactionId" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="INTEGER" />
+    <result column="status_info" property="statusInfo" jdbcType="VARCHAR" />
+    <result column="done_code" property="doneCode" jdbcType="VARCHAR" />
+    <result column="result_return_time" property="resultReturnTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="reconcile_status" property="reconcileStatus" jdbcType="INTEGER" />
+    <result column="reconcile_msg" property="reconcileMsg" jdbcType="VARCHAR" />
+    <result column="charge_status" property="chargeStatus" jdbcType="INTEGER" />
+    <result column="charge_time" property="chargeTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_serial_num, pay_order_id, pay_transaction_id, pay_type, status, status_info, done_code, 
+    result_return_time, create_time, update_time, reconcile_status, reconcile_msg, charge_status, charge_time
+  </sql>
+  
+  <resultMap id="ExtendResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.YqxPayRecord" >    
+    <result column="charge_msg" property="chargeMsg" jdbcType="VARCHAR" />
+    <result column="pay_price" property="payPrice" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <resultMap id="BaseReconcileMap" type="com.cmcc.vrp.province.model.YqxPayReconcileRecord" >
+    <result column="orderSerialNum" property="orderSerialNum" jdbcType="VARCHAR" />
+    <result column="paySerialNum" property="paySerialNum" jdbcType="VARCHAR" />
+    <result column="payTransactionId" property="payTransactionId" jdbcType="VARCHAR" />
+    <result column="doneCode" property="doneCode" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="prdName" property="prdName" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="BIGINT" />
+    <result column="payStatus" property="payStatus" jdbcType="INTEGER" />
+    <result column="reconcileStatus" property="reconcileStatus" jdbcType="INTEGER" />
+    <result column="reconcileMsg" property="reconcileMsg" jdbcType="VARCHAR" />
+    <result column="payCreateTime" property="payCreateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from yqx_pay_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.YqxPayRecord" >
+    insert into yqx_pay_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderSerialNum != null" >
+        order_serial_num,
+      </if>
+      <if test="payOrderId != null" >
+        pay_order_id,
+      </if>
+      <if test="payTransactionId != null" >
+        pay_transaction_id,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="statusInfo != null" >
+        status_info,
+      </if>
+      <if test="doneCode != null" >
+        done_code,
+      </if>
+      <if test="resultReturnTime != null" >
+        result_return_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="reconcileStatus != null" >
+        reconcile_status,
+      </if>
+      <if test="reconcileMsg != null" >
+        reconcile_msg,
+      </if>
+      <if test="chargeStatus != null" >
+        charge_status,
+      </if>
+      <if test="chargeTime != null" >
+        charge_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderSerialNum != null" >
+        #{orderSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="payOrderId != null" >
+        #{payOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="payTransactionId != null" >
+        #{payTransactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="statusInfo != null" >
+        #{statusInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="doneCode != null" >
+        #{doneCode,jdbcType=VARCHAR},
+      </if>
+      <if test="resultReturnTime != null" >
+        #{resultReturnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reconcileStatus != null" >
+        #{reconcileStatus,jdbcType=INTEGER},
+      </if>
+      <if test="reconcileMsg != null" >
+        #{reconcileMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeStatus != null" >
+        #{chargeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="chargeTime != null" >
+        #{chargeTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.YqxPayRecord" >
+    update yqx_pay_record
+    <set >
+      <if test="orderSerialNum != null" >
+        order_serial_num = #{orderSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="payOrderId != null" >
+        pay_order_id = #{payOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="payTransactionId != null" >
+        pay_transaction_id = #{payTransactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="statusInfo != null" >
+        status_info = #{statusInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="doneCode != null" >
+        done_code = #{doneCode,jdbcType=VARCHAR},
+      </if>
+      <if test="resultReturnTime != null" >
+        result_return_time = #{resultReturnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reconcileStatus != null" >
+        reconcile_status = #{reconcileStatus,jdbcType=INTEGER},
+      </if>
+      <if test="reconcileMsg != null" >
+        reconcile_msg = #{reconcileMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeStatus != null" >
+        charge_status = #{chargeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="chargeTime != null" >
+        charge_time = #{chargeTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByOrderSerialNum" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+         from yqx_pay_record
+        where
+        order_serial_num = #{orderSerialNum, jdbcType=VARCHAR} 
+        order by update_time desc
+   </select>
+   
+   <select id="selectByPayIds" resultMap="BaseResultMap">
+       select
+       <include refid="Base_Column_List"/>
+        from yqx_pay_record
+       where
+       pay_order_id = #{orderId, jdbcType=VARCHAR}  and
+       pay_transaction_id = #{transactionId,jdbcType=VARCHAR}
+   </select>
+    
+   <select id="selectNewestSuccessRecord" resultMap="BaseResultMap">
+       select
+       <include refid="Base_Column_List"/>
+        from yqx_pay_record
+       where
+       order_serial_num = #{orderSerialNum, jdbcType=VARCHAR} and status=0
+       order by create_time desc
+       limit 0,1
+   </select> 
+   
+   <select id="selectByTransactionId" resultMap="BaseResultMap">
+       select
+       <include refid="Base_Column_List"/>
+        from yqx_pay_record
+       where
+       pay_transaction_id = #{transactionId,jdbcType=VARCHAR}
+   </select> 
+
+   <select id="selectByDoneCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+         from yqx_pay_record
+        where
+        done_code = #{doneCode, jdbcType=VARCHAR} 
+        order by update_time desc
+   </select>
+
+   <select id="selectRepeatPayByMap" resultMap="ExtendResultMap" parameterType="java.util.Map" >
+    select 
+     r.id, r.order_serial_num, r.pay_order_id, r.pay_transaction_id, r.pay_type, r.status, r.status_info, r.done_code, 
+     r.result_return_time, r.create_time, r.update_time, r.charge_status as chargeStatus, r.charge_time as chargeTime, i.err_msg as chargeMsg
+    from yqx_pay_record r
+    left join yqx_order_record o on o.serial_num = r.order_serial_num
+    left join interface_record i on i.serial_num = r.pay_transaction_id
+    where r.status = 0
+    and o.serial_num in (select order_serial_num from yqx_pay_record where status =0 GROUP BY order_serial_num
+    having count(*)>1)
+    <if test="orderSerialNum != null and orderSerialNum != ''">
+      and r.order_serial_num = #{orderSerialNum, jdbcType=VARCHAR}
+    </if>
+    <if test="startTime != null and startTime != ''">
+      and o.create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and o.create_time &lt;= #{endTime}
+    </if>
+    ORDER BY  o.create_time DESC   
+    <if test="pageNum != null and pageSize != null">
+      LIMIT
+      #{pageNum},#{pageSize}  
+    </if>    
+  </select>
+
+  <select id="countRepeatPayByMap" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+     count(*)
+    from yqx_pay_record r
+    left join yqx_order_record o on o.serial_num = r.order_serial_num
+    where r.status = 0
+    and o.serial_num in (select order_serial_num from yqx_pay_record where status =0 GROUP BY order_serial_num
+    having count(*)>1)
+    <if test="orderSerialNum != null and orderSerialNum != ''">
+      and r.order_serial_num = #{orderSerialNum, jdbcType=VARCHAR}
+    </if>
+    <if test="startTime != null and startTime != ''">
+      and o.create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and o.create_time &lt;= #{endTime}
+    </if>
+  </select>
+  
+  <select id="selectByMap" resultMap="ExtendResultMap" parameterType="java.util.Map" >
+    select 
+     r.id, r.order_serial_num, r.pay_order_id, r.pay_transaction_id, r.pay_type, r.status, r.status_info, r.done_code, 
+     r.result_return_time, r.create_time, r.update_time, r.charge_status as chargeStatus, r.charge_time as chargeTime, 
+     i.err_msg as chargeMsg, o.pay_price as payPrice
+    from yqx_pay_record r
+    left join yqx_order_record o on o.serial_num = r.order_serial_num
+    left join interface_record i on i.serial_num = r.pay_transaction_id
+    where 1=1
+    <if test="orderSerialNum != null and orderSerialNum != ''">
+      and r.order_serial_num = #{orderSerialNum, jdbcType=VARCHAR}
+    </if>
+    <if test="startTime != null and startTime != ''">
+      and o.create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and o.create_time &lt;= #{endTime}
+    </if>
+    ORDER BY  o.create_time DESC   
+    <if test="pageNum != null and pageSize != null">
+      LIMIT
+      #{pageNum},#{pageSize}  
+    </if>    
+  </select>
+  
+  <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+     count(*)
+    from yqx_pay_record r
+    left join yqx_order_record o on o.serial_num = r.order_serial_num
+    where 1=1
+    <if test="orderSerialNum != null and orderSerialNum != ''">
+      and r.order_serial_num = #{orderSerialNum, jdbcType=VARCHAR}
+    </if>
+    <if test="startTime != null and startTime != ''">
+      and o.create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and o.create_time &lt;= #{endTime}
+    </if>
+  </select>
+  
+  
+   <select id="reconcileRecords" resultMap="BaseReconcileMap" parameterType="java.util.Map" >
+    select 
+        yo.serial_num as orderSerialNum,
+        yp.pay_order_id as paySerialNum,
+        yp.pay_transaction_id as payTransactionId,
+        yp.done_code as doneCode,
+        yo.mobile as mobile,ip.name as prdName,
+        yo.pay_price as price,yp.status as payStatus,
+        yp.reconcile_status as reconcileStatus,
+        yp.reconcile_msg as reconcileMsg,
+        yp.create_time as payCreateTime
+    from yqx_order_record yo 
+    inner JOIN yqx_pay_record yp on yp.order_serial_num = yo.serial_num 
+    LEFT JOIN individual_product ip on ip.id = yo.individual_product_id
+    where 1=1
+    <if test="orderSerialNum != null and orderSerialNum != ''">
+      and yo.serial_num = #{orderSerialNum, jdbcType=VARCHAR}
+    </if>
+    <if test="mobile != null and mobile != ''">
+      and yo.mobile = #{mobile, jdbcType=VARCHAR}
+    </if>
+    <if test="reconcileStatus != null and reconcileStatus != ''">
+      and yp.reconcile_status = #{reconcileStatus}
+    </if>
+    <if test="orderTime != null and orderTime != ''">
+      and yp.reconcile_status = #{reconcileStatus}
+    </if>
+     <if test="startTime != null and startTime != ''">
+      and yp.create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and yp.create_time &lt;= #{endTime}
+    </if>
+    ORDER BY  yo.create_time DESC   
+    <if test="pageNum != null and pageSize != null">
+      LIMIT
+      #{pageNum},#{pageSize}  
+    </if>    
+  </select>
+  
+  <select id="reconcileCount" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+        count(*)
+    from yqx_order_record yo 
+    inner JOIN yqx_pay_record yp on yp.order_serial_num = yo.serial_num 
+    LEFT JOIN individual_product ip on ip.id = yo.individual_product_id
+     where 1=1
+    <if test="orderSerialNum != null and orderSerialNum != ''">
+      and yo.serial_num = #{orderSerialNum, jdbcType=VARCHAR}
+    </if>
+    <if test="mobile != null and mobile != ''">
+      and yo.mobile = #{mobile, jdbcType=VARCHAR}
+    </if>
+    <if test="reconcileStatus != null and reconcileStatus != ''">
+      and yp.reconcile_status = #{reconcileStatus}
+    </if>
+    <if test="startTime != null and startTime != ''">
+      and yp.create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and yp.create_time &lt;= #{endTime}
+    </if>
+  </select>
+  
+  <select id="reconcileRangeTime" resultMap="ExtendResultMap" parameterType="java.util.Map" >
+    select 
+     r.id, r.order_serial_num, r.pay_order_id, r.pay_transaction_id, r.pay_type, r.status, r.status_info, r.done_code, 
+     r.result_return_time, r.create_time, r.update_time, r.reconcile_status, r.reconcile_msg,o.pay_price
+    from yqx_pay_record r
+    left join yqx_order_record o on o.serial_num = r.order_serial_num
+    where 1=1
+    <if test="startTime != null">
+            AND r.update_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND r.update_time &lt;= #{endTime}
+        </if>
+  </select>
+  
+  <update id="updateReconcileInfo" parameterType="com.cmcc.vrp.province.model.YqxPayRecord" >
+    update yqx_pay_record
+    <set>
+       <if test="needChangeDbStatus">
+           status = #{status,jdbcType=INTEGER},
+           done_code = #{doneCode,jdbcType=VARCHAR},
+           result_return_time = NOW(),
+       </if>
+       <if test="reconcileStatus != null" >
+        reconcile_status = #{reconcileStatus,jdbcType=INTEGER},
+       </if>
+       <if test="reconcileMsg != null" >
+        reconcile_msg = #{reconcileMsg,jdbcType=VARCHAR},
+       </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}  
+  </update>
+  
+  <update id="updateChargeStatus">
+    update yqx_pay_record
+    <set>        
+       <if test="chargeTime != null" >
+           charge_time = #{chargeTime,jdbcType=TIMESTAMP},
+       </if>
+       charge_status = #{chargeStatus, jdbcType=INTEGER}
+    </set>
+    where pay_transaction_id = #{payTransactionId, jdbcType=VARCHAR}  
+    and (charge_status is null or (charge_status is not null and charge_status &lt; #{chargeStatus, jdbcType=INTEGER}))
+  </update>
+ 
+</mapper>

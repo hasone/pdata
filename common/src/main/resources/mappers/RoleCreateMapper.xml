@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.RoleCreateMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.RoleCreate">
+        <result column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="create_role_id" property="createRoleId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="RoleMap" type="com.cmcc.vrp.province.model.Role">
+        <result column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="roleIds" type="java.lang.Long">
+        <result column="create_role_id" property="roleId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.RoleCreate">
+        insert into role_create (role_id, create_role_id)
+        values (#{roleId,jdbcType=BIGINT}, #{createRoleId,jdbcType=BIGINT})
+    </insert>
+
+    <select id="getCreateRolesByRoleId" parameterType="java.lang.Long" resultMap="RoleMap">
+        select
+        r.role_id, r.name
+        from role_create rc
+        left join role r on rc.create_role_id = r.role_id
+        where rc.role_id = #{roleId,jdbcType=BIGINT}
+        and r.delete_flag = 0
+
+    </select>
+
+    <!--查询该角色可以创建的角色id -->
+    <select id="selectRoleIdsCreateByRoleId" parameterType="java.lang.Long"
+            resultMap="roleIds">
+        select create_role_id from role_create
+        where role_id=#{roleId}
+    </select>
+
+    <select id="select" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select role_id, create_role_id from role_create t
+        <where>
+            <if test="roleId != null">
+                AND t.role_id = #{roleId,jdbcType=BIGINT}
+            </if>
+            <if test="createRoleId != null">
+                AND t.create_role_id = #{createRoleId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteRoleCreateByRoleId" parameterType="com.cmcc.vrp.province.model.RoleCreate">
+        delete from role_create
+        where role_id = #{roleId,jdbcType=BIGINT}
+        and create_role_id = #{createRoleId,jdbcType=BIGINT}
+    </delete>
+
+</mapper>

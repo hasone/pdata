@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AccountRecordMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.AccountRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="owner_id" property="ownerId" jdbcType="BIGINT"/>
+        <result column="account_id" property="accountId" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="serial_num" property="serialNum" jdbcType="VARCHAR"/>
+        <result column="count" property="count" jdbcType="REAL"/>
+        <result column="app_key" property="appKey" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, enter_id, owner_id, account_id, `type`, serial_num, `count`, app_key, description, create_time,
+        update_time, delete_flag
+    </sql>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.AccountRecord"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into account_record (enter_id, owner_id, account_id, `type`,
+        serial_num, `count`, app_key,description, create_time, update_time,delete_flag)
+        values (#{enterId,jdbcType=BIGINT},
+        #{ownerId, jdbcType=BIGINT},
+        #{accountId, jdbcType=BIGINT},
+        #{type,jdbcType=TINYINT},
+        #{serialNum,jdbcType=VARCHAR},
+        #{count,jdbcType=REAL},
+        #{appKey,jdbcType=VARCHAR},
+        #{description,jdbcType=VARCHAR},
+        NOW(),
+        NOW(),
+        #{deleteFlag,jdbcType=TINYINT})
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into account_record (enter_id, owner_id, account_id, `type`,
+        serial_num, `count`, app_key,description, create_time, update_time,delete_flag)
+        values
+        <foreach collection="records" item="record" separator="," index="index">
+            (#{record.enterId,jdbcType=BIGINT},
+            #{record.ownerId, jdbcType=BIGINT},
+            #{record.accountId, jdbcType=BIGINT},
+            #{record.type,jdbcType=TINYINT},
+            #{record.serialNum,jdbcType=VARCHAR},
+            #{record.count,jdbcType=REAL},
+            #{record.appKey,jdbcType=VARCHAR},
+            #{record.description,jdbcType=VARCHAR},
+            NOW(),
+            NOW(),
+            #{record.deleteFlag,jdbcType=TINYINT})
+        </foreach>
+    </insert>
+
+    <select id="getByOwnerId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        account_record
+        where
+        owner_id = #{ownerId, jdbcType=BIGINT}
+    </select>
+
+    <select id="getByEnterId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        account_record
+        where
+        enter_id = #{enterId, jdbcType=BIGINT}
+    </select>
+
+    <select id="selectBySerialNumAndEnterId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        account_record
+        where
+        serial_num = #{serialNum, jdbcType=VARCHAR}
+        and enter_id = #{enterId, jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据系统流水号获取相应的出账记录 -->
+    <select id="getOutgoingRecordByPltSn" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List"/>
+        from
+          account_record
+        where
+          serial_num = #{serialNum, jdbcType=VARCHAR} and
+          `type` = 1
+    </select>
+</mapper>

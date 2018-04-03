@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+    <context:component-scan base-package="com.cmcc.vrp, com.cmcc.webservice">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <context:annotation-config/>
+
+    <!-- jdbc conf -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:/etc/pdata/conf/props/jdbc.properties</value>
+                <value>file:/etc/pdata/conf/props/redis.properties</value>
+                <value>file:/etc/pdata/conf/props/common.properties</value>
+                <value>file:/etc/pdata/conf/props/queue.properties</value>
+            </list>
+        </property>
+        <property name="fileEncoding" value="UTF-8"/>
+        <property name="placeholderPrefix" value="@{"/>
+    </bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+
+    <!-- import datasource -->
+    <import resource="classpath:conf/datasource.xml"/>
+
+    <!-- import quartz -->
+    <import resource="classpath:conf/quartz-beans.xml"/>
+
+    <!-- redis  -->
+    <import resource="classpath:conf/redis.xml"/>
+
+    <!-- boss -->
+    <import resource="file:/etc/pdata/conf/beans.xml"/>
+
+    <!-- RMQ -->
+    <import resource="queue.xml"/>
+
+    <!-- 读取多个配置文件  -->
+    <bean id="settings"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>file:/etc/pdata/conf/props/redis.properties</value>
+                <value>file:/etc/pdata/conf/props/common.properties</value>
+                <value>file:/etc/pdata/conf/props/boss.properties</value>
+                <value>file:/etc/pdata/conf/props/msg.properties</value>
+                <value>file:/etc/pdata/conf/props/queue.properties</value>
+            </list>
+        </property>
+
+        <property name="fileEncoding" value="utf-8"/>
+    </bean>
+
+    <bean id="gson" class="com.google.gson.Gson"/>
+
+    <bean id="entProductService" class="com.cmcc.vrp.province.service.impl.EntProductServiceImpl"/>
+
+    <!-- 广东流量卡请求工厂类 -->
+    <bean id="adcSiRequestFactory" class="com.cmcc.vrp.boss.guangdongcard.AdcSiRequestFactory"/>
+
+    <bean id="propertyConfigurer" class="com.cmcc.vrp.queue.utils.PorpertiesConfigurer">
+        <property name="location">
+            <value>file:/etc/pdata/conf/props/queue.properties</value>
+        </property>
+    </bean>
+    
+    <!-- savagechen11 add spring session -->
+    <bean class="com.cmcc.vrp.province.security.MySessionListener" />
+    
+</beans>

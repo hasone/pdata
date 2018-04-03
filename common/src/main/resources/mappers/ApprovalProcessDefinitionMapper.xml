@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ApprovalProcessDefinitionMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ApprovalProcessDefinition">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="origin_role_id" property="originRoleId" jdbcType="BIGINT"/>
+        <result column="stage" property="stage" jdbcType="INTEGER"/>
+        <result column="target_status" property="targetStatus" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="msg" property="msg" jdbcType="INTEGER"/>
+        <result column="recvmsg" property="recvmsg" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="ExtendedResultMap" extends="BaseResultMap"
+               type="com.cmcc.vrp.province.model.ApprovalProcessDefinition">
+        <result column="roleName" property="roleName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, origin_role_id, stage, target_status, create_time, update_time, delete_flag,
+        type,msg,recvmsg
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        approval_process_definition
+        where
+        id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 逻辑删除 -->
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update
+        approval_process_definition
+        set
+        delete_flag = 1
+        where
+        id = #{id,jdbcType=BIGINT} and delete_flag=0
+    </update>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ApprovalProcessDefinition"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into
+        approval_process_definition
+        (
+        id,
+        origin_role_id,
+        stage,
+        target_status,
+        create_time,
+        update_time,
+        delete_flag,
+        type,
+        msg,
+        recvmsg
+        )
+        values
+        (
+        #{id,jdbcType=BIGINT},
+        #{originRoleId,jdbcType=BIGINT},
+        #{stage,jdbcType=INTEGER},
+        #{targetStatus,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=INTEGER},
+        #{type,jdbcType=INTEGER},
+        #{msg,jdbcType=INTEGER},
+        #{recvmsg,jdbcType=INTEGER}
+        )
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ApprovalProcessDefinition">
+        update
+        approval_process_definition
+        set
+        origin_role_id = #{originRoleId,jdbcType=BIGINT},
+        update_time = NOW()
+        where
+        id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="countApprovalProcess" resultType="int" parameterType="java.util.Map">
+        SELECT
+        count(*)
+        FROM
+        approval_process_definition
+        WHERE
+        delete_flag = 0
+        ORDER BY
+        create_time DESC,
+        update_time DESC
+        limit
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="queryApprovalProcessList" parameterType="java.util.Map"
+            resultMap="ExtendedResultMap">
+        select
+        t1.*,
+        t2.name as roleName
+        from
+        approval_process_definition t1
+        left join
+        role t2 on t2.role_id=t1.origin_role_id
+        where
+        t1.delete_flag = 0
+        order by
+        t1.create_time desc,
+        t1.update_time desc
+        limit
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="getApprovalProcessById" resultMap="ExtendedResultMap" parameterType="java.lang.Long">
+        select
+        t1.*,
+        t2.name as roleName
+        from
+        approval_process_definition t1
+        left join
+        role t2 on t2.role_id=t1.origin_role_id
+        where
+        t1.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        approval_process_definition
+        where
+        type = #{type,jdbcType=INTEGER} and
+        delete_flag =0
+    </select>
+
+    <select id="selectApprovalProcessesByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        approval_process_definition
+        where
+        type = #{type,jdbcType=INTEGER}
+    </select>
+
+</mapper>

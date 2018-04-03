@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ShBossProductMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ShBossProduct">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="supplier_product_id" property="supplierProductId" jdbcType="BIGINT"/>
+        <result column="supplier_product_price" property="supplierProductPrice" jdbcType="INTEGER"/>
+        <result column="supplier_product_size" property="supplierProductSize" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+		<result column="supplier_product_name" property="supplierProductName" jdbcType="VARCHAR"/>
+		<result column="order_type" property="orderType" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, supplier_product_id, supplier_product_price, supplier_product_size, create_time,
+        update_time, delete_flag, supplier_product_name, order_type
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from sh_boss_product
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from sh_boss_product
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ShBossProduct">
+        insert into sh_boss_product (id, supplier_product_id, supplier_product_price,
+        supplier_product_size, create_time, update_time,
+        delete_flag)
+        values (#{id,jdbcType=BIGINT}, #{supplierProductId,jdbcType=BIGINT}, #{supplierProductPrice,jdbcType=INTEGER},
+        #{supplierProductSize,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.ShBossProduct">
+        insert into sh_boss_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="supplierProductId != null">
+                supplier_product_id,
+            </if>
+            <if test="supplierProductPrice != null">
+                supplier_product_price,
+            </if>
+            <if test="supplierProductSize != null">
+                supplier_product_size,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="supplierProductId != null">
+                #{supplierProductId,jdbcType=BIGINT},
+            </if>
+            <if test="supplierProductPrice != null">
+                #{supplierProductPrice,jdbcType=INTEGER},
+            </if>
+            <if test="supplierProductSize != null">
+                #{supplierProductSize,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.ShBossProduct">
+        update sh_boss_product
+        <set>
+            <if test="supplierProductId != null">
+                supplier_product_id = #{supplierProductId,jdbcType=BIGINT},
+            </if>
+            <if test="supplierProductPrice != null">
+                supplier_product_price = #{supplierProductPrice,jdbcType=INTEGER},
+            </if>
+            <if test="supplierProductSize != null">
+                supplier_product_size = #{supplierProductSize,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ShBossProduct">
+        update sh_boss_product
+        set supplier_product_id = #{supplierProductId,jdbcType=BIGINT},
+        supplier_product_price = #{supplierProductPrice,jdbcType=INTEGER},
+        supplier_product_size = #{supplierProductSize,jdbcType=BIGINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+	<select id="getShBossProducts" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sh_boss_product
+        where delete_flag = 0
+    </select>
+	<select id="getShBossProductsByOrderType"  parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sh_boss_product
+        where delete_flag = 0
+        AND
+        order_type=#{orderType,jdbcType=VARCHAR}
+    </select>
+</mapper>

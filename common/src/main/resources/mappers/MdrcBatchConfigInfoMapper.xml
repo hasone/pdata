@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.MdrcBatchConfigInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.MdrcBatchConfigInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="is_free" property="isFree" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="postcode" property="postcode" jdbcType="VARCHAR" />
+    <result column="certificate_key" property="certificateKey" jdbcType="VARCHAR" />
+    <result column="certificate_name" property="certificateName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+    
+    <result column="qrcode_key" property="qrcodeKey" jdbcType="VARCHAR" />
+    <result column="qrcode_name" property="qrcodeName" jdbcType="VARCHAR" />
+    <result column="customer_service_phone" property="customerServicePhone" jdbcType="VARCHAR" />
+    
+    <result column="template_front_key" property="templateFrontKey" jdbcType="VARCHAR" />
+    <result column="template_front_name" property="templateFrontName" jdbcType="VARCHAR" />
+    <result column="template_back_key" property="templateBackKey" jdbcType="VARCHAR" />
+    <result column="template_back_name" property="templateBackName" jdbcType="VARCHAR" />
+    <result column="express_ent_name" property="expressEntName" jdbcType="VARCHAR" />
+    <result column="express_number" property="expressNumber" jdbcType="VARCHAR" />
+    <result column="receive_key" property="receiveKey" jdbcType="VARCHAR" />
+    <result column="receiver_name" property="receiverName" jdbcType="VARCHAR" />
+    <result column="receiver_mobile" property="receiverMobile" jdbcType="VARCHAR" />
+    <result column="receive_file_name" property="receiveFileName" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, is_free, name, mobile, address, postcode, certificate_key, certificate_name, 
+    create_time, update_time, delete_flag, qrcode_key, qrcode_name, customer_service_phone,
+    template_front_key, template_front_name, template_back_key, template_back_name,
+    express_ent_name, express_number, receive_key, receiver_name, receiver_mobile,receive_file_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from mdrc_batch_config_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from mdrc_batch_config_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.MdrcBatchConfigInfo" >
+    insert into mdrc_batch_config_info (id, is_free, name, 
+      mobile, address, postcode, 
+      certificate_key, certificate_name, create_time, 
+      update_time, delete_flag)
+    values (#{id,jdbcType=BIGINT}, #{isFree,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{mobile,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{postcode,jdbcType=VARCHAR}, 
+      #{certificateKey,jdbcType=VARCHAR}, #{certificateName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.MdrcBatchConfigInfo" 
+  useGeneratedKeys="true" keyProperty="id">
+    insert into mdrc_batch_config_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="isFree != null" >
+        is_free,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="postcode != null" >
+        postcode,
+      </if>
+      <if test="certificateKey != null" >
+        certificate_key,
+      </if>
+      <if test="certificateName != null" >
+        certificate_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>   
+      <if test="templateFrontKey != null" >
+        template_front_key,
+      </if>
+      <if test="templateFrontName != null" >
+        template_front_name,
+      </if>
+      <if test="templateBackKey != null" >
+        template_back_key,
+      </if>
+      <if test="templateBackName != null" >
+        template_back_name,
+      </if>      
+      <if test="qrcodeKey != null" >
+        qrcode_key,
+      </if>
+      <if test="qrcodeName != null" >
+        qrcode_name,
+      </if>
+      <if test="customerServicePhone != null" >
+        customer_service_phone,
+      </if>
+      <if test="expressEntName != null" >
+        express_ent_name,
+      </if>
+     	<if test="expressNumber != null" >
+        express_number,
+      </if>
+      <if test="receiveKey != null" >
+        receive_key,
+      </if>
+      <if test="receiverName != null" >
+        receiver_name,
+      </if>
+      <if test="receiverMobile != null" >
+        receiver_mobile,
+      </if>
+      <if test="receiveFileName != null" >
+        receive_file_name,
+      </if>
+    </trim>
+    
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="isFree != null" >
+        #{isFree,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="postcode != null" >
+        #{postcode,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateKey != null" >
+        #{certificateKey,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateName != null" >
+        #{certificateName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      
+      <if test="templateFrontKey != null" >
+        #{templateFrontKey,jdbcType=VARCHAR},
+      </if>
+      <if test="templateFrontName != null" >
+        #{templateFrontName,jdbcType=VARCHAR},
+      </if>
+      <if test="templateBackKey != null" >
+        #{templateBackKey,jdbcType=VARCHAR},
+      </if>
+      <if test="templateBackName != null" >
+        #{templateBackName,jdbcType=VARCHAR},
+      </if>     
+      <if test="qrcodeKey != null" >
+        #{qrcodeKey,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeName != null" >
+        #{qrcodeName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerServicePhone != null" >
+        #{customerServicePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="expressEntName != null" >
+         #{expressEntName,jdbcType=VARCHAR},
+      </if>
+      <if test="expressNumber != null" >
+         #{expressNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveKey != null" >
+         #{receiveKey,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null" >
+         #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverMobile != null" >
+         #{receiverMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveFileName != null" >
+        #{receiveFileName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.MdrcBatchConfigInfo" >
+    update mdrc_batch_config_info
+    <set >
+      <if test="isFree != null" >
+        is_free = #{isFree,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="postcode != null" >
+        postcode = #{postcode,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateKey != null" >
+        certificate_key = #{certificateKey,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateName != null" >
+        certificate_name = #{certificateName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="qrcodeKey != null" >
+        qrcode_key = #{qrcodeKey,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcodeName != null" >
+        qrcode_name = #{qrcodeName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerServicePhone != null" >
+        customer_service_phone = #{customerServicePhone,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="templateFrontKey != null" >
+        template_front_key = #{qrcodeKey,jdbcType=VARCHAR},
+      </if>
+      <if test="templateFrontName != null" >
+        template_front_name = #{templateFrontName,jdbcType=VARCHAR},
+      </if>
+      <if test="templateBackKey != null" >
+        template_back_key = #{templateBackKey,jdbcType=VARCHAR},
+      </if>
+      <if test="templateBackName != null" >
+        template_back_name = #{templateBackName,jdbcType=VARCHAR},
+      </if>
+      <if test="expressEntName != null" >
+        express_ent_name =  #{expressEntName,jdbcType=VARCHAR},
+      </if>
+      <if test="expressNumber != null" >
+        express_number = #{expressNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveKey != null" >
+        receive_key = #{receiveKey,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverName != null" >
+        receiver_name = #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverMobile != null" >
+        receiver_mobile = #{receiverMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveFileName != null" >
+       receive_file_name =  #{receiveFileName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.MdrcBatchConfigInfo" >
+    update mdrc_batch_config_info
+    set is_free = #{isFree,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      postcode = #{postcode,jdbcType=VARCHAR},
+      certificate_key = #{certificateKey,jdbcType=VARCHAR},
+      certificate_name = #{certificateName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.GiveMoneyEnterMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.GiveMoneyEnter">
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="give_money_id" property="giveMoneyId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="ExtendResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.GiveMoneyEnter">
+        <result column="giveMoneyName" property="giveMoneyName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        enter_id,
+        give_money_id,
+        create_time,
+        update_time
+    </sql>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.GiveMoneyEnter">
+        insert into give_money_enter(
+        enter_id,
+        give_money_id,
+        create_time,
+        update_time)
+        values (
+        #{enterId,jdbcType=BIGINT},
+        #{giveMoneyId,jdbcType=BIGINT},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="updateByEnterId" parameterType="com.cmcc.vrp.province.model.GiveMoneyEnter">
+        update give_money_enter
+        set give_money_id = #{giveMoneyId,jdbcType=BIGINT},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where enter_id = #{enterId,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectByEnterId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        t1.*,
+        t2.name as giveMoneyName
+        from
+        give_money_enter t1
+        LEFT JOIN
+        give_money t2 ON t2.id = t1.give_money_id
+        where enter_id = #{enterId,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteGiveMoneyEnterByEnterId" parameterType="java.lang.Long">
+        delete from
+        give_money_enter
+        where enter_id = #{enterId,jdbcType=BIGINT}
+    </delete>
+
+</mapper>

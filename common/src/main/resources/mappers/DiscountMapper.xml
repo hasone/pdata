@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.DiscountMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.Discount">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="dicount" property="dicount" jdbcType="DOUBLE"/>
+        <result column="customer_type_id" property="customerTypeId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, discount, customer_type_id
+    </sql>
+
+    <select id="selectAllDiscount" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from discount
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap"
+            parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from discount
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+</mapper>

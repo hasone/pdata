@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ApprovalDetailDefinitionMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ApprovalDetailDefinition">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="process_id" property="processId" jdbcType="BIGINT"/>
+        <result column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="approval_code" property="approvalCode" jdbcType="INTEGER"/>
+        <result column="precondition" property="precondition" jdbcType="INTEGER"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="ExtendedResultMap" extends="BaseResultMap"
+               type="com.cmcc.vrp.province.model.ApprovalDetailDefinition">
+        <result column="roleName" property="roleName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, process_id, role_id, approval_code, precondition, delete_flag
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from approval_detail_definition
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from approval_detail_definition
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ApprovalDetailDefinition">
+        insert into approval_detail_definition (id, process_id, role_id,
+        approval_code, precondition, delete_flag
+        )
+        values (#{id,jdbcType=BIGINT}, #{processId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT},
+        #{approvalCode,jdbcType=INTEGER}, #{precondition,jdbcType=INTEGER}, #{deleteFlag,jdbcType=INTEGER}
+        )
+    </insert>
+
+
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ApprovalDetailDefinition">
+        update
+        approval_detail_definition
+        set
+        role_id = #{roleId,jdbcType=BIGINT}
+        where
+        id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="getByApprovalProcessId" parameterType="java.lang.Long"
+            resultMap="ExtendedResultMap">
+        select
+        t1.*,
+        t2.name as roleName
+        from
+        approval_detail_definition t1
+        left join
+        role t2 on t2.role_id = t1.role_id
+        where
+        t1.process_id = #{processId,jdbcType=BIGINT} and
+        t1.delete_flag = 0
+    </select>
+
+    <update id="deleteByApprovalProcess" parameterType="java.lang.Long">
+        update
+        approval_detail_definition
+        set
+        delete_flag = 1
+        where
+        process_id = #{processId,jdbcType=BIGINT} and delete_flag=0
+    </update>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into
+        approval_detail_definition
+        (
+        process_id,
+        role_id,
+        approval_code,
+        precondition,
+        delete_flag
+        )
+        values
+        <foreach collection="approvalDetails" item="approvalDetail" separator="," index="index">
+            (
+            #{approvalDetail.processId,jdbcType=BIGINT},
+            #{approvalDetail.roleId,jdbcType=BIGINT},
+            #{approvalDetail.approvalCode,jdbcType=INTEGER},
+            #{approvalDetail.precondition,jdbcType=INTEGER},
+            #{approvalDetail.deleteFlag,jdbcType=INTEGER}
+            )
+        </foreach>
+    </insert>
+
+
+</mapper>

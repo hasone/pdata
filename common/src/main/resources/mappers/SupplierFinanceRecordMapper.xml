@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.SupplierFinanceRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.SupplierFinanceRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
+    
+    <result column="total_money" property="totalMoney" jdbcType="REAL" />
+    <result column="used_money" property="usedMoney" jdbcType="REAL" />
+    <result column="balance" property="balance" jdbcType="REAL" />
+    
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+    
+    <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap type="com.cmcc.vrp.province.model.SupplierFinanceRecord" id="ExtendResultMap" extends="BaseResultMap">
+  	<result column="supplierName" property="supplierName" jdbcType="VARCHAR"/>
+  </resultMap>
+  
+  <resultMap type="com.cmcc.vrp.province.model.SupplierFinanceRecord" id="ExtendResultMap1" extends="BaseResultMap">
+  	<result column="supplierName" property="supplierName" jdbcType="VARCHAR"/>
+  	<result column="totalUseMoney" property="totalUseMoney" jdbcType="REAL" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, supplier_id, total_money, used_money, balance, create_time, update_time, delete_flag,
+    operate_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from supplier_finance_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="getAllSupplierFinanceRecords" resultMap="ExtendResultMap1">
+  	select 
+  		t1.*,
+  		t2.name as supplierName
+  	from 
+  		supplier_finance_record t1
+  	left join
+  		supplier t2 on t2.id = t1.supplier_id
+  	where
+  		t1.delete_flag = 0 and 
+  		t2.delete_flag = 0 and
+  		t2.status = 1 
+  </select>
+  
+  <select id="selectBySupplierId" resultMap="ExtendResultMap" parameterType="java.lang.Long">
+  	select 
+    	t1.*,
+    	t2.name as supplierName
+    from 
+    	supplier_finance_record t1
+    left join 
+    	supplier t2 on t2.id = t1.supplier_id
+    where 
+    	t1.supplier_id = #{supplierId,jdbcType=BIGINT}
+    	and t1.delete_flag = 0
+    	and t2.delete_flag = 0
+  </select>
+  
+  <select id="querySupplierFinanceRecords" resultMap="ExtendResultMap" parameterType="java.util.Map">
+    select
+    	t1.*,
+ 		t2.name as supplierName
+    from
+       	supplier_finance_record t1
+   	left join 
+   		supplier t2 on t2.id = t1.supplier_id
+    where
+       	t1.delete_flag = 0 and t2.delete_flag = 0
+        <if test="supplierName != null and supplierName != ''">
+            AND t2.name like CONCAT('%',CONCAT(#{supplierName},'%'))
+        </if>
+    order by 
+    	t1.operate_time desc,
+    	t1.update_time desc,
+       	t1.id desc
+       <if test="pageSize != null and pageSize != '' and pageSize != -1">
+       	LIMIT
+       		#{pageNum},#{pageSize}
+       </if>
+  </select>
+    
+    <select id="countSupplierFinanceRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        	count(*)
+        from
+       		supplier_finance_record t1
+   		left join 
+   			supplier t2 on t2.id = t1.supplier_id
+        WHERE
+        	t1.delete_flag = 0 and t2.delete_flag = 0
+	        <if test="supplierName != null and supplierName != ''">
+	            AND t2.name like CONCAT('%',CONCAT(#{supplierName},'%'))
+	        </if>
+    </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from supplier_finance_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <update id="deleteBysupplierId" parameterType="java.lang.Long">
+   update
+   	supplier_finance_record
+   set
+   	delete_flag = 1,
+   	update_time = NOW()
+   where
+   	supplier_id = #{supplierId,jdbcType=BIGINT}
+   	and delete_flag = 0
+  </update>
+  
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.SupplierFinanceRecord" 
+  useGeneratedKeys="true" keyProperty="id">
+    insert into supplier_finance_record (id, supplier_id, total_money, 
+      used_money, balance, create_time, 
+      update_time, delete_flag, operate_time)
+    values (#{id,jdbcType=BIGINT}, #{supplierId,jdbcType=BIGINT}, #{totalMoney,jdbcType=REAL}, 
+      #{usedMoney,jdbcType=REAL}, #{balance,jdbcType=REAL}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER}, NOW())
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.SupplierFinanceRecord" 
+  useGeneratedKeys="true" keyProperty="id">
+    insert into supplier_finance_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="supplierId != null" >
+        supplier_id,
+      </if>
+      <if test="totalMoney != null" >
+        total_money,
+      </if>
+      <if test="usedMoney != null" >
+        used_money,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+      <if test="operateTime != null" >
+        operate_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="supplierId != null" >
+        #{supplierId,jdbcType=BIGINT},
+      </if>
+      <if test="totalMoney != null" >
+        #{totalMoney,jdbcType=REAL},
+      </if>
+      <if test="usedMoney != null" >
+        #{usedMoney,jdbcType=REAL},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=REAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="operateTime != null" >
+      	#{operateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.SupplierFinanceRecord" >
+    update supplier_finance_record
+    <set >
+      <if test="supplierId != null" >
+        supplier_id = #{supplierId,jdbcType=BIGINT},
+      </if>
+      <if test="totalMoney != null" >
+        total_money = #{totalMoney,jdbcType=REAL},
+      </if>
+      <if test="usedMoney != null" >
+        used_money = #{usedMoney,jdbcType=REAL},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=REAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="operateTime != null" >
+        operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.SupplierFinanceRecord" >
+    update supplier_finance_record
+    set supplier_id = #{supplierId,jdbcType=BIGINT},
+    
+      total_money = #{totalMoney,jdbcType=REAL},
+      used_money = #{usedMoney,jdbcType=REAL},
+      balance = #{balance,jdbcType=REAL},
+      
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      
+      operate_time = #{operateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <update id="batchUpdate" parameterType="java.util.List">
+        UPDATE
+        supplier_finance_record
+        SET
+        total_money = CASE
+        <foreach collection="records" item="record" close="ELSE `total_money` END">
+            WHEN supplier_id = #{record.supplierId, jdbcType = BIGINT} THEN #{record.totalMoney, jdbcType = REAL}
+        </foreach>
+        ,used_money = CASE
+        <foreach collection="records" item="record" close="ELSE `used_money` END">
+            WHEN supplier_id = #{record.supplierId, jdbcType = BIGINT} THEN #{record.usedMoney, jdbcType = REAL}
+        </foreach>
+        ,balance = CASE
+        <foreach collection="records" item="record" close="ELSE `balance` END">
+            WHEN supplier_id = #{record.supplierId, jdbcType = BIGINT} THEN #{record.balance, jdbcType = REAL}
+        </foreach>
+       	,update_time = CASE
+        <foreach collection="records" item="record" close="ELSE `update_time` END">
+            WHEN supplier_id = #{record.supplierId, jdbcType = BIGINT} THEN #{record.updateTime, jdbcType = TIMESTAMP}
+        </foreach>
+        WHERE
+        delete_flag = 0 and
+        supplier_id in
+        <foreach collection="records" item="record" open="(" close=")" separator=",">
+            #{record.supplierId, jdbcType = BIGINT}
+        </foreach>
+    </update>
+    
+</mapper>

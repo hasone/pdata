@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.MobileBlackListMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.MobileBlackList">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, mobile, type, create_time,
+        update_time, delete_flag
+    </sql>
+    
+    
+	<insert id="insert" parameterType="com.cmcc.vrp.province.model.MobileBlackList"  useGeneratedKeys="true" keyProperty="id">
+        insert into mobile_black_list (mobile, type, create_time, update_time, delete_flag)
+        values (#{mobile,jdbcType=VARCHAR},
+        #{type,jdbcType=BIGINT}, NOW(), NOW(), 
+        #{deleteFlag,jdbcType=INTEGER})
+    </insert>
+    
+	<select id="getByMobile" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from mobile_black_list
+		where
+        delete_flag = 0
+		<if test="mobile != null and mobile != ''">
+            and mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+	<update id="deleteById" parameterType="java.lang.Long">
+        UPDATE
+        mobile_black_list
+        SET
+        delete_flag = 1,
+        update_time = NOW()
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+	<select id="getByMobileAndType" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from mobile_black_list
+		where
+        delete_flag = 0
+		and mobile = #{mobile,jdbcType=VARCHAR}
+		and type = #{type,jdbcType=BIGINT}
+    </select>
+</mapper>

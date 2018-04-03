@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.CrowdfundingActivityDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.CrowdfundingActivityDetail" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="activity_id" property="activityId" jdbcType="VARCHAR" />
+    <result column="current_count" property="currentCount" jdbcType="BIGINT" />
+    <result column="target_count" property="targetCount" jdbcType="BIGINT" />
+    <result column="rules" property="rules" jdbcType="VARCHAR" />
+    <result column="result" property="result" jdbcType="INTEGER" />
+    <result column="banner" property="banner" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="charge_type" property="chargeType" jdbcType="INTEGER" />
+    <result column="appendix" property="appendix" jdbcType="VARCHAR" />
+    <result column="has_white_or_black" property="hasWhiteOrBlack" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="BIGINT" />
+    <result column="join_type" property="joinType" jdbcType="INTEGER" />
+    <result column="user_list" property="userList" jdbcType="INTEGER" />
+
+    <result column="banner_key" property="bannerKey" jdbcType="VARCHAR" />
+    <result column="logo_key" property="logoKey" jdbcType="VARCHAR" />
+    <result column="appendix_key" property="appendixKey" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, activity_id, current_count, target_count, rules, result, banner, logo, charge_type, 
+    appendix, has_white_or_black, url, delete_flag, version, join_type, user_list, banner_key, logo_key,
+    appendix_key
+  </sql>
+
+  <!--根据id查询-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from crowdfunding_activity_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <!--根据activityId查询-->
+  <!--  
+  <select id="selectByActivityId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from crowdfunding_activity_detail
+    where activity_id = #{activityId,jdbcType=VARCHAR}
+  </select>
+  -->
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from crowdfunding_activity_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" useGeneratedKeys="true"
+            keyProperty="id" parameterType="com.cmcc.vrp.province.model.CrowdfundingActivityDetail" >
+    insert into crowdfunding_activity_detail (id, activity_id, current_count, 
+      target_count, rules, result, 
+      banner, logo, charge_type, 
+      appendix, has_white_or_black, url, 
+      delete_flag, version, join_type, user_list,
+      banner_key, logo_key, appendix_key)
+    values (#{id,jdbcType=BIGINT}, #{activityId,jdbcType=VARCHAR}, #{currentCount,jdbcType=BIGINT}, 
+      #{targetCount,jdbcType=BIGINT}, #{rules,jdbcType=VARCHAR}, #{result,jdbcType=INTEGER}, 
+      #{banner,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, #{chargeType,jdbcType=INTEGER}, 
+      #{appendix,jdbcType=VARCHAR}, #{hasWhiteOrBlack,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, 
+      #{deleteFlag,jdbcType=INTEGER}, #{version,jdbcType=BIGINT}, #{joinType,jdbcType=INTEGER}, #{userList,jdbcType=INTEGER},
+      #{bannerKey,jdbcType=VARCHAR}, #{logoKey,jdbcType=VARCHAR}, #{appendixKey,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.CrowdfundingActivityDetail" >
+    insert into crowdfunding_activity_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="activityId != null" >
+        activity_id,
+      </if>
+      <if test="currentCount != null" >
+        current_count,
+      </if>
+      <if test="targetCount != null" >
+        target_count,
+      </if>
+      <if test="rules != null" >
+        rules,
+      </if>
+      <if test="result != null" >
+        result,
+      </if>
+      <if test="banner != null" >
+        banner,
+      </if>
+      <if test="logo != null" >
+        logo,
+      </if>
+      <if test="chargeType != null" >
+        charge_type,
+      </if>
+      <if test="appendix != null" >
+        appendix,
+      </if>
+      <if test="hasWhiteOrBlack != null" >
+        has_white_or_black,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="joinType != null" >
+        join_type,
+      </if>
+
+      <if test="bannerKey != null" >
+        banner_key,
+      </if>
+      <if test="logoKey != null" >
+        logo_key,
+      </if>
+      <if test="appendixKey != null" >
+        appendix_key,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="activityId != null" >
+        #{activityId,jdbcType=VARCHAR},
+      </if>
+      <if test="currentCount != null" >
+        #{currentCount,jdbcType=BIGINT},
+      </if>
+      <if test="targetCount != null" >
+        #{targetCount,jdbcType=BIGINT},
+      </if>
+      <if test="rules != null" >
+        #{rules,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null" >
+        #{result,jdbcType=INTEGER},
+      </if>
+      <if test="banner != null" >
+        #{banner,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeType != null" >
+        #{chargeType,jdbcType=INTEGER},
+      </if>
+      <if test="appendix != null" >
+        #{appendix,jdbcType=VARCHAR},
+      </if>
+      <if test="hasWhiteOrBlack != null" >
+        #{hasWhiteOrBlack,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=BIGINT},
+      </if>
+      <if test="joinType != null" >
+        #{joinType,jdbcType=INTEGER},
+      </if>
+      <if test="bannerKey != null" >
+        #{bannerKey,jdbcType=VARCHAR},
+      </if>
+      <if test="logoKey != null" >
+        #{logoKey,jdbcType=VARCHAR},
+      </if>
+      <if test="appendixKey != null" >
+        #{appendixKey,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective"  useGeneratedKeys="true"
+            keyProperty="id" parameterType="com.cmcc.vrp.province.model.CrowdfundingActivityDetail" >
+    update crowdfunding_activity_detail
+    <set >
+      <if test="currentCount != null and currentCount != ''" >
+        current_count = #{currentCount,jdbcType=BIGINT},
+      </if>
+      <if test="targetCount != null and targetCount != ''" >
+        target_count = #{targetCount,jdbcType=BIGINT},
+      </if>
+      <if test="rules != null and rules != ''" >
+        rules = #{rules,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null and result != ''" >
+        result = #{result,jdbcType=INTEGER},
+      </if>
+      <if test="banner != null and banner != ''" >
+        banner = #{banner,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null and logo != ''" >
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeType != null and chargeType != ''" >
+        charge_type = #{chargeType,jdbcType=INTEGER},
+      </if>
+      <if test="appendix != null and appendix != ''" >
+        appendix = #{appendix,jdbcType=VARCHAR},
+      </if>
+      <if test="hasWhiteOrBlack != null and hasWhiteOrBlack != ''" >
+        has_white_or_black = #{hasWhiteOrBlack,jdbcType=INTEGER},
+      </if>
+      <if test="url != null and url != ''" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null and deleteFlag != ''" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="userList != null and userList != ''" >
+        user_list = #{userList,jdbcType=INTEGER},
+      </if>
+      <if test="version != null and version != ''" >
+        version = #{version,jdbcType=BIGINT},
+      </if>
+      <if test="bannerKey != null and bannerKey != ''" >
+        banner_key = #{bannerKey,jdbcType=VARCHAR},
+      </if>
+      <if test="logoKey != null and logoKey != ''" >
+        logo_key = #{logoKey,jdbcType=VARCHAR},
+      </if>
+      <if test="appendixKey != null and appendixKey != ''" >
+        appendix_key = #{appendixKey,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where activity_id = #{activityId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.CrowdfundingActivityDetail" >
+    update crowdfunding_activity_detail
+    set activity_id = #{activityId,jdbcType=VARCHAR},
+      current_count = #{currentCount,jdbcType=BIGINT},
+      target_count = #{targetCount,jdbcType=BIGINT},
+      rules = #{rules,jdbcType=VARCHAR},
+      result = #{result,jdbcType=INTEGER},
+      banner = #{banner,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
+      charge_type = #{chargeType,jdbcType=INTEGER},
+      appendix = #{appendix,jdbcType=VARCHAR},
+      has_white_or_black = #{hasWhiteOrBlack,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      version = #{version,jdbcType=BIGINT},
+      join_type = #{joinType,jdbcType=INTEGER},
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!--根据activityId查询-->
+  <select id="selectByActivityId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from crowdfunding_activity_detail
+    where activity_id = #{activityId,jdbcType=VARCHAR}
+  </select>
+  
+  <update id="updateCurrentCount" parameterType="com.cmcc.vrp.province.model.CrowdfundingActivityDetail">
+    update crowdfunding_activity_detail
+    set current_count = #{currentCount,jdbcType=BIGINT},
+    version = version + 1
+    where activity_id = #{activityId,jdbcType=VARCHAR}
+    and version = #{version,jdbcType=BIGINT}      
+  </update>
+  
+</mapper>

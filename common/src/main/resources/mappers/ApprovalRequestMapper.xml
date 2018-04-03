@@ -1,0 +1,1515 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ApprovalRequestMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ApprovalRequest">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="process_id" property="processId" jdbcType="BIGINT"/>
+        <result column="ent_id" property="entId" jdbcType="BIGINT"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="result" property="result" jdbcType="INTEGER"/>
+    </resultMap>
+	
+	<resultMap id="definitionResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ApprovalRequest">
+        <result column="type" property="type" jdbcType="INTEGER"/>
+    </resultMap>
+	
+
+    <resultMap id="ExtendedResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ApprovalRequest">
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="entCode" property="entCode" jdbcType="VARCHAR"/>
+        <result column="entCreateTime" property="entCreateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="accountResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ApprovalRequest">
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="entCode" property="entCode" jdbcType="VARCHAR"/>
+        <result column="entPhone" property="entPhone" jdbcType="VARCHAR"/>
+        <result column="count" property="count" jdbcType="DOUBLE"/>
+        <result column="productType" property="productType" jdbcType="INTEGER"/>
+        <result column="discountType" property="discountType" jdbcType="INTEGER"/>
+        <result column="discountValue" property="discountValue" jdbcType="INTEGER"/>
+        <result column="productTypeName" property="productTypeName" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <resultMap id="activityResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ApprovalRequest">
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="entCode" property="entCode" jdbcType="VARCHAR"/>
+        <result column="activityId" property="activityId" jdbcType="VARCHAR"/>
+        <result column="activityName" property="activityName" jdbcType="VARCHAR"/>
+        <result column="activityType" property="activityType" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="entChangeResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ApprovalRequest">
+        <result column="entStatus" property="entStatus" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="mdrcActiveResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ApprovalRequest">
+        <result column="startCardNumber" property="startCardNumber" jdbcType="VARCHAR" />
+        <result column="endCardNumber" property="endCardNumber" jdbcType="VARCHAR" />
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="entCode" property="entCode" jdbcType="VARCHAR"/>
+        <result column="templateName" property="templateName" jdbcType="VARCHAR"/>
+        <result column="productName" property="productName" jdbcType="VARCHAR"/>
+        <result column="customerManagerName" property="customerManagerName" jdbcType="VARCHAR"/>
+        <result column="customerManagerMobile" property="customerManagerMobile" jdbcType="VARCHAR"/>
+        <result column="activeStatus" property="activeStatus" jdbcType="INTEGER"/>
+        <result column="serialNumber" property="serialNumber" jdbcType="VARCHAR"/><!-- 制卡批次 -->
+        <result column="amount" property="amount" jdbcType="BIGINT"/><!-- 制卡数量 -->
+        <result column="productSize" property="productSize" jdbcType="BIGINT"/>
+        <result column="mdrcCount" property="mdrcCount" jdbcType="BIGINT"/><!-- 激活数量 -->
+        <result column="configName" property="configName" jdbcType="BIGINT"/><!-- 批次名称 -->       
+    </resultMap>
+
+    <resultMap id="mdrcCardmakeResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ApprovalRequest">
+        <result column="amount" property="amount" jdbcType="BIGINT"/>
+        <result column="productSize" property="productSize" jdbcType="BIGINT"/>
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="entCode" property="entCode" jdbcType="VARCHAR"/>
+        <result column="cardmakeStatus" property="cardmakeStatus" jdbcType="INTEGER"/>
+        <result column="configName" property="configName" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="SdExportResultMap" type="com.cmcc.vrp.province.model.SdAccApprovalRequest">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="entId" property="entId" jdbcType="BIGINT"/>
+        <result column="processId" property="processId" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="deleteFlag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="count" property="count" jdbcType="DOUBLE"/>
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="entCode" property="entCode" jdbcType="VARCHAR"/> 
+        <result column="productType" property="productType" jdbcType="INTEGER"/>
+        <result column="discountType" property="discountType" jdbcType="INTEGER"/>
+        <result column="discountValue" property="discountValue" jdbcType="INTEGER"/>
+        <result column="productTypeName" property="productTypeName" jdbcType="VARCHAR"/>
+        <result column="pkgSeq" property="pkgSeq" jdbcType="VARCHAR" />
+        <result column="acctId" property="acctId" jdbcType="VARCHAR" />
+        <result column="acctSeq" property="acctSeq" jdbcType="VARCHAR" />
+    </resultMap>
+    
+
+    <sql id="Base_Column_List">
+        id, process_id, ent_id, creator_id, status, create_time, update_time, delete_flag,result
+    </sql>
+
+    <select id="selectByEntIdAndProcessId" resultMap="BaseResultMap" resultType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        approval_request
+        where
+        ent_id = #{entId,jdbcType=BIGINT} and
+        process_id = #{processId,jdbcType=BIGINT}
+    </select>
+    
+    <select id="selectByEntIdAndProcessType" resultMap="BaseResultMap">
+        select
+        	ar.id, ar.process_id, ar.ent_id, ar.creator_id, ar.status, ar.create_time, ar.update_time, ar.delete_flag, ar.result
+        from
+        approval_request ar
+        left join approval_process_definition apd on ar.process_id = apd.id
+        where
+        ar.ent_id = #{entId,jdbcType=BIGINT} and
+        apd.type = #{type,jdbcType=BIGINT}
+        and apd.delete_flag = 0
+        order by ar.create_time desc
+    </select>
+
+    <select id="getApprovalRequestList" resultMap="BaseResultMap">
+        select
+        t1.*,
+        t2.name as entName,
+        t2.code as entCode,
+        t2.create_time as entCreateTime
+        from
+        approval_request t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        where
+        t1.ent_id in
+        <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+            enterprise.id
+        </foreach>
+        <if test="processId != null">
+            and t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test="preconditon != null">
+            and t1.status = #{preconditon,jdbcType=INTEGER}
+        </if>
+        and t1.delete_flag=0
+        order by
+        t1.create_time desc,
+        t1.update_time desc,
+        t1.id
+        limit
+        #{pageNum},#{pageSize}
+    </select>
+
+
+
+    
+    <!-- 制卡审批列表 -->
+    <select id="countMakecardRecords" resultType="java.lang.Long" parameterType="java.util.Map">
+    	SELECT
+    		count(DISTINCT t1.id)
+        FROM
+        	approval_request t1
+        LEFT JOIN
+        	mdrc_cardmake_detail t2 ON t1.id = t2.request_id
+        LEFT JOIN
+        	product t3 ON t3.id = t2.product_id
+        LEFT JOIN
+        	enterprises t4 ON t4.id = t2.enterprise_id
+        WHERE
+        	1=1
+    		<if test="enterprises != null">
+            	and t1.ent_id in
+	            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+	                #{enterprise.id,jdbcType=BIGINT}
+	            </foreach>
+        	</if>
+        	<if test ="processId != null">
+            	AND t1.process_id = #{processId,jdbcType=BIGINT}
+        	</if>
+        	<if test = "result != null">
+            	AND t1.result = #{result,jdbcType=INTEGER}
+        	</if>
+       		<if test ="entCode != null">
+            	AND t4.code like CONCAT('%',CONCAT(#{entCode},'%'))
+        	</if>
+        	<if test ="entName != null">
+            	AND t4.name like CONCAT('%',CONCAT(#{entName},'%'))
+        	</if>
+    </select>
+
+    <!-- 制卡排序 -->
+    <select id="getMakecardRecordsOrderBy" resultMap="mdrcCardmakeResultMap" parameterType="java.util.Map">
+    	SELECT * FROM (
+        (select
+	            t1.*,
+	            t2.amount AS amount,
+	            t2.config_name as configName,
+	            t3.product_size AS productSize,
+	            t4.name AS entName,
+	            t4.code AS entCode,
+                1 as canOperate
+	        FROM
+	          approval_request t1
+	        LEFT JOIN
+	          mdrc_cardmake_detail t2 ON t1.id = t2.request_id
+	        LEFT JOIN
+	          product t3 ON t3.id = t2.product_id
+	        LEFT JOIN
+	          enterprises t4 ON t4.id = t2.enterprise_id
+            LEFT JOIN
+              approval_record t5 ON  t5.request_id = t1.id
+	        WHERE
+	            1=1
+
+                <!-- 如果出现bug，这个不能保证查出来的approval_record只有1条 -->
+                AND t5.is_new = 1
+                AND t5.creator_id IS  NOT  NULL
+                AND t5.creator_id <![CDATA[!=]]> #{currentUserId,jdbcType=BIGINT}
+
+	            <if test="enterprises != null">
+	                and t1.ent_id in
+	                <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+	                    #{enterprise.id,jdbcType=BIGINT}
+	                </foreach>
+	            </if>
+	            <if test ="processId != null">
+	                AND t1.process_id = #{processId,jdbcType=BIGINT}
+	            </if>
+	            <if test = "result != null">
+	                AND t1.result = #{result,jdbcType=INTEGER}
+	            </if>
+	            <if test ="entCode != null">
+	                AND t4.code like CONCAT('%',CONCAT(#{entCode},'%'))
+	            </if>
+	            <if test ="entName != null">
+	                AND t4.name like CONCAT('%',CONCAT(#{entName},'%'))
+	            </if>
+	            AND  t1.status IN
+	            <foreach collection="preconditions" item="item" separator="," open="(" close=")">
+                    #{item}
+	            </foreach>
+        )
+        UNION ALL
+        (
+	        select
+	    		a1.*,
+	        	a2.amount AS amount,
+	        	a2.config_name as configName,
+	        	a3.product_size AS productSize,
+	        	a4.name AS entName,
+	        	a4.code AS entCode,
+                0 as canOperate
+	        FROM
+	        	approval_request a1
+	        LEFT JOIN
+	        	mdrc_cardmake_detail a2 ON a1.id = a2.request_id
+	        LEFT JOIN
+	        	product a3 ON a3.id = a2.product_id
+	        LEFT JOIN
+	        	enterprises a4 ON a4.id = a2.enterprise_id
+	        WHERE
+	        	1=1
+	        	<if test="enterprises != null">
+	            	and a1.ent_id in
+		            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+		                #{enterprise.id,jdbcType=BIGINT}
+		            </foreach>
+	        	</if>
+	        	<if test ="processId != null">
+	            	AND a1.process_id = #{processId,jdbcType=BIGINT}
+	        	</if>
+	        	<if test = "result != null">
+	            	AND a1.result = #{result,jdbcType=INTEGER}
+	        	</if>
+	       		<if test ="entCode != null">
+	            	AND a4.code like CONCAT('%',CONCAT(#{entCode},'%'))
+	        	</if>
+	        	<if test ="entName != null">
+	            	AND a4.name like CONCAT('%',CONCAT(#{entName},'%'))
+	        	</if>
+                AND  a1.id NOT IN (
+                    select
+                      t1.id
+                    FROM
+                      approval_request t1
+                    LEFT JOIN
+                      mdrc_cardmake_detail t2 ON t1.id = t2.request_id
+                    LEFT JOIN
+                      product t3 ON t3.id = t2.product_id
+                    LEFT JOIN
+                      enterprises t4 ON t4.id = t2.enterprise_id
+                    LEFT JOIN
+                      approval_record t5 ON  t5.request_id = t1.id
+                    WHERE
+                    1=1
+
+                    <!-- 如果出现bug，这个不能保证查出来的approval_record只有1条 -->
+                    AND t5.is_new = 1
+                    AND t5.creator_id IS  NOT  NULL
+                    AND t5.creator_id <![CDATA[!=]]> #{currentUserId,jdbcType=BIGINT}
+
+                    <if test="enterprises != null">
+                        and t1.ent_id in
+                        <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+                            #{enterprise.id,jdbcType=BIGINT}
+                        </foreach>
+                    </if>
+                    <if test ="processId != null">
+                        AND t1.process_id = #{processId,jdbcType=BIGINT}
+                    </if>
+                    <if test = "result != null">
+                        AND t1.result = #{result,jdbcType=INTEGER}
+                    </if>
+                    <if test ="entCode != null">
+                        AND t4.code like CONCAT('%',CONCAT(#{entCode},'%'))
+                    </if>
+                    <if test ="entName != null">
+                        AND t4.name like CONCAT('%',CONCAT(#{entName},'%'))
+                    </if>
+                    AND  t1.status IN
+                    <foreach collection="preconditions" item="item" separator="," open="(" close=")">
+                        #{item}
+                    </foreach>
+                ))) AS newTable 
+		        ORDER BY 
+					newTable.canOperate DESC,
+					newTable.update_time DESC,
+					newTable.create_time DESC
+				limit
+        			#{pageNum},#{pageSize}
+    </select>
+    
+
+    <!-- 制卡审批列表 -->
+    <select id="getMakecardRecords" resultMap="mdrcCardmakeResultMap" parameterType="java.util.Map">
+    	select 
+    		t1.*,
+        	t2.amount AS amount,
+        	t2.config_name as configName,
+        	t3.product_size AS productSize,
+        	t4.name AS entName,
+        	t4.code AS entCode
+        FROM
+        	approval_request t1
+        LEFT JOIN
+        	mdrc_cardmake_detail t2 ON t1.id = t2.request_id
+        LEFT JOIN
+        	product t3 ON t3.id = t2.product_id
+        LEFT JOIN
+        	enterprises t4 ON t4.id = t2.enterprise_id
+        WHERE
+        	1=1
+        	<if test="enterprises != null">
+            	and t1.ent_id in
+	            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+	                #{enterprise.id,jdbcType=BIGINT}
+	            </foreach>
+        	</if>
+        	<if test ="processId != null">
+            	AND t1.process_id = #{processId,jdbcType=BIGINT}
+        	</if>
+        	<if test = "result != null">
+            	AND t1.result = #{result,jdbcType=INTEGER}
+        	</if>
+       		<if test ="entCode != null">
+            	AND t4.code like CONCAT('%',CONCAT(#{entCode},'%'))
+        	</if>
+        	<if test ="entName != null">
+            	AND t4.name like CONCAT('%',CONCAT(#{entName},'%'))
+        	</if>
+        ORDER BY
+        t1.update_time DESC,
+        t1.create_time DESC,
+        t1.id
+        limit
+        #{pageNum},#{pageSize}
+    </select>
+
+    <!--查找营销卡制卡请求-->
+    <select id="getApprovalRequestForMdrcCardmake" resultMap="mdrcCardmakeResultMap" parameterType="java.util.Map">
+        SELECT
+        t1.*,
+        t2.amount AS amount,
+        t2.config_name as configName,
+        t3.product_size AS productSize,
+        t4.name AS entName,
+        t4.code AS entCode
+        FROM
+        approval_request t1
+        LEFT JOIN
+        mdrc_cardmake_detail t2 ON t1.id = t2.request_id
+        LEFT JOIN
+        product t3 ON t3.id = t2.product_id
+        LEFT JOIN
+        enterprises t4 ON t4.id = t2.enterprise_id
+        WHERE
+        1=1
+        <if test="creators != null">
+            AND t1.creator_id IN
+            <foreach collection="creators" item="creator" separator="," open="(" close=")">
+                #{creator.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="preconditions != null">
+            and t1.status in
+            <foreach collection="preconditions" item="precondition" separator="," index="index" open="(" close=")">
+                #{precondition,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test ="deleteFlag != null"  >
+            AND t1.delete_flag = #{deleteFlag,jdbcType=INTEGER}
+        </if>
+        <if test ="processId != null">
+            AND t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test = "result != null">
+            AND t1.result = #{result,jdbcType=INTEGER}
+        </if>
+        <if test="startTime != null">
+            AND t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="cardmakeStatus != null">
+            AND t2.cardmake_status = #{cardmakeStatus,jdbcType=INTEGER}
+        </if>
+        <if test ="creatorId != null">
+            AND t1.creator_id = #{creatorId,jdbcType=BIGINT}
+        </if>
+        <if test ="enterpriseCode != null">
+            AND t4.code like CONCAT('%',CONCAT(#{enterpriseCode},'%'))
+        </if>
+        <if test ="enterpriseName != null">
+            AND t4.name like CONCAT('%',CONCAT(#{enterpriseName},'%'))
+        </if>
+        ORDER BY
+        t1.update_time DESC,
+        t1.create_time DESC,
+        t1.id
+        limit
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="countApprovalRequestForMdrcCardmake" resultType="java.lang.Long" parameterType="java.util.Map">
+        SELECT
+        count(DISTINCT t1.id)
+        FROM
+        approval_request t1
+        LEFT JOIN
+        mdrc_cardmake_detail t2 ON t1.id = t2.request_id
+        LEFT JOIN
+        product t3 ON t3.id = t2.product_id
+        LEFT JOIN
+        enterprises t4 ON t4.id = t2.enterprise_id
+        WHERE
+        1=1
+        <if test="creators != null">
+            AND t1.creator_id IN
+            <foreach collection="creators" item="creator" separator="," open="(" close=")">
+                #{creator.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="preconditions != null">
+            and t1.status in
+            <foreach collection="preconditions" item="precondition" separator="," index="index" open="(" close=")">
+                #{precondition,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test ="deleteFlag != null"  >
+            AND t1.delete_flag = #{deleteFlag,jdbcType=INTEGER}
+        </if>
+        <if test ="processId != null">
+            AND t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test ="creatorId != null">
+            AND t1.creator_id = #{creatorId,jdbcType=BIGINT}
+        </if>
+        <if test = "result != null">
+            AND t1.result = #{result,jdbcType=INTEGER}
+        </if>
+        <if test="startTime != null">
+            AND t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="cardmakeStatus != null">
+            AND t2.cardmake_status = #{cardmakeStatus,jdbcType=INTEGER}
+        </if>
+        <if test ="enterpriseCode != null">
+            AND t4.code like CONCAT('%',CONCAT(#{enterpriseCode},'%'))
+        </if>
+        <if test ="enterpriseName != null">
+            AND t4.name like CONCAT('%',CONCAT(#{enterpriseName},'%'))
+        </if>
+    </select>
+
+    <!-- 查找营销卡激活请求 -->
+    <select id="getApprovalRequestForMdrcActive" resultMap="mdrcActiveResultMap" parameterType="java.util.Map">
+        SELECT
+          t1.*,
+          t2.count AS mdrcCount,
+          t2.active_status AS activeStatus,
+          t3.name AS entName,
+          t3.code AS entCode,
+          t4.name AS templateName,
+          t5.name AS productName,
+          t5.product_size as productSize,
+          t6.user_name AS customerManagerName,
+          t6.mobile_phone AS customerManagerMobile,
+          t7.serial_number as serialNumber,
+          t7.amount as amount,
+          t7.config_name as configName
+        FROM
+          approval_request t1
+        LEFT JOIN
+          mdrc_active_detail t2 on t1.id = t2.request_id
+       	LEFT JOIN
+       	  mdrc_batch_config t7 on t7.id = t2.config_id
+        LEFT JOIN
+          enterprises t3 ON t3.id = t2.ent_id
+        LEFT JOIN
+          mdrc_template t4 ON  t4.id = t2.template_id
+        LEFT JOIN
+          product t5 ON t5.id = t2.product_id
+        LEFT JOIN
+         administer t6 ON t6.id = t1.creator_id
+        WHERE
+        1=1
+        <if test="preconditions != null">
+            and t1.status in
+            <foreach collection="preconditions" item="precondition" separator="," index="index" open="(" close=")">
+                #{precondition,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="enterprises != null">
+            and t1.ent_id in
+            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+                #{enterprise.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+         <if test ="deleteFlag != null"  >
+            AND t1.delete_flag = #{deleteFlag,jdbcType=INTEGER}
+         </if>
+         <if test ="configId != null">
+            AND t2.config_id = #{configId,jdbcType=BIGINT}
+         </if>
+         <if test ="creatorId != null">
+            AND t1.creator_id = #{creatorId,jdbcType=BIGINT}
+         </if>
+         <if test ="processId != null">
+            AND t1.process_id = #{processId,jdbcType=BIGINT}
+         </if>
+         <if test = "result != null">
+            AND t1.result = #{result,jdbcType=INTEGER}
+         </if>
+         <if test="startTime != null">
+            AND t1.create_time &gt;= #{startTime}
+         </if>
+         <if test="endTime != null">
+            AND t1.create_time &lt;= #{endTime}
+         </if>
+        <if test="name != null">
+            and t3.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="code != null">
+            and t3.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="serialNumber != null and serialNumber != ''">
+        	 AND t7.serial_number = #{serialNumber,jdbcType=VARCHAR}
+        </if>
+        ORDER BY
+          t1.create_time DESC,
+          t1.update_time DESC,
+          t1.id
+          limit
+          #{pageNum},#{pageSize}
+    </select>
+
+    <select id="countApprovalRequestForMdrcActive" resultType="java.lang.Long" parameterType="java.util.Map">
+        SELECT
+          count(DISTINCT t1.id)
+        FROM
+          approval_request t1
+        LEFT JOIN
+          mdrc_active_detail t2 on t1.id = t2.request_id
+       	LEFT JOIN
+       	  mdrc_batch_config t7 on t7.id = t2.config_id
+        LEFT JOIN
+          enterprises t3 ON t3.id = t2.ent_id
+        LEFT JOIN
+          mdrc_template t4 ON  t4.id = t2.template_id
+        LEFT JOIN
+          product t5 ON t5.id = t2.product_id
+        LEFT JOIN
+         administer t6 ON t6.id = t1.creator_id
+        WHERE
+        1=1
+        <if test="preconditions != null">
+            and t1.status in
+            <foreach collection="preconditions" item="precondition" separator="," index="index" open="(" close=")">
+                #{precondition,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="enterprises != null">
+            and t1.ent_id in
+            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+                #{enterprise.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+         <if test ="deleteFlag != null"  >
+            AND t1.delete_flag = #{deleteFlag,jdbcType=INTEGER}
+         </if>
+         <if test ="configId != null">
+            AND t2.config_id = #{configId,jdbcType=BIGINT}
+         </if>
+         <if test ="creatorId != null">
+            AND t1.creator_id = #{creatorId,jdbcType=BIGINT}
+         </if>
+         <if test ="processId != null">
+            AND t1.process_id = #{processId,jdbcType=BIGINT}
+         </if>
+         <if test = "result != null">
+            AND t1.result = #{result,jdbcType=INTEGER}
+         </if>
+         <if test="startTime != null">
+            AND t1.create_time &gt;= #{startTime}
+         </if>
+         <if test="endTime != null">
+            AND t1.create_time &lt;= #{endTime}
+         </if>
+        <if test="name != null">
+            and t3.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="code != null">
+            and t3.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="serialNumber != null and serialNumber != ''">
+        	 AND t7.serial_number = #{serialNumber,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <!--查找企业变更请求-->
+    <select id="queryForEntChange" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        t1.*,
+        t2. delete_flag AS entStatus
+        FROM
+        approval_request t1
+        LEFT JOIN
+        history_enterprises t2 ON t1.id = t2.request_id
+        WHERE
+        1=1
+        <if test="approvalProcessList != null">
+            AND t1.process_id IN
+            <foreach collection="approvalProcessList" item="approvalProcess" open="(" close=")" separator=",">
+                #{approvalProcess.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="entId != null">
+            AND t1.ent_id = #{entId,jdbcType=BIGINT}
+        </if>
+        order by
+        t1.create_time desc,
+        t1.update_time desc,
+        t1.id
+        limit
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="countForEntChange" resultType="java.lang.Long" parameterType="java.util.Map">
+        SELECT
+        COUNT(*)
+        FROM
+        approval_request t1
+        LEFT JOIN
+        history_enterprises t2 ON t1.id = t2.request_id
+        WHERE
+        t1.delete_flag = 0
+        <if test="approvalProcessList != null">
+            AND t1.process_id IN
+            <foreach collection="approvalProcessList" item="approvalProcess" open="(" close=")" separator=",">
+                #{approvalProcess.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="entId != null">
+            AND t1.ent_id = #{entId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <!-- 获取充值记录 -->
+    <select id="queryApprovalRequestsForAccountChange" parameterType="java.util.Map" resultMap="accountResultMap">
+        select
+        t1.*,
+        t2.name as entName,
+        t2.code as entCode,
+        t2.phone as entPhone,
+        t3.count as count,
+        t3.discount_type as discountType,
+        t3.discount_value as discountValue,
+        prd.type as productType,
+        prd.name as productTypeName
+        from
+        approval_request t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        left join
+        account_change_detail t3 on t3.request_id = t1.id
+        left join 
+        product prd on prd.id = t3.product_id
+        where
+        t1.ent_id in
+        <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+            #{enterprise.id,jdbcType=BIGINT}
+        </foreach>
+        <if test="processId != null">
+            and t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test="name != null">
+            and t2.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="code != null">
+            and t2.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="phone != null">
+            and t2.phone like CONCAT('%',CONCAT(#{phone},'%'))
+        </if>
+        <if test="startTime != null">
+            and t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and t1.create_time &lt;= #{endTime}
+        </if>
+        order by
+        t1.create_time desc,
+        t1.update_time desc,
+        t1.id
+        limit
+        #{pageNum},#{pageSize}
+    </select>
+ 	<select id="queryRecordForAccountChange" parameterType="java.util.Map" resultMap="accountResultMap">
+        select
+        t1.*,
+        t2.name as entName,
+        t2.code as entCode,
+        t2.phone as entPhone,
+        t3.count as count,
+        t3.discount_type as discountType,
+        t3.discount_value as discountValue,
+        prd.type as productType,
+        prd.name as productTypeName
+        from
+        approval_request t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        left join
+        account_change_detail t3 on t3.request_id = t1.id
+        left join 
+        product prd on prd.id = t3.product_id
+        where
+        t1.ent_id in
+        <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+            #{enterprise.id,jdbcType=BIGINT}
+        </foreach>
+        <if test="processId != null">
+            and t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test="name != null">
+            and t2.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="code != null">
+            and t2.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="phone != null">
+            and t2.phone like CONCAT('%',CONCAT(#{phone},'%'))
+        </if>
+        <if test="startTime != null">
+            and t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and t1.create_time &lt;= #{endTime}
+        </if>
+        order by
+        t1.create_time desc,
+        t1.update_time desc,
+        t1.id
+    </select>
+
+    <select id="countApprovalRequestsForAccountChange" parameterType="java.util.Map" resultType="java.lang.Long">
+        select
+        count(*)
+        from
+        approval_request t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        left join
+        account_change_detail t3 on t3.request_id = t1.id
+        left join 
+        product prd on prd.id = t3.product_id
+        where
+        t1.ent_id in
+        <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+            #{enterprise.id,jdbcType=BIGINT}
+        </foreach>
+        <if test="processId != null">
+            and t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test="name != null">
+            and t2.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="code != null">
+            and t2.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="phone != null">
+            and t2.phone like CONCAT('%',CONCAT(#{phone},'%'))
+        </if>
+        <if test="startTime != null">
+            and t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and t1.create_time &lt;= #{endTime}
+        </if>
+        order by
+        t1.create_time desc,
+        t1.update_time desc,
+        t1.id
+    </select>
+
+    <!-- 获取审核记录表 -->
+    <select id="getApprovalRequestListByMap" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        t1.*,
+        t2.name as entName,
+        t2.code as entCode,
+        t2.create_time as entCreateTime
+        from
+        approval_request t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        where
+        1=1
+        <if test="enterprises != null">
+            and t1.ent_id in
+            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+                #{enterprise.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="preconditions != null">
+            and t1.status in
+            <foreach collection="preconditions" item="precondition" separator="," index="index" open="(" close=")">
+                #{precondition,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="processId != null">
+            and t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test="name != null">
+            and t2.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="code != null">
+            and t2.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="startTime != null">
+            and t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="result != null">
+            and t1.result = #{result, jdbcType=INTEGER}
+        </if>
+        and t1.delete_flag=0
+        and t2.delete_flag!=8
+        order by
+        t1.create_time desc,
+        t1.update_time desc,
+        t1.id
+        limit
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="getActivityApprovalRequestsByMap" parameterType="java.util.Map" resultMap="activityResultMap">
+        SELECT
+        t1.*,
+        t2.name as entName,
+        t2.code as entCode,
+        t3.activity_id as activityId,
+        t3.activity_name as activityName,
+        t3.activity_type as activityType
+        FROM
+        approval_request t1
+        LEFT JOIN
+        enterprises t2 on t1.ent_id = t2.id
+        LEFT JOIN
+        activity_approval_detail t3 ON t1.id = t3.request_id
+        WHERE
+        1=1
+        <if test="enterprises != null">
+            and t1.ent_id in
+            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+                #{enterprise.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="preconditions != null">
+            and t1.status in
+            <foreach collection="preconditions" item="precondition" separator="," index="index" open="(" close=")">
+                #{precondition,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="processId != null">
+            and t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test="name != null">
+            and t2.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="code != null">
+            and t2.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="startTime != null">
+            and t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="result != null">
+            and t1.result = #{result, jdbcType=INTEGER}
+        </if>
+        order by
+        t1.create_time desc,
+        t1.update_time desc,
+        t1.id
+        limit
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="countApprovalRequestByMap" parameterType="java.util.Map" resultType="java.lang.Long">
+        select
+        count(*)
+        from
+        approval_request t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        where
+        1=1
+        <if test="enterprises != null">
+            and t1.ent_id in
+            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+                #{enterprise.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="preconditions != null">
+            and t1.status in
+            <foreach collection="preconditions" item="precondition" separator="," index="index" open="(" close=")">
+                #{precondition,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="processId != null">
+            and t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test="preconditon != null">
+            and t1.status = #{preconditon,jdbcType=INTEGER}
+        </if>
+        <if test="name != null">
+            and t2.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="code != null">
+            and t2.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="startTime != null">
+            and t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="result != null">
+            and t1.result = #{result, jdbcType=INTEGER}
+        </if>
+        and t2.delete_flag!=8
+        order by
+        t1.create_time desc,
+        t1.update_time desc,
+        t1.id
+    </select>
+
+    <select id="countActivityApprovalRequestsByMap" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        approval_request t1
+        LEFT JOIN
+        enterprises t2 on t1.ent_id = t2.id
+        LEFT JOIN
+        activity_approval_detail t3 ON t1.id = t3.request_id
+        WHERE
+        1=1
+        <if test="enterprises != null">
+            and t1.ent_id in
+            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+                #{enterprise.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="preconditions != null">
+            and t1.status in
+            <foreach collection="preconditions" item="precondition" separator="," index="index" open="(" close=")">
+                #{precondition,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="processId != null">
+            and t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test="name != null">
+            and t2.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="code != null">
+            and t2.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="result != null">
+            and t1.result = #{result, jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        approval_request
+        where
+        id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from approval_request
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ApprovalRequest" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into
+        approval_request
+        (
+        process_id,
+        ent_id,
+        creator_id,
+        status,
+        create_time,
+        update_time,
+        delete_flag,
+        result)
+        values
+        (
+        #{processId,jdbcType=BIGINT},
+        #{entId,jdbcType=BIGINT},
+        #{creatorId,jdbcType=BIGINT},
+        #{status,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=INTEGER},
+        #{result,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.ApprovalRequest" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into approval_request
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="processId != null">
+                process_id,
+            </if>
+            <if test="entId != null">
+                ent_id,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="result != null">
+                result,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="processId != null">
+                #{processId,jdbcType=BIGINT},
+            </if>
+            <if test="entId != null">
+                #{entId,jdbcType=BIGINT},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="result != null">
+                #{result,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateApprovalRequest" parameterType="com.cmcc.vrp.province.model.ApprovalRequest">
+        update
+        approval_request
+        <set>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="result != null">
+                result = #{result,jdbcType=INTEGER},
+            </if>
+        </set>
+        where
+        id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ApprovalRequest">
+        update approval_request
+        set process_id = #{processId,jdbcType=BIGINT},
+        ent_id = #{entId,jdbcType=BIGINT},
+        creator_id = #{creatorId,jdbcType=BIGINT},
+        status = #{status,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectByActivityId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        t1.*
+        FROM
+        approval_request t1
+        LEFT JOIN
+        activity_approval_detail t2 ON t1.id = t2.request_id
+        WHERE
+        t2.activity_id = #{activityId,jdbcType=VARCHAR}
+    </select>
+    
+    <!-- 获取EC变更记录 -->
+    <select id="queryApprovalRequestsForEcChange" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        t1.*
+        from
+        approval_request t1
+        where
+        1=1
+        <if test="processId != null">
+            and t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test="entId != null">
+            and t1.ent_id = #{entId,jdbcType=BIGINT}
+        </if>
+        order by
+        t1.create_time desc,
+        t1.update_time desc,
+        t1.id
+        limit
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="countApprovalRequestsForEcChange" parameterType="java.util.Map" resultType="java.lang.Long">
+        select
+        count(*)
+        from
+        approval_request t1
+        where
+        1=1
+        <if test="processId != null">
+            and t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test="entId != null">
+            and t1.ent_id = #{entId,jdbcType=BIGINT}
+        </if>
+    </select>
+    
+    <select id="getRecords" resultMap="ExtendedResultMap" parameterType="java.util.Map">
+        select
+        	request.*,
+        	e.name as entName,
+        	e.code as entCode,
+        	definition.type as type
+       	from approval_request request
+        left join approval_process_definition definition on definition.id = request.process_id    
+        left join enterprises e on request.ent_id = e.id
+        left join ent_manager em on em.enter_id = e.id
+        <where>
+	        <if test="entName != null and entName !=''">
+	            AND e.name like CONCAT('%',CONCAT(#{entName},'%'))
+	       	</if>
+	       	<if test="entCode != null and entCode !=''">
+	            AND e.code = #{entCode,jdbcType=VARCHAR}
+	        </if>
+	        <if test="result != null">
+	            AND request.result = #{result,jdbcType=INTEGER}
+	        </if>
+	        <if test="type != null">
+	            AND definition.type = #{type,jdbcType=INTEGER}
+	        </if>
+	       	<if test="managerIds != null and managerIds != ''">
+	            and em.manager_id in (${managerIds})
+	   	   	</if>
+   	   	</where>        
+        order by
+        request.update_time DESC,
+        request.create_time desc
+        <if test="pageNum != null and pageSize !=null">
+        LIMIT
+        	#{pageNum},#{pageSize}
+        </if>
+    </select>
+    
+    <select id="getECRecords" resultMap="ExtendedResultMap" parameterType="java.util.Map">
+        select
+            request.*,
+            e.name as entName,
+            e.code as entCode,
+            definition.type as type
+        from approval_request request
+        left join approval_process_definition definition on definition.id = request.process_id    
+        left join enterprises e on request.ent_id = e.id
+        left join ent_manager em on em.enter_id = e.id
+        left join ec_approval_detail ead on ead.request_id = request.id
+        <where>
+            <if test="entName != null and entName !=''">
+                AND e.name like CONCAT('%',CONCAT(#{entName},'%'))
+            </if>
+            <if test="entCode != null and entCode !=''">
+                AND e.code like CONCAT('%',CONCAT(#{entCode},'%'))
+            </if>
+            <if test="result != null">
+                AND request.result = #{result,jdbcType=INTEGER}
+            </if>
+            <if test="type != null">
+                AND definition.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="managerIds != null and managerIds != ''">
+                and em.manager_id in (${managerIds})
+            </if>
+            <if test="callbackAddr != null and callbackAddr !=''">
+                and (ead.ip1 like #{callbackAddr,jdbcType=VARCHAR} or ead.ip2 like #{callbackAddr,jdbcType=VARCHAR} or ead.ip3 like #{callbackAddr,jdbcType=VARCHAR})
+            </if>
+            
+        </where>        
+        order by
+        request.update_time DESC,
+        request.create_time desc
+        <if test="pageNum != null and pageSize !=null">
+        LIMIT
+            #{pageNum},#{pageSize}
+        </if>
+    </select>
+       
+    <select id="countRecords" resultType="java.lang.Long" parameterType="java.util.Map">
+        select
+			count(request.id)      
+       	from approval_request request
+        left join approval_process_definition definition on definition.id = request.process_id    
+        left join enterprises e on request.ent_id = e.id
+        left join ent_manager em on em.enter_id = e.id    
+        <where>
+	        <if test="entName != null and entName !=''">
+	            AND e.name like CONCAT('%',CONCAT(#{entName},'%'))
+	       	</if>
+	       	<if test="entCode != null and entCode !=''">
+	            AND e.code = #{entCode,jdbcType=VARCHAR}
+	        </if>
+	        <if test="result != null">
+	            AND request.result = #{result,jdbcType=INTEGER}
+	        </if>
+	        <if test="type != null">
+	            AND definition.type = #{type,jdbcType=INTEGER}
+	        </if>
+	       	<if test="managerIds != null and managerIds != ''">
+	            and em.manager_id in (${managerIds})
+	   	   	</if>
+	   	   	
+   	   	</where>  
+    </select>
+    
+    <select id="countECRecords" resultType="java.lang.Long" parameterType="java.util.Map">
+        select
+            count(request.id)      
+        from approval_request request
+        left join approval_process_definition definition on definition.id = request.process_id    
+        left join enterprises e on request.ent_id = e.id
+        left join ent_manager em on em.enter_id = e.id
+        left join ec_approval_detail ead on ead.request_id = request.id
+        <where>
+            <if test="entName != null and entName !=''">
+                AND e.name like CONCAT('%',CONCAT(#{entName},'%'))
+            </if>
+            <if test="entCode != null and entCode !=''">
+                AND e.code = #{entCode,jdbcType=VARCHAR}
+            </if>
+            <if test="result != null">
+                AND request.result = #{result,jdbcType=INTEGER}
+            </if>
+            <if test="type != null">
+                AND definition.type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="managerIds != null and managerIds != ''">
+                and em.manager_id in (${managerIds})
+            </if>
+            <if test="callbackAddr != null and callbackAddr !=''">
+                and (ead.ip1 like #{callbackAddr,jdbcType=VARCHAR} or ead.ip2 like #{callbackAddr,jdbcType=VARCHAR} or ead.ip3 like #{callbackAddr,jdbcType=VARCHAR})
+            </if>
+        </where>  
+    </select>
+    
+    <select id="getById" parameterType="java.util.Map" resultMap="definitionResultMap">
+        select
+			request.*,
+			definition.type as type     
+       	from 
+       		approval_request request
+        left join 
+        	approval_process_definition definition on definition.id = request.process_id    
+        where
+	        request.id = #{id,jdbcType=BIGINT}
+    </select>
+    
+     <!-- 激活审批列表 -->
+    <select id="countMdrcActiveRecords" resultType="java.lang.Long" parameterType="java.util.Map">
+    	SELECT
+    		count(DISTINCT t1.id)
+		FROM
+        	approval_request t1
+        LEFT JOIN
+        	mdrc_active_detail t2 ON t1.id = t2.request_id
+        LEFT JOIN
+        	mdrc_batch_config t3 on t3.id = t2.config_id	
+        LEFT JOIN
+        	product t4 ON t4.id = t3.product_id
+        LEFT JOIN
+        	enterprises t5 ON t5.id = t3.enterprise_id
+        WHERE
+        	1=1
+        	<if test="enterprises != null">
+            	and t1.ent_id in
+	            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+	                #{enterprise.id,jdbcType=BIGINT}
+	            </foreach>
+        	</if>
+        	<if test ="processId != null">
+            	AND t1.process_id = #{processId,jdbcType=BIGINT}
+        	</if>
+        	<if test = "result != null">
+            	AND t1.result = #{result,jdbcType=INTEGER}
+        	</if>
+       		<if test ="enterpriseCode != null">
+            	AND t5.code like CONCAT('%',CONCAT(#{enterpriseCode},'%'))
+        	</if>
+        	<if test ="enterpriseName != null">
+            	AND t5.name like CONCAT('%',CONCAT(#{enterpriseName},'%'))
+        	</if>
+        	<if test ="serialNumber != null">
+            	AND t3.serial_number = #{serialNumber,jdbcType=VARCHAR}
+        	</if>	
+    </select>
+    	
+    <!-- 激活审批列表 -->
+    <select id="getMdrcActiveRecords" resultMap="mdrcActiveResultMap" parameterType="java.util.Map">
+    	select 
+    		t1.*,
+        	t2.count AS mdrcCount,
+        	t3.serial_number as serialNumber,
+        	t3.amount as amount,
+        	t3.config_name as configName,
+        	t4.product_size AS productSize,
+        	t5.name AS entName,
+        	t5.code AS entCode
+        FROM
+        	approval_request t1
+        LEFT JOIN
+        	mdrc_active_detail t2 ON t1.id = t2.request_id
+        LEFT JOIN
+        	mdrc_batch_config t3 on t3.id = t2.config_id	
+        LEFT JOIN
+        	product t4 ON t4.id = t3.product_id
+        LEFT JOIN
+        	enterprises t5 ON t5.id = t3.enterprise_id
+        WHERE
+        	1=1
+        	<if test="enterprises != null">
+            	and t1.ent_id in
+	            <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+	                #{enterprise.id,jdbcType=BIGINT}
+	            </foreach>
+        	</if>
+        	<if test ="processId != null">
+            	AND t1.process_id = #{processId,jdbcType=BIGINT}
+        	</if>
+        	<if test = "result != null">
+            	AND t1.result = #{result,jdbcType=INTEGER}
+        	</if>
+       		<if test ="enterpriseCode != null">
+            	AND t5.code like CONCAT('%',CONCAT(#{enterpriseCode},'%'))
+        	</if>
+        	<if test ="enterpriseName != null">
+            	AND t5.name like CONCAT('%',CONCAT(#{enterpriseName},'%'))
+        	</if>
+        	<if test ="serialNumber != null">
+            	AND t3.serial_number = #{serialNumber,jdbcType=VARCHAR}
+        	</if>	
+        ORDER BY
+        t1.create_time DESC,
+        t1.update_time DESC,
+        t1.id
+        <if test ="pageNum != null and pageSize != null">
+        limit
+        #{pageNum},#{pageSize}
+        </if>	
+
+    </select>
+    
+    <!-- 导出山东充值记录 -->
+    <select id="exportSDAccountChangeRecords" parameterType="java.util.Map" resultMap="SdExportResultMap">
+        select
+        t1.id as id,
+        t1.process_id as processId,
+        t1.status as status,
+        t1.delete_flag as deleteFlag,
+        t1.create_time as createTime,
+        t1.ent_id as entId,
+        t2.name as entName,
+        t2.code as entCode,
+        t2.phone as entPhone,
+        t3.count as count,
+        t3.discount_type as discountType,
+        t3.discount_value as discountValue,
+        prd.type as productType,
+        prd.name as productTypeName,
+        sacr.pkg_seq as pkgSeq,
+        sacr.acct_id as acctId,
+        sacr.acct_seq as acctSeq
+        from
+        approval_request t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        left join
+        account_change_detail t3 on t3.request_id = t1.id
+        left join 
+        product prd on prd.id = t3.product_id
+        left join
+        sd_account_charge_record sacr on sacr.change_detail_id = t3.id
+        where
+        t1.ent_id in
+        <foreach collection="enterprises" item="enterprise" separator="," index="index" open="(" close=")">
+            #{enterprise.id,jdbcType=BIGINT}
+        </foreach>
+        <if test="processId != null">
+            and t1.process_id = #{processId,jdbcType=BIGINT}
+        </if>
+        <if test="name != null">
+            and t2.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="code != null">
+            and t2.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="phone != null">
+            and t2.phone like CONCAT('%',CONCAT(#{phone},'%'))
+        </if>
+        <if test="startTime != null">
+            and t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and t1.create_time &lt;= #{endTime}
+        </if>
+     </select>
+            
+     <select id="getApprovalRequests" resultMap="BaseResultMap" parameterType="java.util.Map">
+	        select
+	        	request.*
+	       	from 
+	       		approval_request request
+	        left join 
+	        	approval_process_definition definition on definition.id = request.process_id
+	        where
+	        	request.ent_id = #{entId,jdbcType=BIGINT}
+	        and
+	        	request.result = #{status, jdbcType=INTEGER}
+	        and
+	        	definition.type = #{approvalType,jdbcType=INTEGER}	        			
+     </select>   
+
+</mapper>

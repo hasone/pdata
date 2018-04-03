@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.UserGainRecordMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.UserGainRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="ent_id" property="entId" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="prd_id" property="prdId" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="extend_param" property="extendParam" jdbcType="VARCHAR"/>
+        <result column="source_name" property="sourceName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        ent_id,
+        user_id,
+        prd_id,
+        status,
+        extend_param,
+        source_name,
+        create_time,
+        update_time,
+        delete_flag
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.cmcc.vrp.province.model.UserGainRecord">
+        insert into user_gain_record (
+        ent_id,
+        user_id,
+        prd_id,
+        status,
+        extend_param,
+        source_name,
+        create_time,
+        update_time,
+        delete_flag)
+        values (
+        #{entId,jdbcType=BIGINT},
+        #{userId,jdbcType=BIGINT},
+        #{prdId,jdbcType=BIGINT},
+        #{status,jdbcType=INTEGER},
+        #{extendParam,jdbcType=VARCHAR},
+        #{sourceName,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=INTEGER})
+    </insert>
+
+    <!-- 根据用户ID和来源名称获取记录 -->
+    <select id="get" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        user_gain_record
+        where
+        user_id=#{userId, jdbcType=BIGINT} and
+        source_name = #{sourceName, jdbcType=VARCHAR} and
+        delete_flag = 0
+        order by
+        create_time DESC
+    </select>
+
+    <!-- 根据用户手机和来源名称获取记录 -->
+    <select id="getByMobile" resultMap="BaseResultMap">
+        select
+        r.id,
+        r.ent_id,
+        r.user_id,
+        r.prd_id,
+        p.product_size as size,
+        r.status,
+        r.extend_param,
+        r.source_name,
+        r.create_time,
+        r.update_time,
+        r.delete_flag
+        from
+        user_gain_record r,
+        user_info i,
+        product p
+        where
+        p.id = r.prd_id and
+        i.id = r.user_id and
+        i.mobile=#{mobile, jdbcType=VARCHAR} and
+        r.source_name = #{sourceName, jdbcType=VARCHAR} and
+        i.delete_flag = 0 and r.delete_flag = 0
+        order by
+        r.create_time DESC
+    </select>
+
+    <!-- 根据用户ID删除记录 -->
+    <update id="delete" parameterType="java.lang.Long">
+        update
+        user_gain_record
+        set
+        delete_flag = 1
+        where
+        user_id = #{userId, jdbcType=BIGINT}
+    </update>
+
+    <!-- 根据用户手机删除记录，逻辑删除 -->
+    <update id="deleteByMobile" parameterType="java.lang.Long">
+        update
+        user_gain_record r,
+        user_info i
+        set
+        r.delete_flag = 1
+        where
+        i.id = r.user_id and
+        i.mobile = #{mobile, jdbcType=VARCHAR}
+    </update>
+
+    <!-- 查询用户当月的记录 -->
+    <select id="monthAmount" resultType="java.lang.Long">
+        select
+        sum(p.product_size)
+        from
+        user_gain_record r,
+        product p,
+        user_info u
+        where
+        u.id = r.user_id and
+        p.id = r.prd_id and
+        u.mobile = #{mobile, jdbcType=VARCHAR} and
+        r.source_name = #{sourceName, jdbcType=VARCHAR} and
+        r.delete_flag = 0 and
+        DATE_FORMAT(r.create_time,'%Y-%m') = DATE_FORMAT(NOW() ,'%Y-%m') <!-- 只显示当月记录 -->
+    </select>
+
+    <select id="count" resultType="java.lang.Long">
+        select
+        count(*)
+        from
+        user_gain_record r,
+        user_info i
+        where
+        i.id = r.user_id and
+        i.mobile=#{mobile, jdbcType=VARCHAR} and
+        r.source_name = #{sourceName, jdbcType=VARCHAR} and
+        i.delete_flag = 0 and r.delete_flag = 0 and
+        TO_DAYS(r.create_time) = TO_DAYS(NOW())
+    </select>
+
+    <update id="updateStatus">
+        update
+        user_gain_record
+        set
+        status = #{status, jdbcType=INTEGER}
+        where
+        id = #{id, jdbcType=BIGINT}
+    </update>
+
+</mapper>

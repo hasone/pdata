@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AccountChangeOperatorMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.AccountChangeOperator">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="account_id" property="accountId" jdbcType="BIGINT"/>
+        <result column="prd_id" property="prdId" jdbcType="BIGINT"/>
+        <result column="count" property="count" jdbcType="DOUBLE"/>
+        <result column="ent_id" property="entId" jdbcType="BIGINT"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="serial_num" property="serialNum" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="discount_type" property="discountType" jdbcType="INTEGER"/>
+        <result column="discount_value" property="discountValue" jdbcType="INTEGER"/>
+        <result column="change_type" property="changeType" jdbcType="INTEGER"/>
+        
+    </resultMap>
+
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.AccountChangeOperator">
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="entCode" property="entCode" jdbcType="VARCHAR"/>
+        <result column="productType" property="productType" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, account_id, prd_id, count, ent_id, delete_flag, serial_num, discount_type, discount_value
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from account_change_operator
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByMap" resultMap="ExtendsResultMap" parameterType="java.util.Map">
+        select
+        t1.*,
+        t2.name as entName,
+        t2.code as entCode,
+        prd.type as productType
+        from
+        account_change_operator t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        left join 
+        product prd on t1.prd_id = prd.id
+        where
+        t1.delete_flag = 0
+        <if test="entId != null and entId != ''">
+            and t1.ent_id = #{entId,jdbcType=BIGINT}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="approvalType != null">
+            and t1.change_type = #{approvalType}
+        </if>
+        order by
+        t1.update_time desc
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="countByMap" parameterType="java.util.Map" resultType="java.lang.Long">
+        select
+        count(*)
+        from
+        account_change_operator t1
+        left join
+        enterprises t2 on t1.ent_id = t2.id
+        where
+        t1.delete_flag = 0
+        <if test="entId != null and entId != ''">
+            and t1.ent_id = #{entId,jdbcType=BIGINT}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="approvalType != null">
+            and t1.change_type = #{approvalType}
+        </if>
+        order by
+        t1.id
+    </select>
+
+
+    <delete id="deleteBySerialNum" parameterType="java.lang.String">
+        delete from
+        account_change_operator
+        where
+        serial_num = #{serialNum,jdbcType=VARCHAR}
+    </delete>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from account_change_operator
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.AccountChangeOperator" useGeneratedKeys="true" keyProperty="id">
+        insert into account_change_operator (id, account_id, prd_id,
+        count, ent_id, delete_flag, serial_num, create_time, update_time, discount_type, discount_value,
+        change_type)
+        values (#{id,jdbcType=BIGINT}, #{accountId,jdbcType=BIGINT}, #{prdId,jdbcType=BIGINT},
+        #{count,jdbcType=DOUBLE}, #{entId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=INTEGER},
+        #{serialNum,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},
+        #{discountType,jdbcType=INTEGER}, #{discountValue,jdbcType=INTEGER},#{changeType,jdbcType=INTEGER}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.AccountChangeOperator" useGeneratedKeys="true" keyProperty="id">
+        insert into account_change_operator
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="accountId != null">
+                account_id,
+            </if>
+            <if test="prdId != null">
+                prd_id,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="entId != null">
+                ent_id,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="serialNum != null">
+                serial_num,
+            </if>
+            <if test="discountType != null">
+                discount_type,
+            </if>
+            <if test="discountValue != null">
+                discount_value,
+            </if>
+            <if test="changeType != null">
+                change_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="accountId != null">
+                #{accountId,jdbcType=BIGINT},
+            </if>
+            <if test="prdId != null">
+                #{prdId,jdbcType=BIGINT},
+            </if>
+            <if test="count != null">
+                #{count,jdbcType=DOUBLE},
+            </if>
+            <if test="entId != null">
+                #{entId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="serialNum != null">
+                #{serialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="discountType != null">
+                #{discountType,jdbcType=INTEGER},
+            </if>
+            <if test="discountValue != null">
+                #{discountValue,jdbcType=INTEGER},
+            </if>                        
+            <if test="changeType != null">
+                #{changeType,jdbcType=INTEGER},
+            </if>                        
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.AccountChangeOperator">
+        update account_change_operator
+        <set>
+            <if test="accountId != null">
+                account_id = #{accountId,jdbcType=BIGINT},
+            </if>
+            <if test="prdId != null">
+                prd_id = #{prdId,jdbcType=BIGINT},
+            </if>
+            <if test="count != null">
+                count = #{count,jdbcType=DOUBLE},
+            </if>
+            <if test="entId != null">
+                ent_id = #{entId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="serialNum != null">
+                serial_num = #{serialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+			<if test="discountType != null">
+                discount_type = #{discountType,jdbcType=INTEGER},
+            </if>
+			<if test="discountValue != null">
+                discount_value = #{discountValue,jdbcType=INTEGER},
+            </if>
+            <if test="changeType != null">
+                change_type = #{changeType,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.AccountChangeOperator">
+        update account_change_operator
+        set account_id = #{accountId,jdbcType=BIGINT},
+        prd_id = #{prdId,jdbcType=BIGINT},
+        count = #{count,jdbcType=DOUBLE},
+        ent_id = #{entId,jdbcType=BIGINT},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        serial_num = #{serialNum,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

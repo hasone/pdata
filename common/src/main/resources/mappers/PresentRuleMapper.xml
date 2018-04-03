@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.PresentRuleMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.PresentRule">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="ent_id" property="entId" jdbcType="BIGINT"/>
+        <result column="eName" property="eName" jdbcType="VARCHAR"/>
+        <result column="activity_name" property="aName" jdbcType="VARCHAR"/>
+        <result column="total" property="total" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+        <result column="updater_id" property="updaterId" jdbcType="BIGINT"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="TINYINT"/>
+        <result column="version" property="version" jdbcType="TINYINT"/>
+        <result column="pCode" property="pCode" jdbcType="VARCHAR"/>
+        <result column="eCode" property="eCode" jdbcType="VARCHAR"/>
+
+        <result column="use_sms" property="useSms" jdbcType="INTEGER"/>
+        <result column="sms_template_id" property="smsTemplateId" jdbcType="BIGINT"/>
+
+    </resultMap>
+    <resultMap id="FlowCountLineMap" type="com.cmcc.vrp.province.model.FlowCountLineMap">
+        <result column="flowCount" property="flowCount" jdbcType="INTEGER"/>
+        <result column="sumFlowCount" property="sumFlowCount" jdbcType="INTEGER"/>
+        <result column="createTime" property="createTime" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, ent_id, total, status, create_time,
+        update_time,
+        creator_id, updater_id, delete_flag, version,
+        use_sms, sms_template_id,activity_name
+    </sql>
+
+    <!-- 流量规则 start -->
+    <select id="selectCount" resultType="java.lang.Integer"
+            parameterType="com.cmcc.vrp.util.PageResult">
+        SELECT
+        COUNT(0)
+        FROM
+        enterprises a,
+        present_rule c,
+        ent_manager em,
+        admin_manager am
+        WHERE
+        a.id=c.ent_id
+        and em.enter_id = a.id
+        and em.enter_id = a.id
+        and em.manager_id = am.manager_id
+        and em.delete_flag = 0
+        and am.delete_flag = 0
+        <if test="adminId != null and adminId != ''">
+            and am.admin_id = #{adminId, jdbcType=BIGINT}
+        </if>
+
+        <if test="status != null and status != '' and status != -1">
+            and c.status = #{status,jdbcType=BIGINT}
+            and c.delete_flag = 0
+        </if>
+
+        <if test="entName != null and entName != ''">
+            and a.name like CONCAT('%',CONCAT(#{entName},'%'))
+            and
+            c.delete_flag = 0
+        </if>
+        <if test="aName != null and aName != ''">
+            and c.activity_name like CONCAT('%',CONCAT(#{aName},'%'))
+            and
+            c.delete_flag = 0
+        </if>
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and c.delete_flag =1
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and c.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and c.create_time &lt;= #{endTime}
+        </if>
+
+    </select>
+
+    <select id="selectRuleByMult" resultMap="BaseResultMap"
+            parameterType="com.cmcc.vrp.province.model.PresentRule">
+        select *
+        from present_rule
+        where ent_id=#{entId}
+        and total=#{total} and creator_id=#{creatorId}
+        order by create_time desc
+        limit 1
+    </select>
+
+    <select id="selectPageRule" resultMap="BaseResultMap"
+            parameterType="com.cmcc.vrp.util.PageResult">
+        SELECT
+        c.*,
+        a.`name` as eName
+        FROM
+        enterprises a,
+        present_rule c,
+        ent_manager em,
+        admin_manager am
+        WHERE
+        a.id=c.ent_id
+        and em.enter_id = a.id
+        and em.enter_id = a.id
+        and em.manager_id = am.manager_id
+        and em.delete_flag = 0
+        and am.delete_flag = 0
+
+        <if test="adminId != null and adminId != ''">
+            and am.admin_id = #{adminId, jdbcType=BIGINT}
+        </if>
+
+        <if test="status != null and status != '' and status != '-1'">
+            and c.status = #{status,jdbcType=BIGINT}
+            and c.delete_flag =
+            0
+        </if>
+
+        <if test="entName != null and entName != ''">
+            and a.name like CONCAT('%',CONCAT(#{entName},'%'))
+            and
+            c.delete_flag = 0
+        </if>
+        <if test="aName != null and aName != ''">
+            and c.activity_name like CONCAT('%',CONCAT(#{aName},'%'))
+            and
+            c.delete_flag = 0
+        </if>
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and c.delete_flag =1
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and c.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and c.create_time &lt;= #{endTime}
+        </if>
+        ORDER BY
+        c.update_time DESC,
+        c.create_time DESC
+        LIMIT #{pageNum},
+        #{pageSize}
+    </select>
+
+    <!-- end -->
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap"
+            parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from present_rule
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        update
+        present_rule
+        set delete_flag = "1" where id =
+        #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectRuleDetails" resultMap="BaseResultMap"
+            parameterType="java.lang.Long">
+        select
+        a.id ,
+        a.total,
+
+        a.use_sms,
+        a.sms_template_id,
+        a.update_time,
+        a.ent_id,
+        a.activity_name,
+
+        c.name as eName,
+        c.code as eCode
+        from
+        present_rule as a,
+        enterprises as c
+        where
+        a.ent_id=c.id
+        and a.id =#{id}
+    </select>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.PresentRule">
+        insert into
+        present_rule (id, ent_id,total,
+        status, create_time,
+        update_time,
+        creator_id, updater_id, delete_flag,
+        version, use_sms, sms_template_id, activity_name)
+        values
+        (#{id,jdbcType=BIGINT},
+        #{entId,jdbcType=BIGINT},
+        #{prdId,jdbcType=BIGINT},
+        #{total,jdbcType=INTEGER},
+        #{status,jdbcType=TINYINT},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{creatorId,jdbcType=BIGINT},
+        #{updaterId,jdbcType=BIGINT},
+        #{deleteFlag,jdbcType=TINYINT},
+        #{version,jdbcType=TINYINT},
+
+        #{useSms,jdbcType=INTEGER},
+        #{smsTemplateId,jdbcType=BIGINT},
+        #{aName,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.PresentRule"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into present_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="entId != null">
+                ent_id,
+            </if>
+            <if test="total != null">
+                total,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="updaterId != null">
+                updater_id,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+            <if test="useSms != null">
+                use_sms,
+            </if>
+            <if test="smsTemplateId != null">
+                sms_template_id,
+            </if>
+            <if test="aName != null">
+                activity_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="entId != null">
+                #{entId,jdbcType=BIGINT},
+            </if>
+            <if test="total != null">
+                #{total,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="updaterId != null">
+                #{updaterId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=TINYINT},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=TINYINT},
+            </if>
+
+            <if test="useSms != null">
+                #{useSms,jdbcType=INTEGER},
+            </if>
+            <if test="smsTemplateId != null">
+                #{smsTemplateId,jdbcType=BIGINT},
+            </if>
+            <if test="aName != null">
+                #{aName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.PresentRule">
+        update present_rule
+        <set>
+            <if test="entId != null">
+                ent_id = #{entId,jdbcType=BIGINT},
+            </if>
+            <if test="total != null">
+                total = #{total,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="updaterId != null">
+                updater_id = #{updaterId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=TINYINT},
+            </if>
+            <if test="version != null">
+                version = #{version,jdbcType=TINYINT},
+            </if>
+            <if test="useSms != null">
+                use_sms = #{useSms,jdbcType=INTEGER},
+            </if>
+            <if test="smsTemplateId != null">
+                sms_template_id = #{smsTemplateId,jdbcType=BIGINT},
+            </if>
+            <if test="aName != null">
+                activity_name = #{aName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.PresentRule">
+        update
+        present_rule
+        set
+        ent_id = #{entId,jdbcType=BIGINT},
+        total = #{total,jdbcType=INTEGER},
+        status = #{status,jdbcType=TINYINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        creator_id = #{creatorId,jdbcType=BIGINT},
+        updater_id = #{updaterId,jdbcType=BIGINT},
+        delete_flag = #{deleteFlag,jdbcType=TINYINT},
+        version = #{version,jdbcType=TINYINT},
+        use_sms = #{useSms,jdbcType=INTEGER},
+        sms_template_id = #{smsTemplateId,jdbcType=BIGINT},
+        activity_name = #{aName,jdbcType=VARCHAR}
+        where
+        id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="getPresentCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT (d.atotal+e.btotal) as ccount FROM(
+        SELECT count(a.id) as atotal
+        FROM monthly_present_record a
+        LEFT JOIN monthly_present_rule b ON a.rule_id = b.id
+        LEFT JOIN enterprises c ON b.ent_id=c.id
+        LEFT JOIN admin_enter ae ON ae.enter_id=c.id
+        WHERE ae.admin_id=#{userId,jdbcType=BIGINT}
+        <if test="minTime != null">
+            AND date_format(a.create_time,"%Y-%m-%d") &gt;= #{minTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="maxTime != null">
+            AND date_format(a.create_time,"%Y-%m-%d") &lt;= #{maxTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="enterprisesName != null">
+            AND c.name LIKE CONCAT('%', #{enterprisesName,jdbcType=VARCHAR} , '%')
+        </if>
+        <if test="status != null">
+            AND a.status = #{status}
+        </if>
+        ) d,
+        (
+        SELECT count(a.id) as btotal
+        FROM present_record a
+        LEFT JOIN present_rule b ON a.rule_id=b.id
+        LEFT JOIN enterprises c ON c.id=b.ent_id
+        LEFT JOIN admin_enter ae ON c.id=ae.enter_id
+        WHERE ae.admin_id=#{userId,jdbcType=BIGINT}
+        <if test="minTime != null">
+            AND date_format(a.create_time,"%Y-%m-%d") &gt;= #{minTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="maxTime != null">
+            AND date_format(a.create_time,"%Y-%m-%d") &lt;= #{maxTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="enterprisesName != null">
+            AND c.name LIKE CONCAT('%', #{enterprisesName,jdbcType=VARCHAR} , '%')
+        </if>
+        <if test="status != null">
+            AND a.status = #{status}
+        </if>
+        ) e
+    </select>
+
+
+    <select id="getMonthPresentCountLine" parameterType="java.util.Map" resultMap="FlowCountLineMap">
+        SELECT count(a.id)as flowCount,date_format(a.create_time,#{toDateType,jdbcType=VARCHAR}) as createTime
+        FROM monthly_present_record a
+        LEFT JOIN monthly_present_rule r ON a.rule_id=r.id
+        LEFT JOIN enterprises b ON r.ent_id=b.id
+        LEFT JOIN admin_enter c ON b.id=c.enter_id
+        WHERE c.admin_id=#{userId,jdbcType=BIGINT}
+        <if test="minTime != null">
+            AND date_format(a.create_time,"%Y-%m-%d") &gt;= #{minTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="maxTime != null">
+            AND date_format(a.create_time,"%Y-%m-%d") &lt;= #{maxTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="enterprisesName != null">
+            AND b.name LIKE CONCAT('%', #{enterprisesName,jdbcType=VARCHAR} , '%')
+        </if>
+        <if test="status != null">
+            AND a.status = #{status}
+        </if>
+        GROUP BY date_format(a.create_time,#{toDateType,jdbcType=VARCHAR})
+    </select>
+
+
+    <select id="getPresentCountLine" parameterType="java.util.Map" resultMap="FlowCountLineMap">
+        SELECT sum(total)as flowCount,date_format(a.create_time,#{toDateType,jdbcType=VARCHAR})as createTime
+        FROM present_record a
+        LEFT JOIN present_rule r ON a.rule_id=r.id
+        LEFT JOIN enterprises b ON r.ent_id=b.id
+        LEFT JOIN admin_enter c ON b.id=c.enter_id
+        WHERE c.admin_id=#{userId,jdbcType=BIGINT}
+        <if test="minTime != null">
+            AND date_format(a.create_time,"%Y-%m-%d") &gt;= #{minTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="maxTime != null">
+            AND date_format(a.create_time,"%Y-%m-%d") &lt;= #{maxTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="enterprisesName != null">
+            AND b.name LIKE CONCAT('%', #{enterprisesName,jdbcType=VARCHAR} , '%')
+        </if>
+        <if test="status != null">
+            AND a.status = #{status}
+        </if>
+        GROUP BY date_format(a.create_time,#{toDateType,jdbcType=VARCHAR})
+    </select>
+</mapper>

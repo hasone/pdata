@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.SupplierProdReqUsePerDayMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.SupplierProdReqUsePerDay" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="supplier_product_id" property="supplierProductId" jdbcType="BIGINT" />
+    <result column="use_money" property="useMoney" jdbcType="REAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, supplier_product_id, use_money, create_time, update_time, delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from supplier_prod_req_use_per_day
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	select
+  		<include refid="Base_Column_List" />
+  	from 
+  		supplier_prod_req_use_per_day
+  	where
+  		delete_flag = 0 
+  		<if test="supplierProductId != null">
+  			and supplier_product_id = #{supplierProductId,jdbcType=BIGINT}
+  		</if>
+  		<if test="startTime != null and endTime != null">
+  			and create_time &gt;= #{startTime,jdbcType=TIMESTAMP}
+  			and create_time &lt;= #{endTime,jdbcType=TIMESTAMP}
+  		</if>
+  </select>
+  
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    update 
+    	supplier_prod_req_use_per_day
+    set
+    	delete_flag = 1,
+    	update_time = NOW()
+    where 
+    	id = #{id,jdbcType=BIGINT} and 
+    	delete_flag = 0
+  </update>
+  
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.SupplierProdReqUsePerDay" 
+  useGeneratedKeys="true" keyProperty="id">
+    insert into supplier_prod_req_use_per_day (id, supplier_product_id, use_money, 
+      create_time, update_time, delete_flag
+      )
+    values (#{id,jdbcType=BIGINT}, #{supplierProductId,jdbcType=BIGINT}, #{useMoney,jdbcType=REAL}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.SupplierProdReqUsePerDay" 
+  useGeneratedKeys="true" keyProperty="id">
+    insert into supplier_prod_req_use_per_day
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="supplierProductId != null" >
+        supplier_product_id,
+      </if>
+      <if test="useMoney != null" >
+        use_money,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="supplierProductId != null" >
+        #{supplierProductId,jdbcType=BIGINT},
+      </if>
+      <if test="useMoney != null" >
+        #{useMoney,jdbcType=REAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.SupplierProdReqUsePerDay" >
+    update supplier_prod_req_use_per_day
+    <set >
+      <if test="supplierProductId != null" >
+        supplier_product_id = #{supplierProductId,jdbcType=BIGINT},
+      </if>
+      <if test="useMoney != null" >
+        use_money = #{useMoney,jdbcType=REAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.SupplierProdReqUsePerDay" >
+    update supplier_prod_req_use_per_day
+    set supplier_product_id = #{supplierProductId,jdbcType=BIGINT},
+      use_money = #{useMoney,jdbcType=REAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <update id="updateUsedMoney">
+  	UPDATE
+        supplier_prod_req_use_per_day
+    SET
+        `use_money` = `use_money` + #{delta, jdbcType = REAL},
+        update_time = NOW()
+    WHERE
+    	id = #{id, jdbcType = BIGINT}
+  </update>
+</mapper>

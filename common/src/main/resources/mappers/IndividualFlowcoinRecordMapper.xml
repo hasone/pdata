@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.IndividualFlowcoinRecordMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.IndividualFlowcoinRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="admin_id" property="adminId" jdbcType="BIGINT"/>
+        <result column="individual_account_record_id" property="individualAccountRecordId" jdbcType="BIGINT"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="expire_time" property="expireTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="activity_type" property="activityType" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, admin_id, individual_account_record_id, count, type, create_time, update_time,
+        expire_time, delete_flag, description, mobile,activity_type
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from individual_flowcoin_record
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from individual_flowcoin_record
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.IndividualFlowcoinRecord"  useGeneratedKeys="true"
+            keyProperty="id">
+        insert into individual_flowcoin_record (id, admin_id, individual_account_record_id,
+        count, type, create_time,
+        update_time, expire_time, delete_flag,
+        description, mobile,activity_type)
+        values (#{id,jdbcType=BIGINT}, #{adminId,jdbcType=BIGINT}, #{individualAccountRecordId,jdbcType=BIGINT},
+        #{count,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}, #{expireTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER},
+        #{description,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},#{activityType,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.IndividualFlowcoinRecord"  useGeneratedKeys="true"
+            keyProperty="id">
+        insert into individual_flowcoin_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="adminId != null">
+                admin_id,
+            </if>
+            <if test="individualAccountRecordId != null">
+                individual_account_record_id,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="expireTime != null">
+                expire_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="activityType != null">
+                activity_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="adminId != null">
+                #{adminId,jdbcType=BIGINT},
+            </if>
+            <if test="individualAccountRecordId != null">
+                #{individualAccountRecordId,jdbcType=BIGINT},
+            </if>
+            <if test="count != null">
+                #{count,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="expireTime != null">
+                #{expireTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="activityType != null">
+                #{activityType,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.IndividualFlowcoinRecord">
+        update individual_flowcoin_record
+        <set>
+            <if test="adminId != null">
+                admin_id = #{adminId,jdbcType=BIGINT},
+            </if>
+            <if test="individualAccountRecordId != null">
+                individual_account_record_id = #{individualAccountRecordId,jdbcType=BIGINT},
+            </if>
+            <if test="count != null">
+                count = #{count,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="expireTime != null">
+                expire_time = #{expireTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.IndividualFlowcoinRecord">
+        update individual_flowcoin_record
+        set admin_id = #{adminId,jdbcType=BIGINT},
+        individual_account_record_id = #{individualAccountRecordId,jdbcType=BIGINT},
+        count = #{count,jdbcType=INTEGER},
+        type = #{type,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        expire_time = #{expireTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        description = #{description,jdbcType=VARCHAR},
+        mobile = #{mobile,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectByMap" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from individual_flowcoin_record
+        where
+        delete_flag = 0
+        <if test="adminId != null">
+            and admin_id = #{adminId}
+        </if>
+        <if test="startDate != null">
+            and Date(create_time) &gt;= Date(#{startDate})
+        </if>
+        <if test="endDate != null">
+            and Date(create_time) &lt;= Date(#{endDate})
+        </if>
+        <if test="type != null">
+            and type=#{type}
+        </if>
+        <if test="mobile != null">
+            and mobile=#{mobile}
+        </if>
+        order by
+        create_time DESC,
+        update_time DESC
+        <if test="pageNum != null and pageSize != null">
+            LIMIT
+            #{pageNum},#{pageSize}
+        </if>
+    </select>
+
+    <select id="countByMap" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        count(0)
+        from individual_flowcoin_record
+        where
+        delete_flag = 0
+        <if test="adminId != null">
+            and admin_id = #{adminId}
+        </if>
+        <if test="startDate != null">
+            and Date(create_time) &gt;= Date(#{startDate})
+        </if>
+        <if test="endDate != null">
+            and Date(create_time) &lt;= Date(#{endDate})
+        </if>
+        <if test="type != null">
+            and type=#{type}
+        </if>
+        <if test="mobile != null">
+            and mobile=#{mobile}
+        </if>
+    </select>
+</mapper>

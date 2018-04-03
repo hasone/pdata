@@ -1,0 +1,1424 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ChargeRecordMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ChargeRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="prd_id" property="prdId" jdbcType="BIGINT"/>
+        <result column="record_id" property="recordId" jdbcType="BIGINT"/>
+        <result column="charge_time" property="chargeTime" jdbcType="TIMESTAMP"/>
+        <result column="type_code" property="typeCode" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="status_code" property="statusCode" jdbcType="VARCHAR"/>
+        <result column="error_message" property="errorMessage" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="aName" property="aName" jdbcType="VARCHAR"/>
+        <result column="system_num" property="systemNum" jdbcType="VARCHAR"/>
+        <result column="serial_num" property="serialNum" jdbcType="VARCHAR"/>
+        <result column="boss_num" property="bossNum" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="BIGINT"/>
+        <result column="supplier_product_id" property="supplierProductId" jdbcType="BIGINT"/>
+        <result column="boss_charge_time" property="bossChargeTime" jdbcType="TIMESTAMP"/>
+        <result column="update_charge_time" property="updateChargeTime" jdbcType="TIMESTAMP"/>
+        <result column="finance_status" property="financeStatus" jdbcType="INTEGER"/>
+        <result column="change_account_status" property="changeAccountStatus" jdbcType="INTEGER"/>
+        <result column="effect_type" property="effectType" jdbcType="INTEGER"/>
+        <result column="supplier_product_price" property="supplierProductPrice" jdbcType="BIGINT"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="query_time" property="queryTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="StatementResultMap" type="com.cmcc.vrp.province.model.statement.FingerprintStat">
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="flowCount" property="flowCount" jdbcType="REAL"/>
+        <result column="price" property="price" jdbcType="REAL"/>
+    </resultMap>
+    
+    <resultMap id="EntBillRecordResultMap" type="com.cmcc.vrp.province.model.EntBillRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="charge_time" property="chargeTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="system_num" property="systemNum" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="BIGINT"/>      
+        <result column="update_charge_time" property="updateChargeTime" jdbcType="TIMESTAMP"/>
+        <result column="finance_status" property="financeStatus" jdbcType="INTEGER"/>
+        <result column="change_account_status" property="changeAccountStatus" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 山东对账使用的基本类 -->
+    <resultMap id="SDBaseResultMap" type="com.cmcc.vrp.boss.shangdong.boss.model.ServiceModel">
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="recordId" property="recordId" jdbcType="BIGINT"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="operateTime" property="operateTime" jdbcType="TIMESTAMP"/>
+        <result column="bossEnterpriseId" property="bossEnterpriseId" jdbcType="VARCHAR"/>
+        <result column="userId" property="userId" jdbcType="VARCHAR"/>
+        <result column="productCode" property="productCode" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="errorMessage" property="errorMessage" jdbcType="VARCHAR"/>
+        <result column="orderDiscount" property="orderDiscount" jdbcType="INTEGER"/>
+        <result column="platformSerialNum" property="platformSerialNum" jdbcType="VARCHAR"/>
+        <result column="bossReqSerialNum" property="bossReqSerialNum" jdbcType="VARCHAR"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+    </resultMap>
+    
+    <!--  对账使用类 -->
+    <resultMap id="BaseRecopncileResultMap" type="com.cmcc.vrp.province.reconcile.model.DBModel">
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="prdCode" property="prdCode" jdbcType="VARCHAR"/>
+        <result column="phonePrdCount" property="phonePrdCount" jdbcType="INTEGER"/>
+        <result column="bossRespSerialNum" property="bossRespSerialNum" jdbcType="VARCHAR"/>
+        <result column="chargeTime" property="chargeTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+     <!--  江苏开放平台对账使用类 -->
+    <resultMap id="JSBaseResultMap" type="com.cmcc.vrp.province.reconcile.model.JSModel">
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="prdCode" property="prdCode" jdbcType="VARCHAR"/>       
+        <result column="chargeTime" property="chargeTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="systemNum" property="systemNum" jdbcType="VARCHAR"/>
+        <result column="serialNum" property="serialNum" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询报表-->
+    <resultMap id="ExtendResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ChargeRecord">
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="productName" property="productName" jdbcType="VARCHAR"/>
+        <result column="cardNumber" property="cardNumber" jdbcType="VARCHAR"/>
+        <result column="configSerialNumber" property="configSerialNumber" jdbcType="VARCHAR"/>
+        <result column="configName" property="configName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="StatisticLineMap" type="com.cmcc.vrp.province.module.ChargeStatisticLineModule">
+        <result column="number" property="number" jdbcType="BIGINT"/>
+        <result column="money" property="money" jdbcType="DOUBLE"/>
+        <result column="capacity" property="capacity" jdbcType="DOUBLE"/>
+        <result column="date" property="date" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="StatisticChargeListMap" type="com.cmcc.vrp.province.module.ChargeStatisticListModule">
+        <result column="eName" property="eName" jdbcType="VARCHAR"/>
+        <result column="eCode" property="eCode" jdbcType="VARCHAR"/>
+        <result column="fullDistrictName" property="fullDistrictName" jdbcType="VARCHAR"/>
+        <result column="aName" property="aName" jdbcType="VARCHAR"/>
+        <result column="chargeType" property="chargeType" jdbcType="VARCHAR"/>
+        <result column="pName" property="pName" jdbcType="VARCHAR"/>
+        <result column="pCode" property="pCode" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="chargeTime" property="chargeTime" jdbcType="VARCHAR"/>
+        <result column="chargeStatus" property="chargeStatus" jdbcType="INTEGER"/>
+        <result column="serial_num" property="serialNum" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DOUBLE"/>
+        <result column="bossReqSerialNum" property="bossReqSerialNum" jdbcType="VARCHAR"/>
+        <result column="systemNum" property="systemNum" jdbcType="VARCHAR"/>
+        <result column="isQueryChargeResult" property="isQueryChargeResult" jdbcType="INTEGER"/>
+        <result column="fingerprint" property="fingerprint" jdbcType="VARCHAR"/>
+        <result column="queryTime" property="queryTime" jdbcType="TIMESTAMP"/>
+        <result column="feature" property="feature" jdbcType="VARCHAR"/>        
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, prd_id, enter_id, type_code, record_id, charge_time, status, error_message, type,
+        phone, aName, system_num, serial_num, boss_num,price, update_charge_time,boss_charge_time,
+        finance_status, change_account_status,supplier_product_id,effect_type, supplier_product_price,count,query_time
+    </sql>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ChargeRecord" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into charge_record (id, prd_id, enter_id,
+        type_code, record_id, charge_time,
+        status, status_code, error_message, type,
+        phone, aName, system_num,
+        serial_num, boss_num, fingerprint, effect_type,count)
+        values (#{id,jdbcType=BIGINT}, #{prdId,jdbcType=BIGINT}, #{enterId,jdbcType=BIGINT},
+        #{typeCode,jdbcType=INTEGER}, #{recordId,jdbcType=BIGINT}, #{chargeTime,jdbcType=TIMESTAMP},
+        #{status,jdbcType=INTEGER}, #{statusCode,jdbcType=VARCHAR}, #{errorMessage,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
+        #{phone,jdbcType=VARCHAR}, #{aName,jdbcType=VARCHAR}, #{systemNum,jdbcType=VARCHAR},
+        #{serialNum,jdbcType=VARCHAR}, #{bossNum,jdbcType=VARCHAR}, #{fingerprint,jdbcType=VARCHAR}, #{effectType,jdbcType=INTEGER},#{count,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.ChargeRecord"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into charge_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="prdId != null">
+                prd_id,
+            </if>
+            <if test="enterId != null">
+                enter_id,
+            </if>
+            <if test="typeCode != null">
+                type_code,
+            </if>
+            <if test="recordId != null">
+                record_id,
+            </if>
+            <if test="chargeTime != null">
+                charge_time,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="errorMessage != null">
+                error_message,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="aName != null">
+                aName,
+            </if>
+            <if test="systemNum != null">
+                system_num,
+            </if>
+            <if test="serialNum != null">
+                serial_num,
+            </if>
+            <if test="bossNum != null">
+                boss_num,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="prdId != null">
+                #{prdId,jdbcType=BIGINT},
+            </if>
+            <if test="enterId != null">
+                #{enterId,jdbcType=BIGINT},
+            </if>
+            <if test="typeCode != null">
+                #{typeCode,jdbcType=INTEGER},
+            </if>
+            <if test="recordId != null">
+                #{recordId,jdbcType=BIGINT},
+            </if>
+            <if test="chargeTime != null">
+                #{chargeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="errorMessage != null">
+                #{errorMessage,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="aName != null">
+                #{aName,jdbcType=VARCHAR},
+            </if>
+            <if test="systemNum != null">
+                #{systemNum,jdbcType=VARCHAR},
+            </if>
+            <if test="serialNum != null">
+                #{serialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="bossNum != null">
+                #{bossNum,jdbcType=VARCHAR},
+            </if>
+            <if test="count != null">
+                #{count,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.ChargeRecord">
+        update charge_record
+        <set>
+            <if test="prdId != null">
+                prd_id = #{prdId,jdbcType=BIGINT},
+            </if>
+            <if test="enterId != null">
+                enter_id = #{enterId,jdbcType=BIGINT},
+            </if>
+            <if test="typeCode != null">
+                type_code = #{typeCode,jdbcType=INTEGER},
+            </if>
+            <if test="recordId != null">
+                record_id = #{recordId,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="errorMessage != null">
+                error_message = #{errorMessage,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="aName != null">
+                aName = #{aName,jdbcType=VARCHAR},
+            </if>
+            <if test="systemNum != null">
+                system_num = #{systemNum,jdbcType=VARCHAR},
+            </if>
+            <if test="serialNum != null">
+                serial_num = #{serialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="bossNum != null">
+                boss_num = #{bossNum,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=BIGINT},
+            </if>
+            <if test="supplierProductId != null">
+                supplier_product_id = #{supplierProductId,jdbcType=BIGINT},
+            </if>
+            <if test="updateChargeTime != null">
+                update_charge_time = #{updateChargeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="bossChargeTime != null">
+                boss_charge_time = #{bossChargeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="financeStatus != null">
+                finance_status = #{financeStatus,jdbcType=INTEGER},
+            </if>
+            <if test="changeAccountStatus != null">
+                change_account_status = #{changeAccountStatus,jdbcType=INTEGER},
+            </if>
+			<if test="supplierProductPrice != null">
+                supplier_product_price = #{supplierProductPrice,jdbcType=BIGINT},
+            </if>
+            <if test="count != null">
+                count = #{count,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <!-- 统计所有充值记录的列表 -->
+    <select id="statisticChargeList" parameterType="java.util.Map" resultMap="StatisticChargeListMap">
+        SELECT
+        t3.name as eName,
+        t3.code as eCode,
+
+        (select CONCAT(IFNULL(m1.name,""),IFNULL(m2.name,""),IFNULL(m3.name,"")) from manager m3
+        left join manager m2 on m3.parent_id=m2.id
+        left join manager m1 on m1.id = m2.parent_id
+        WHERE m3.id=t5.manager_id) as fullDistrictName,
+
+        t1.aName as aName,
+        t1.type as chargeType,
+        t4.name as pName,
+        t1.phone as mobile,
+        t1.charge_time as chargeTime,
+        t1.status as chargeStatus,
+        t1.error_message as chargeMsg,
+        t1.record_id as recordId,
+        t1.serial_num as serialNum,
+        t1.system_num as systemNum,
+        t1.query_time as queryTime,
+        sn.boss_req_serial_num as bossReqSerialNum,
+        t4.price as price,
+        t4.product_code as pCode,
+        t7.is_query_charge_result as isQueryChargeResult,
+        t7.fingerprint as fingerprint,
+        t6.feature as feature
+
+        FROM
+        charge_record t1
+        LEFT JOIN serial_num sn on t1.system_num = sn.platform_serial_num
+        LEFT JOIN enterprises t3 ON t3.id = t1.enter_id
+        LEFT JOIN
+        product t4 ON t4.id = t1.prd_id
+        LEFT JOIN
+        ent_manager t5 ON t5.enter_id = t3.id
+        LEFT JOIN
+        supplier_product t6 ON t1.supplier_product_id = t6.id
+        LEFT JOIN 
+        supplier t7 on t6.supplier_id = t7.id
+        <where>
+            t5.delete_flag = 0
+            <if test="startTime != null  and  startTime !='' ">
+                and t1.charge_time &gt;= #{startTime}
+            </if>
+
+            <if test="endTime != null and  endTime !=''">
+                and t1.charge_time &lt;= #{endTime}
+            </if>
+			
+			<if test="typeList != null  and  typeList !='' "> 
+				and t1.type_code in
+				<foreach collection="typeList" item="type" open="(" close=")" separator=",">
+					#{type,jdbcType=INTEGER}
+				</foreach>	
+			</if>
+			
+            <if test="mobile != null and mobile != ''">
+                and t1.phone like CONCAT('%',CONCAT(#{mobile,jdbcType=VARCHAR},'%'))
+            </if>
+
+            <if test="status != null and status != '' ">
+                and t1.status = #{status,jdbcType=TINYINT}
+            </if>
+
+
+            <if test="eName != null and eName != ''">
+                and t3.name like CONCAT('%',CONCAT(#{eName},'%'))
+            </if>
+
+            <if test="productName != null and productName != ''">
+                and t4.name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+
+            <if test="enterIds != null">
+                and t1.enter_id in
+                <foreach collection="enterIds" item="enterId" index="index"
+                         open="(" close=")" separator=",">
+                    #{enterId}
+                </foreach>
+            </if>
+            
+            <if test="sdFlowName != null and sdFlowName != ''">
+                and t4.product_code like CONCAT('%',CONCAT('109901-','%'))
+            </if>
+            
+             <if test="sdPackageName != null and sdPackageName != ''">
+                and left(right(t4.product_code,6),4) = #{sdPackageName,jdbcType=VARCHAR}
+            </if>
+
+        </where>
+        ORDER BY t1.charge_time DESC
+
+        <if test="pageSize != null and pageNum!=null and pageSize != 0">
+            LIMIT #{pageNum}, #{pageSize}
+        </if>
+    </select>
+    
+    <!-- 统计所有充值记录的列表 -->
+    <select id="sdstatisticChargeList" parameterType="java.util.Map" resultMap="StatisticChargeListMap">
+        SELECT
+        t3.name as eName,
+        t3.code as eCode,
+
+        (select CONCAT(IFNULL(m0.name,""),IFNULL(m1.name,"")) from manager m3
+        left join manager m2 on m3.parent_id=m2.id
+        left join manager m1 on m1.id = m2.parent_id
+                left join manager m0 on m0.id = m1.parent_id
+        WHERE m3.id=t5.manager_id) as fullDistrictName,
+
+        t1.aName as aName,
+        t1.type as chargeType,
+        t4.name as pName,
+        t1.phone as mobile,
+        t1.charge_time as chargeTime,
+        t1.status as chargeStatus,
+        t1.error_message as chargeMsg,
+        t1.record_id as recordId,
+        t1.serial_num as serialNum,
+        t1.system_num as systemNum,
+        t1.query_time as queryTime,
+        sn.boss_req_serial_num as bossReqSerialNum,
+        t4.price as price,
+        t4.product_code as pCode,
+        t7.is_query_charge_result as isQueryChargeResult,
+        t7.fingerprint as fingerprint,
+        t6.feature as feature
+
+        FROM
+        charge_record t1
+        LEFT JOIN serial_num sn on t1.system_num = sn.platform_serial_num
+        LEFT JOIN enterprises t3 ON t3.id = t1.enter_id
+        LEFT JOIN
+        product t4 ON t4.id = t1.prd_id
+        LEFT JOIN
+        ent_manager t5 ON t5.enter_id = t3.id
+        LEFT JOIN
+        supplier_product t6 ON t1.supplier_product_id = t6.id
+        LEFT JOIN 
+        supplier t7 on t6.supplier_id = t7.id
+        <where>
+            t5.delete_flag = 0
+            <if test="startTime != null  and  startTime !='' ">
+                and t1.charge_time &gt;= #{startTime}
+            </if>
+
+            <if test="endTime != null and  endTime !=''">
+                and t1.charge_time &lt;= #{endTime}
+            </if>
+            
+            <if test="typeList != null  and  typeList !='' "> 
+                and t1.type_code in
+                <foreach collection="typeList" item="type" open="(" close=")" separator=",">
+                    #{type,jdbcType=INTEGER}
+                </foreach>  
+            </if>
+            
+            <if test="mobile != null and mobile != ''">
+                and t1.phone like CONCAT('%',CONCAT(#{mobile,jdbcType=VARCHAR},'%'))
+            </if>
+
+            <if test="status != null and status != '' ">
+                and t1.status = #{status,jdbcType=TINYINT}
+            </if>
+
+
+            <if test="eName != null and eName != ''">
+                and t3.name like CONCAT('%',CONCAT(#{eName},'%'))
+            </if>
+
+            <if test="productName != null and productName != ''">
+                and t4.name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+
+            <if test="enterIds != null">
+                and t1.enter_id in
+                <foreach collection="enterIds" item="enterId" index="index"
+                         open="(" close=")" separator=",">
+                    #{enterId}
+                </foreach>
+            </if>
+            
+            <if test="sdFlowName != null and sdFlowName != ''">
+                and t4.product_code like CONCAT('%',CONCAT('109901-','%'))
+            </if>
+            
+             <if test="sdPackageName != null and sdPackageName != ''">
+                and left(right(t4.product_code,6),4) = #{sdPackageName,jdbcType=VARCHAR}
+            </if>
+
+        </where>
+        ORDER BY t1.charge_time DESC
+
+        <if test="pageSize != null and pageNum!=null and pageSize != 0">
+            LIMIT #{pageNum}, #{pageSize}
+        </if>
+    </select>
+
+    <select id="statisticChargeListCount" parameterType="java.util.Map" resultType="int">
+        SELECT
+        count(0)
+        FROM
+        charge_record t1
+        LEFT JOIN
+        enterprises t3 ON t3.id = t1.enter_id
+        LEFT JOIN
+        product t4 ON t4.id = t1.prd_id
+        <where>
+            1=1
+            <if test="startTime != null  and  startTime !='' ">
+                and t1.charge_time &gt;= #{startTime}
+            </if>
+            <if test="typeList != null  and  typeList !='' "> 
+				and t1.type_code in
+				<foreach collection="typeList" item="type" open="(" close=")" separator=",">
+					#{type,jdbcType=INTEGER}
+				</foreach>	
+			</if>
+            <if test="endTime != null and  endTime !=''">
+                and t1.charge_time &lt;= #{endTime}
+            </if>
+
+            <if test="mobile != null and mobile != ''">
+                and t1.phone like CONCAT('%',CONCAT(#{mobile,jdbcType=VARCHAR},'%'))
+            </if>
+
+            <if test="status != null and status != '' ">
+                and t1.status = #{status,jdbcType=TINYINT}
+            </if>
+
+            <if test="eName != null and eName != ''">
+                and t3.name like CONCAT('%',CONCAT(#{eName},'%'))
+            </if>
+
+            <if test="productName != null and productName != ''">
+                and t4.name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+
+            <if test="enterIds != null">
+                and t1.enter_id in
+                <foreach collection="enterIds" item="enterId" index="index"
+                         open="(" close=")" separator=",">
+                    #{enterId}
+                </foreach>
+            </if>
+            
+            <if test="sdFlowName != null and sdFlowName != ''">
+                and t4.product_code like CONCAT('%',CONCAT('109901-','%'))
+            </if>
+            
+             <if test="sdPackageName != null and sdPackageName != ''">
+                and left(right(t4.product_code,6),4) = #{sdPackageName,jdbcType=VARCHAR}
+            </if>
+
+        </where>
+    </select>
+
+    <!-- 统计方法-->
+    <select id="statistictByChargeDay" resultMap="StatisticLineMap" parameterType="java.util.Map">
+        select count(*) as number, sum(t4.product_size)/1024.0 as capacity , sum(t1.price)/100.0 as money
+        ,IFNULL(DATE(t1.charge_time),"") as date
+        from charge_record t1
+        LEFT JOIN
+        enterprises t3 ON t3.id = t1.enter_id
+        LEFT JOIN
+        discount t2 ON t2.id = t3.discount
+        LEFT JOIN
+        product t4 ON t4.id = t1.prd_id
+        <if test="adminId != null and adminId != ''">
+            LEFT JOIN
+            admin_enter t5 ON t3.id = t5.enter_id
+        </if>
+        where t1.status = 3
+        <if test="adminId != null and adminId != ''">
+            and t5.admin_id = #{adminId}
+        </if>
+
+        <if test="startTime != null  and  startTime !='' ">
+            and t1.charge_time &gt;= #{startTime}
+        </if>
+
+        <if test="endTime != null and  endTime !=''">
+            and t1.charge_time &lt;= #{endTime}
+        </if>
+        <if test="status != null and status != '' ">
+            and t1.status = #{status,jdbcType=TINYINT}
+        </if>
+
+
+        <if test="eName != null and eName != ''">
+            and t3.name like CONCAT('%',CONCAT(#{eName},'%'))
+        </if>
+
+        <if test="productName != null and productName != ''">
+            and t4.name like CONCAT('%',CONCAT(#{productName},'%'))
+        </if>
+
+        <if test="districtIds != null">
+            and t3.district_id in
+            <foreach collection="districtIds" item="districtId" index="index"
+                     open="(" close=")" separator=",">
+                #{districtId}
+            </foreach>
+        </if>
+        GROUP BY DATE(t1.charge_time)
+        order by t1.charge_time asc
+    </select>
+
+    <select id="selectByChargeDay" resultMap="StatisticLineMap" parameterType="java.util.Map">
+        select IFNULL(count(*),0) as number, IFNULL(sum(t4.product_size)/1024.0,0.00) as capacity,
+        IFNULL(sum(t1.price)/100.0,0.00) as money
+        ,IFNULL(DATE(t1.charge_time),"") as date
+        from charge_record t1
+        LEFT JOIN
+        enterprises t3 ON t3.id = t1.enter_id
+        LEFT JOIN
+        discount t2 ON t2.id = t3.discount
+        LEFT JOIN
+        product t4 ON t4.id = t1.prd_id
+        LEFT JOIN
+        ent_manager t5 ON t5.enter_id = t3.id
+        LEFT JOIN
+        manager t6 ON t6.id = t5.manager_id
+        where t1.status = 3
+        and t5.delete_flag = 0
+
+        <if test="startTime != null  and  startTime !='' ">
+            and t1.charge_time &gt;= #{startTime}
+        </if>
+
+        <if test="endTime != null and  endTime !=''">
+            and t1.charge_time &lt;= #{endTime}
+        </if>
+        <if test="status != null and status != '' ">
+            and t1.status = #{status,jdbcType=TINYINT}
+        </if>
+
+        <if test="eName != null and eName != ''">
+            and t3.name like CONCAT('%',CONCAT(#{eName},'%'))
+        </if>
+
+        <if test="productName != null and productName != ''">
+            and t4.name like CONCAT('%',CONCAT(#{productName},'%'))
+        </if>
+
+        <if test="managerIds != null">
+            and t6.id in
+            <foreach collection="managerIds" item="managerId" index="index"
+                     open="(" close=")" separator=",">
+                #{managerId}
+            </foreach>
+        </if>
+        GROUP BY DATE(t1.charge_time)
+        order by t1.charge_time asc
+    </select>
+
+
+    <update id="updateStatus">
+        UPDATE
+        charge_record
+        SET
+        status = #{status, jdbcType = INTEGER},
+        error_message = #{errorMsg, jdbcType = VARCHAR}
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+
+    <update id="updateByRecordId">
+        UPDATE
+        charge_record
+        SET
+        status = #{status, jdbcType = INTEGER},
+        error_message = #{errorMessage,jdbcType=VARCHAR}
+        WHERE
+        record_id = #{recordId,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateBySystemNum">
+        UPDATE
+        charge_record
+        SET
+        <if test="updateChargeTime != null">
+        	update_charge_time = #{updateChargeTime},
+        </if>
+        <if test="financeStatus != null">
+        	finance_status = #{financeStatus},
+        </if>
+        status = #{status, jdbcType = INTEGER},
+        error_message = #{errorMessage,jdbcType=VARCHAR}
+        WHERE
+        system_num = #{systemNum,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByTypeCodeAndRecordId" parameterType="java.util.Map">
+        update charge_record
+        <set>
+            <if test="enterId != null">
+                enter_id = #{enterId,jdbcType=BIGINT},
+            </if>
+            <if test="prdId != null">
+                prd_id = #{prdId,jdbcType=BIGINT},
+            </if>
+            <if test="recordId != null">
+                record_id = #{recordId,jdbcType=BIGINT},
+            </if>
+            <if test="typeCode != null">
+                type_code = #{typeCode,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="errorMessage != null">
+                error_message = #{errorMessage,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="aName != null">
+                aName = #{aName,jdbcType=VARCHAR},
+            </if>
+            <if test="systemNum != null">
+                system_num = #{systemNum,jdbcType=VARCHAR},
+            </if>
+            <if test="serialNum != null">
+                serial_num = #{serialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="bossNum != null">
+                boss_num = #{bossNum,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where type_code = #{code,jdbcType=INTEGER} and record_id=#{recordId,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectRecordBySN" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM charge_record
+        WHERE
+        system_num = #{systemNum,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectRecords" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM charge_record
+        WHERE
+        enter_id = #{enterId,jdbcType=BIGINT}
+        ORDER BY charge_time DESC
+        LIMIT
+        #{pageOff},
+        #{pageSize}
+    </select>
+
+    <select id="selectByTypeCodeAndRecordId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM charge_record
+        WHERE
+        type_code = #{code,jdbcType=INTEGER} and record_id=#{recordId,jdbcType=BIGINT}
+    </select>
+
+
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into charge_record (prd_id, enter_id,
+        type_code, record_id, charge_time,
+        status, error_message, `type`,
+        phone, aName, system_num,
+        serial_num, boss_num, fingerprint,effect_type,count)
+        values
+        <foreach collection="list" item="record" separator=",">
+            (#{record.prdId,jdbcType=BIGINT},
+            #{record.enterId,jdbcType=BIGINT},
+            #{record.typeCode,jdbcType=INTEGER},
+            #{record.recordId,jdbcType=BIGINT},
+            #{record.chargeTime,jdbcType=TIMESTAMP},
+            #{record.status,jdbcType=INTEGER},
+            #{record.errorMessage,jdbcType=VARCHAR},
+            #{record.type,jdbcType=VARCHAR},
+            #{record.phone,jdbcType=VARCHAR},
+            #{record.aName,jdbcType=VARCHAR},
+            #{record.systemNum,jdbcType=VARCHAR},
+            #{record.serialNum,jdbcType=VARCHAR},
+            #{record.bossNum,jdbcType=VARCHAR},
+            #{record.fingerprint,jdbcType=VARCHAR},
+            #{record.effectType,jdbcType=INTEGER},
+            #{record.count,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
+    <update id="batchUpdateStatus" parameterType="java.util.List">
+        UPDATE
+        charge_record
+        SET
+        status = CASE
+        <foreach collection="records" item="record" close="ELSE `status` END">
+            WHEN id = #{record.id, jdbcType = BIGINT} THEN #{record.status, jdbcType = INTEGER}
+        </foreach>
+        ,error_message = CASE
+        <foreach collection="records" item="record" close="ELSE `error_message` END">
+            WHEN id = #{record.id, jdbcType = BIGINT} THEN #{record.errorMessage, jdbcType = VARCHAR}
+        </foreach>
+        ,status_code = CASE
+        <foreach collection="records" item="record" close="ELSE `status_code` END">
+            WHEN id = #{record.id, jdbcType = BIGINT} THEN #{record.statusCode, jdbcType = VARCHAR}
+        </foreach>
+        
+        <if test="updateChargeTime != null">
+        	,update_charge_time = CASE
+	        <foreach collection="records" item="record" close="ELSE `status` END">
+	            WHEN id = #{record.id, jdbcType = BIGINT} THEN #{record.updateChargeTime, jdbcType = TIMESTAMP}
+	        </foreach>
+        </if>
+        <if test="financeStatus != null">
+        	,finance_status  = CASE
+	        <foreach collection="records" item="record" close="ELSE `status` END">
+	            WHEN id = #{record.id, jdbcType = BIGINT} THEN #{record.financeStatus, jdbcType = INTEGER}
+	        </foreach>
+        </if>
+        
+        WHERE
+        id in
+        <foreach collection="records" item="record" open="(" close=")" separator=",">
+            #{record.id, jdbcType = BIGINT}
+        </foreach>
+    </update>
+
+    <select id="statement" resultMap="StatementResultMap">
+        SELECT
+        cr.fingerprint as `name`, count(*) as `count`, sum(cr.price) as `price`, sum(p.product_size) / 1024 as flowCount
+        FROM
+        charge_record cr
+        left join product p
+        on cr.prd_id = p.id
+        WHERE
+        cr.enter_id = #{entId, jdbcType = BIGINT} AND
+        cr.charge_time >= #{begin, jdbcType = TIMESTAMP} AND
+        cr.charge_time &lt; #{end, jdbcType = TIMESTAMP} AND
+        cr.status = 3
+        GROUP BY
+        cr.fingerprint
+    </select>
+
+    <select id="get" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        charge_record
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </select>
+
+    <!-- 山东专用，得到对账时需要的数据 -->
+    <select id="sdGetReconcileDatas" resultMap="SDBaseResultMap" parameterType="java.util.Map">
+        select
+        record.type_code as type,record.id as recordId,record.phone as mobile,record.charge_time as operateTime,e.phone
+        as bossEnterpriseId,
+        sp.name as userId,sp.code as productCode,p.price as price,record.status,record.error_message as
+        errorMessage,ep.discount as orderDiscount,
+        p.product_size as size
+        from charge_record record
+        INNER JOIN supplier_product sp on sp.id = record.supplier_product_id
+        INNER JOIN product p on p.id = record.prd_id
+        LEFT JOIN ent_product ep on ep.product_id = record.prd_id and ep.enterprize_id = record.enter_id
+        INNER JOIN enterprises e on e.id = record.enter_id
+        WHERE record.status =3
+        and record.charge_time is not NULL and ep.delete_flag = 0 
+        <if test="code != null and code != ''">
+            AND sp.code like CONCAT(CONCAT(#{code},'%'))
+        </if>
+        <if test="billStartTime != null">
+            AND record.charge_time &gt;= #{billStartTime}
+        </if>
+        <if test="billEndTime != null">
+            AND record.charge_time &lt;= #{billEndTime}
+        </if>
+    </select>
+    
+     <!-- 山东专用，得到对账时需要的数据 -->
+    <select id="sdGetReconcileSeqDatas" resultMap="SDBaseResultMap" parameterType="java.util.Map">
+        select
+        record.type_code as type,record.id as recordId,record.phone as mobile,record.charge_time as operateTime,e.phone
+        as bossEnterpriseId,
+        sp.name as userId,sp.code as productCode,p.price as price,record.status,record.error_message as
+        errorMessage,ep.discount as orderDiscount,
+        p.product_size as size,
+        s.platform_serial_num as platformSerialNum,
+        s.boss_req_serial_num as bossReqSerialNum,
+        record.count as count
+        from charge_record record
+        INNER JOIN supplier_product sp on sp.id = record.supplier_product_id
+        INNER JOIN product p on p.id = record.prd_id
+        LEFT JOIN ent_product ep on ep.product_id = record.prd_id and ep.enterprize_id = record.enter_id
+        INNER JOIN enterprises e on e.id = record.enter_id
+        INNER JOIN serial_num s on s.platform_serial_num = record.system_num
+        WHERE  record.charge_time is not NULL AND s.boss_req_serial_num is not NULL and ep.delete_flag = 0 
+        <if test="code != null and code != ''">
+            AND sp.code like CONCAT(CONCAT(#{code},'%'))
+        </if>
+        <if test="billStartTime != null">
+            AND record.charge_time &gt;= #{billStartTime}
+        </if>
+        <if test="billEndTime != null">
+            AND record.charge_time &lt;= #{billEndTime}
+        </if>
+    </select>
+
+    <!-- 山东专用，得到对账时需要的数据 -->
+    <select id="sdGetFlowReconcileDatas" resultMap="SDBaseResultMap" parameterType="java.util.Map">
+        select
+        record.phone as mobile, sp.name as userId, sp.code as productCode, sum(p.product_size) as size
+        from charge_record record
+        INNER JOIN supplier_product sp on sp.id = record.supplier_product_id
+        INNER JOIN product p on p.id = record.prd_id
+        WHERE record.status =3
+        and record.charge_time is not NULL
+        <if test="code != null and code != ''">
+            AND sp.code like CONCAT(CONCAT(#{code},'%'))
+        </if>
+        <if test="billStartTime != null">
+            AND record.charge_time &gt;= #{billStartTime}
+        </if>
+        <if test="billEndTime != null">
+            AND record.charge_time &lt;= #{billEndTime}
+        </if>
+        group by productCode, userId, mobile
+    </select>
+    
+    <select id="selectRecordByEnterIdAndSerialNum" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM charge_record
+        WHERE
+        enter_id = #{enterId,jdbcType=BIGINT}
+        and
+        serial_num = #{serialNum,jdbcType=VARCHAR}
+    </select>
+
+    <select id="batchSelectBySystemNum" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        charge_record
+        WHERE
+        system_num
+        IN
+        <foreach collection="systemNums" item="systemNum" open="(" close=")" separator=",">
+            #{systemNum,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <update id="updateStatusCode">
+        UPDATE
+        charge_record
+        SET
+        status_code = #{statusCode, jdbcType = VARCHAR}
+        WHERE
+        cast(IFNULL(status_code, '0') as SIGNED) &lt; cast(#{statusCode, jdbcType = VARCHAR} as SIGNED)
+        and
+        id = #{recordId, jdbcType = BIGINT}
+    </update>
+    
+    <update id="updateStatusCodeBySystemNum">
+        UPDATE
+        charge_record
+        SET
+        status_code = #{statusCode, jdbcType = VARCHAR}
+        WHERE
+        cast(IFNULL(status_code, '0') as SIGNED) &lt; cast(#{statusCode, jdbcType = VARCHAR} as SIGNED)
+        and
+        system_num = #{systemNum, jdbcType = VARCHAR}
+    </update>
+
+    <update id="updateStatusAndStatusCode">
+        UPDATE
+        charge_record
+        SET
+        <if test="updateChargeTime != null">
+        	update_charge_time = #{updateChargeTime},
+        </if>
+        <if test="financeStatus != null">
+        	finance_status = #{financeStatus},
+        </if>
+        <if test="statusCode != null">
+        	status_code = #{statusCode, jdbcType = VARCHAR},
+        </if>        
+        status = #{status, jdbcType = INTEGER},
+        error_message = #{errorMsg, jdbcType = VARCHAR}
+        WHERE
+        id = #{recordId, jdbcType = BIGINT}
+    </update>
+
+    <update id="batchUpdateStatusCode">
+        UPDATE
+        charge_record
+        SET
+        status_code = #{statusCode, jdbcType = VARCHAR}
+        WHERE
+        cast(IFNULL(status_code, '0') as SIGNED) &lt; cast(#{statusCode, jdbcType = VARCHAR} as SIGNED)
+        and
+        system_num in
+        <foreach collection="systemNums" item="systemNum" open="(" close=")" separator=",">
+            #{systemNum, jdbcType = VARCHAR}
+        </foreach>
+    </update>
+    
+    <select id="selectByTypeRecordId" resultMap="BaseResultMap">
+        select *
+        from charge_record
+        where
+        type_code = #{type} and
+        record_id = #{recordId}
+    </select>
+    
+    <select id="selectEntBillRecordByMap" resultMap="EntBillRecordResultMap">
+        select 
+        	cr.id as id,
+        	cr.type as type,
+        	p.name as productName,
+        	cr.phone as phone,
+        	cr.charge_time as chargeTime,
+        	cr.update_charge_time as updateChargeTime,        	
+        	TIMESTAMPDIFF(SECOND, cr.charge_time, IFNULL(cr.update_charge_time, NOW())) as intervalDate,
+        	cr.enter_id as enterId,
+        	cr.system_num as systemNum,
+        	cr.status as status,
+        	cr.price as price,
+        	cr.finance_status as financeStatus,
+        	cr.change_account_status as changeAccountStatus
+        	
+        from charge_record cr
+        	left join product p on p.id = cr.prd_id      
+        where
+        	1=1
+        <if test="enterId != null">
+        	and cr.enter_id = #{enterId}
+        </if>
+        <if test="financeStatus != null">
+        	and cr.finance_status = #{financeStatus}
+        </if>
+        <if test="chargeTime != null">
+        	and Month(cr.charge_time) = Month(str_to_date(#{chargeTime}, '%Y-%m'))
+        	and Year(cr.charge_time) = Year(str_to_date(#{chargeTime}, '%Y-%m'))
+        </if>
+        <if test="financeStatus != null">
+        	and finance_status = #{financeStatus}
+        </if>
+        <if test="phone != null">
+        	and phone = #{phone}
+        </if>
+		<if test="recordSystemNums!=null">
+        	and cr.system_num in (#{recordSystemNums})
+        </if>
+        ORDER BY
+		FIELD(cr.status, 2, 1, 3, 4),
+		intervalDate desc
+		<if test="pageNum != null">
+	        LIMIT
+	        #{pageNum},
+	        #{pageSize}
+        </if>
+    </select>
+    
+    <select id="countEntBillRecordByMap" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*)
+        	from charge_record cr
+        	left join product p on p.id = cr.prd_id      
+        where
+        1=1
+        <if test="enterId != null">
+        	and cr.enter_id = #{enterId}
+        </if>
+        <if test="financeStatus != null">
+        	and cr.finance_status = #{financeStatus}
+        </if>
+        <if test="chargeTime != null">
+        	and Month(cr.charge_time) = Month(str_to_date(#{chargeTime}, '%Y-%m'))
+        	and Year(cr.charge_time) = Year(str_to_date(#{chargeTime}, '%Y-%m'))
+        </if>
+        <if test="financeStatus != null">
+        	and finance_status = #{financeStatus}
+        </if>
+        <if test="phone != null">
+        	and phone = #{phone}
+        </if>
+        <if test="recordSystemNums!=null">
+        	and cr.system_num in (#{recordSystemNums})
+        </if>
+    </select>
+    
+    <select id="sumEntBillPriceByMap" parameterType="java.util.Map" resultType="java.lang.Long">
+        select sum(cr.price)
+        	from charge_record cr
+        	left join product p on p.id = cr.prd_id      
+        where
+        1=1
+        <if test="enterId != null">
+        	and cr.enter_id = #{enterId}
+        </if>
+        <if test="financeStatus != null">
+        	and cr.finance_status = #{financeStatus}
+        </if>
+        <if test="chargeTime != null">
+        	and Month(cr.charge_time) = Month(str_to_date(#{chargeTime}, '%Y-%m'))
+        	and Year(cr.charge_time) = Year(str_to_date(#{chargeTime}, '%Y-%m'))
+        </if>
+        <if test="financeStatus != null">
+        	and cr.finance_status = #{financeStatus}
+        </if>
+        <if test="phone != null">
+        	and cr.phone = #{phone}
+        </if>
+        <if test="recordSystemNums!=null">
+        	and cr.system_num in (#{recordSystemNums})
+        </if>
+    </select>
+    
+    <update id="updateBossChargeTimeBySystemNum" parameterType="java.lang.String">
+        update charge_record
+        <set>
+        	boss_charge_time = #{date,jdbcType=TIMESTAMP}           
+        </set>
+        where system_num = #{systemNum,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="batchUpdateBossChargeTimeBySystemNum" parameterType="java.util.List">
+        UPDATE
+        	charge_record
+        SET
+        	boss_charge_time = #{date,jdbcType=TIMESTAMP}    
+        WHERE
+        	system_num in
+        <foreach collection="systemNums" item="systemNum" open="(" close=")" separator=",">
+            #{systemNum, jdbcType = VARCHAR}
+        </foreach>
+    </update>
+
+    <!--查询报表-->
+    <select id="queryChargeRecord" parameterType="java.util.Map" resultMap="ExtendResultMap">
+        SELECT
+        t1.id,
+        t1.prd_id,
+        t1.enter_id,
+        t1.type_code,
+        t1.record_id,
+        t1.charge_time,
+        t1.status,
+        t1.error_message,
+        t1.type,
+        t1.phone,
+        t1.aName,
+        t1.system_num,
+        t1.serial_num,
+        t1.boss_num,
+        t1.price,
+        t1.update_charge_time,
+        t1.boss_charge_time,
+        t1.finance_status,
+        t1.change_account_status,
+        t2.name AS entName,
+        t3.name AS productName
+        FROM
+        charge_record t1
+        LEFT JOIN
+        enterprises t2 ON t2.id = t1.enter_id
+        LEFT JOIN
+        product t3 ON t3.id = t1.prd_id
+        WHERE
+        1=1
+        <if test="enterprises != null">
+            AND t1.enter_id IN
+            <foreach collection="enterprises" item="enter" open="(" close=")" separator=",">
+                #{enter.id}
+            </foreach>
+        </if>
+        <if test="financeStatusList != null">
+            AND t1.finance_status IN
+            <foreach collection="financeStatusList" item="financeStatus" open="(" close=")" separator=",">
+                #{financeStatus}
+            </foreach>
+        </if>
+        <if test="changeAccountStatus != null">
+            AND t1.change_account_status = #{changeAccountStatus}
+        </if>
+        <if test="status != null">
+            AND t1.status = #{status}
+        </if>
+        <if test="entName != null">
+            AND t2.name like CONCAT('%',CONCAT(#{entName,jdbcType=VARCHAR},'%'))
+        </if>
+        <if test="mobile != null">
+            AND t1.phone = #{mobile}
+        </if>
+        <if test="startTime != null">
+            AND t1.charge_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND t1.charge_time &lt;= #{endTime}
+        </if>
+        ORDER BY
+        t1.charge_time
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="countChargeRecord" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        charge_record t1
+        LEFT JOIN
+        enterprises t2 ON t2.id = t1.enter_id
+        LEFT JOIN
+        product t3 ON t3.id = t1.prd_id
+        WHERE
+        1=1
+        <if test="enterprises != null">
+            AND t1.enter_id IN
+            <foreach collection="enterprises" item="enter" open="(" close=")" separator=",">
+                #{enter.id}
+            </foreach>
+        </if>
+        <if test="financeStatusList != null">
+            AND t1.finance_status IN
+            <foreach collection="financeStatusList" item="financeStatus" open="(" close=")" separator=",">
+                #{financeStatus}
+            </foreach>
+        </if>
+        <if test="changeAccountStatus != null">
+            AND t1.change_account_status = #{changeAccountStatus}
+        </if>
+        <if test="status != null">
+            AND t1.status = #{status}
+        </if>
+        <if test="entName != null">
+            AND t2.name like CONCAT('%',CONCAT(#{entName,jdbcType=VARCHAR},'%'))
+        </if>
+        <if test="productName != null">
+            AND t3.name like CONCAT('%',CONCAT(#{productName,jdbcType=VARCHAR},'%'))
+        </if>
+        <if test="startTime != null">
+            AND t1.charge_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND t1.charge_time &lt;= #{endTime}
+        </if>
+        ORDER BY
+        t1.charge_time
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+    
+    <select id="getJsReconcileDatas" resultMap="BaseRecopncileResultMap" parameterType="java.util.Map">
+        select cr.phone as phone,
+        p.product_code as prdCode,
+        count(*) as phonePrdCount 
+        from charge_record cr 
+        INNER JOIN product p ON p.id = cr.prd_id 
+        WHERE cr.status =3
+        and cr.charge_time is not NULL
+        <if test="billStartTime != null">
+            AND cr.charge_time &gt;= #{billStartTime}
+        </if>
+        <if test="billEndTime != null">
+            AND cr.charge_time &lt;= #{billEndTime}
+        </if>
+        GROUP BY cr.phone,p.product_code;
+	</select>
+
+    <select id="getJxChargeRecords" resultMap="BaseResultMap">
+    	SELECT
+    	a.*
+    	FROM charge_record a
+    	left join 
+    	supplier_product b on a.supplier_product_id=b.id 
+    	left join 
+    	supplier c on b.supplier_id=c.id
+    	where
+    	c.id=#{supplierId, jdbcType = BIGINT} AND 
+    	a.charge_time >= #{begin, jdbcType = TIMESTAMP} AND
+    	a.charge_time &lt; #{end, jdbcType = TIMESTAMP} AND
+        a.status = 2
+    </select>
+    
+    <select id="getMdrcChargeRecords" resultMap="ExtendResultMap" parameterType="java.util.Map">
+    	SELECT
+    		c.*,
+    		config.serial_number as configSerialNumber,
+    		e.name as entName,
+    		m.card_number as cardNumber,
+    		config.config_name as configName
+    	FROM charge_record c
+    	left join mdrc_card_info_${year} as m on c.record_id = m.id and c.type_code = 19
+    	left join mdrc_batch_config config on config.id = config_id
+    	left join enterprises e on e.id = config.enterprise_id
+    	<where>
+    		<if test="systemNum != null and systemNum != ''">
+            	AND c.system_num = #{systemNum, jdbcType = VARCHAR}
+        	</if>
+    	    <if test="cardNumber != null and cardNumber != ''">
+            	AND m.card_number = #{cardNumber, jdbcType = VARCHAR}
+        	</if>
+        	<if test="statusList != null"> 
+				AND c.status in
+				<foreach collection="statusList" item="status" open="(" close=")" separator=",">
+					#{status,jdbcType=INTEGER}
+				</foreach>	
+			</if>
+			<if test="mobile != null and mobile != ''">
+            	AND c.phone = #{mobile, jdbcType = VARCHAR}
+        	</if>
+			<if test="enterprises != null">
+    			AND e.id in 
+    			<foreach collection="enterprises" item="item" open="(" close=")" separator="," index="">
+    				#{item.id, jdbcType = BIGINT}
+    			</foreach>
+    		</if>
+    	</where>
+    	order by c.charge_time
+    	<if test="pageSize != null and pageNum!=null and pageSize != 0">
+            LIMIT #{pageNum}, #{pageSize}
+        </if>
+    </select>
+    
+    <select id="countMdrcChargeRecords" resultType="java.lang.Long" parameterType="java.util.Map">
+    	SELECT
+		  count(c.id)
+    	FROM charge_record c
+    	left join mdrc_card_info_${year} as m on c.record_id = m.id and c.type_code = 19
+    	left join mdrc_batch_config config on config.id = config_id
+    	left join enterprises e on e.id = config.enterprise_id
+    	<where>
+    		<if test="systemNum != null and systemNum != ''">
+            	AND c.system_num = #{systemNum, jdbcType = VARCHAR}
+        	</if>
+    	    <if test="cardNumber != null and cardNumber != ''">
+            	AND m.card_number = #{cardNumber, jdbcType = VARCHAR}
+        	</if>
+        	<if test="statusList != null"> 
+				AND c.status in
+				<foreach collection="statusList" item="status" open="(" close=")" separator=",">
+					#{status,jdbcType=INTEGER}
+				</foreach>	
+			</if>
+			<if test="mobile != null and mobile != ''">
+            	AND c.phone = #{mobile, jdbcType = VARCHAR}
+        	</if>
+			<if test="enterprises != null">
+    			AND e.id in 
+    			<foreach collection="enterprises" item="item" open="(" close=")" separator="," index="">
+    				#{item.id, jdbcType = BIGINT}
+    			</foreach>
+    		</if>
+    	</where>
+    </select> 
+    
+	<update id="updateQueryTime" parameterType="java.lang.String">
+        update charge_record
+        <set>
+        	query_time = #{date,jdbcType=TIMESTAMP}           
+        </set>
+        where system_num = #{systemNum,jdbcType=VARCHAR}
+    </update>
+    
+	<select id="getRecordsByMobileAndPrd" resultMap="BaseResultMap">
+    	SELECT
+    	*
+    	FROM charge_record 
+    	where
+    	supplier_product_id=#{splPid, jdbcType = BIGINT} AND 
+    	phone=#{mobile, jdbcType = VARCHAR} AND 
+    	charge_time >= #{date, jdbcType = TIMESTAMP} AND
+        status = 3
+    </select>
+    
+     <!-- 江苏专用，得到和力云对账时需要的数据 -->
+    <select id="jsGetReconcileDatas" resultMap="JSBaseResultMap" parameterType="java.util.Map">
+        select cr.phone as phone,p.product_code as prdCode,cr.charge_time as chargeTime,cr.status as status,
+        cr.system_num as systemNum,cr.serial_num as serialNum from charge_record cr 
+        INNER JOIN product p on cr.prd_id = p.id 
+        where p.delete_flag=0
+        <if test="billStartTime != null">
+            AND cr.charge_time &gt;= #{billStartTime}
+        </if>
+        <if test="billEndTime != null">
+            AND cr.charge_time &lt;= #{billEndTime}
+        </if>
+    </select>
+    
+    <!-- 江苏专用,带boss流水号的对账 -->
+    <select id="jsReconcileDatasWithRespSeq" resultMap="BaseRecopncileResultMap" parameterType="java.util.Map" >
+        select cr.phone as phone,
+        p.product_code as prdCode,
+        sn.boss_resp_serial_num as bossRespSerialNum,
+        cr.charge_time as chargeTime
+        from charge_record cr 
+        INNER JOIN product p ON p.id = cr.prd_id 
+        LEFT JOIN serial_num sn on cr.system_num = sn.platform_serial_num
+        WHERE cr.status =3
+        and cr.charge_time is not NULL
+        <if test="billStartTime != null">
+            AND cr.charge_time &gt;= #{billStartTime}
+        </if>
+        <if test="billEndTime != null">
+            AND cr.charge_time &lt;= #{billEndTime}
+        </if>
+    </select>
+    
+</mapper>

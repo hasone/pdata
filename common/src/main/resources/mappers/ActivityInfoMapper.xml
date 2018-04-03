@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ActivityInfoMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ActivityInfo">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="activity_id" property="activityId" jdbcType="VARCHAR"/>
+        <result column="prize_count" property="prizeCount" jdbcType="BIGINT"/>
+        <result column="user_count" property="userCount" jdbcType="BIGINT"/>
+        <result column="total_product_size" property="totalProductSize" jdbcType="BIGINT"/>
+        <result column="price" property="price" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="has_white_or_black" property="hasWhiteOrBlack" jdbcType="INTEGER"/>
+        <result column="qrcode_size" property="qrcodeSize" jdbcType="INTEGER"/>
+        <result column="download" property="download" jdbcType="INTEGER"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+
+        <result column="gived_user_count" property="givedUserCount" jdbcType="BIGINT"/>
+        <result column="used_product_size" property="usedProductSize" jdbcType="BIGINT"/>
+        
+        <result column="visit_count" property="visitCount" jdbcType="BIGINT"/>
+        <result column="play_count" property="playCount" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, activity_id, prize_count, user_count, total_product_size, price, create_time,
+        update_time, delete_flag, has_white_or_black, qrcode_size,download, code, url,
+        gived_user_count, used_product_size, visit_count, play_count
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from activity_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from activity_info
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ActivityInfo">
+        insert into activity_info (id, activity_id, prize_count,
+        user_count, total_product_size, price,
+        create_time, update_time, delete_flag, has_white_or_black, qrcode_size,download
+        )
+        values (#{id,jdbcType=BIGINT}, #{activityId,jdbcType=VARCHAR}, #{prizeCount,jdbcType=BIGINT},
+        #{userCount,jdbcType=BIGINT}, #{totalProductSize,jdbcType=BIGINT}, #{price,jdbcType=BIGINT},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER},
+        #{hasWhiteOrBlack,jdbcType=INTEGER}, #{qrcodeSize,jdbcType=INTEGER}, #{download,jdbcType=INTEGER}
+        )
+    </insert>
+
+    <insert id="insertForRedpacket" parameterType="com.cmcc.vrp.province.model.ActivityInfo">
+        insert into
+        activity_info
+        (
+        id,
+        activity_id,
+        prize_count,
+        user_count,
+        total_product_size,
+        create_time,
+        update_time,
+        delete_flag,
+        price
+        )
+        values
+        (
+        #{id,jdbcType=BIGINT},
+        #{activityId,jdbcType=VARCHAR},
+        #{prizeCount,jdbcType=BIGINT},
+        #{userCount,jdbcType=BIGINT},
+        #{totalProductSize,jdbcType=BIGINT},
+        now(),
+        now(),
+        0,
+        #{price,jdbcType=BIGINT}
+        )
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.ActivityInfo">
+        insert into activity_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="activityId != null">
+                activity_id,
+            </if>
+            <if test="prizeCount != null">
+                prize_count,
+            </if>
+            <if test="userCount != null">
+                user_count,
+            </if>
+            <if test="totalProductSize != null">
+                total_product_size,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="hasWhiteOrBlack != null">
+                has_white_or_black,
+            </if>
+            <if test="qrcodeSize != null">
+                qrcode_size,
+            </if>
+            <if test="download != null">
+                download,
+            </if>
+
+            <if test="code != null">
+                code,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="givedUserCount != null">
+                gived_user_count,
+            </if>
+            <if test="usedProductSize != null">
+                used_product_size,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="activityId != null">
+                #{activityId,jdbcType=VARCHAR},
+            </if>
+            <if test="prizeCount != null">
+                #{prizeCount,jdbcType=BIGINT},
+            </if>
+            <if test="userCount != null">
+                #{userCount,jdbcType=BIGINT},
+            </if>
+            <if test="totalProductSize != null">
+                #{totalProductSize,jdbcType=BIGINT},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="hasWhiteOrBlack != null">
+                #{hasWhiteOrBlack,jdbcType=INTEGER},
+            </if>
+            <if test="qrcodeSize != null">
+                #{qrcodeSize,jdbcType=INTEGER},
+            </if>
+            <if test="download != null">
+                #{download,jdbcType=INTEGER},
+            </if>
+
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="givedUserCount != null">
+                #{givedUserCount,jdbcType=BIGINT},
+            </if>
+            <if test="usedProductSize != null">
+                #{usedProductSize,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateForRendomPacket" parameterType="com.cmcc.vrp.province.model.ActivityInfo">
+        UPDATE
+          activity_info
+        SET
+          gived_user_count = gived_user_count  + #{givedUserCount,jdbcType=BIGINT},
+          used_product_size = used_product_size + #{usedProductSize,jdbcType=BIGINT},
+          update_time = NOW()
+        WHERE
+          activity_id = #{activityId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.ActivityInfo">
+        update activity_info
+        <set>
+            <if test="prizeCount != null">
+                prize_count = #{prizeCount,jdbcType=BIGINT},
+            </if>
+            <if test="userCount != null">
+                user_count = #{userCount,jdbcType=BIGINT},
+            </if>
+            <if test="totalProductSize != null">
+                total_product_size = #{totalProductSize,jdbcType=BIGINT},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="hasWhiteOrBlack != null">
+                has_white_or_black = #{hasWhiteOrBlack,jdbcType=INTEGER},
+            </if>
+            <if test="qrcodeSize != null">
+                qrcode_size = #{qrcodeSize,jdbcType=INTEGER},
+            </if>
+            <if test="download != null">
+                download = #{download,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="givedUserCount != null">
+                gived_user_count = #{givedUserCount,jdbcType=BIGINT},
+            </if>
+            <if test="usedProductSize != null">
+                used_product_size = #{usedProductSize,jdbcType=BIGINT},
+            </if>
+            <if test="playCount != null">
+                play_count = #{playCount,jdbcType=BIGINT},
+            </if>
+            <if test="visitCount != null">
+                visit_count = #{visitCount,jdbcType=BIGINT},
+            </if>
+        </set>
+        where
+        activity_id = #{activityId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ActivityInfo">
+        update activity_info
+        set activity_id = #{activityId,jdbcType=VARCHAR},
+        prize_count = #{prizeCount,jdbcType=BIGINT},
+        user_count = #{userCount,jdbcType=BIGINT},
+        total_product_size = #{totalProductSize,jdbcType=BIGINT},
+        price = #{price,jdbcType=BIGINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        has_white_or_black = #{hasWhiteOrBlack,jdbcType=INTEGER},
+        qrcode_size = #{qrcodeSize,jdbcType=INTEGER},
+        download = #{download,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectByActivityId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from activity_info
+        where activity_id = #{activityId,jdbcType=VARCHAR}
+    </select>
+</mapper>

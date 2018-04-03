@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.EntManagerMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.EntManager">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="manager_id" property="managerId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="TINYINT"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="ManagerResultMap" type="com.cmcc.vrp.province.model.Manager">
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="role_id" jdbcType="BIGINT" property="roleId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="delete_flag" jdbcType="TINYINT" property="deleteFlag"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, enter_id, manager_id, create_time, update_time, delete_flag, creator_id
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from ent_manager
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from ent_manager
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" useGeneratedKeys="true"
+            keyProperty="id" parameterType="com.cmcc.vrp.province.model.EntManager">
+        insert into ent_manager (id, enter_id, manager_id,
+        create_time, update_time, delete_flag,
+        creator_id)
+        values (#{id,jdbcType=BIGINT}, #{enterId,jdbcType=BIGINT}, #{managerId,jdbcType=BIGINT},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=TINYINT},
+        #{creatorId,jdbcType=BIGINT})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.EntManager">
+        insert into ent_manager
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="enterId != null">
+                enter_id,
+            </if>
+            <if test="managerId != null">
+                manager_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="enterId != null">
+                #{enterId,jdbcType=BIGINT},
+            </if>
+            <if test="managerId != null">
+                #{managerId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=TINYINT},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.EntManager">
+        update ent_manager
+        <set>
+            <if test="enterId != null">
+                enter_id = #{enterId,jdbcType=BIGINT},
+            </if>
+            <if test="managerId != null">
+                manager_id = #{managerId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=TINYINT},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.EntManager">
+        update ent_manager
+        set enter_id = #{enterId,jdbcType=BIGINT},
+        manager_id = #{managerId,jdbcType=BIGINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=TINYINT},
+        creator_id = #{creatorId,jdbcType=BIGINT}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="getManagerIdForEnter" resultType="java.lang.Long" parameterType="java.lang.Long">
+        select
+        manager_id
+        from ent_manager
+        where enter_id = #{enterId,jdbcType=BIGINT} and delete_flag = 0
+    </select>
+
+    <select id="getManagerForEnter" resultMap="ManagerResultMap" parameterType="java.lang.Long">
+        select
+        t2.*
+        from
+        ent_manager t1
+        left join
+        manager t2 on t2.id = t1.manager_id
+        where
+        t1.enter_id = #{enterId,jdbcType=BIGINT} and t1.delete_flag = 0
+    </select>
+    
+    <select id="getManagerForEnterCode" resultMap="ManagerResultMap" parameterType="java.lang.String">
+        select
+        t2.*
+        from
+        ent_manager t1
+        left join
+        manager t2 on t2.id = t1.manager_id
+        left join
+        enterprises e on e.id = t1.enter_id
+        where
+        e.code = #{enterCode,jdbcType=VARCHAR} and t1.delete_flag = 0 and e.delete_flag = 0
+    </select>
+    
+    <select id="selectByManagerId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from ent_manager
+        where manager_id = #{managerId,jdbcType=BIGINT}
+        and delete_flag = 0
+    </select>
+</mapper>

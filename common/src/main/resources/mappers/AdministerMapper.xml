@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AdministerMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.Administer">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="password_new" property="passwordNew" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="VARCHAR"/>
+        <result column="mobile_phone" property="mobilePhone" jdbcType="VARCHAR"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+        <result column="pic_url" property="picUrl" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="citys" property="citys" jdbcType="VARCHAR"/>
+        <result column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="password_update_time" property="passwordUpdateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.Administer">
+        <result column="roleName" property="roleName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="ResultMapAuthority" type="com.cmcc.vrp.province.model.Authority">
+        <result column="AUTHORITY_NAME" property="authorityName" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+    <resultMap id="RoleStatisticMap" type="com.cmcc.vrp.province.module.UserStatisticModule">
+        <result column="roleName" property="roleName" jdbcType="VARCHAR"/>
+        <result column="managerName" property="managerName" jdbcType="VARCHAR"/>
+        <result column="number" property="number" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_name, password, password_new, salt, mobile_phone, creator_id, pic_url, email, create_time, update_time,
+        delete_flag, citys, password_update_time
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        a.id, a.user_name, a.password, a.password_new, a.salt, a.mobile_phone, a.creator_id, a.pic_url, a.email,
+        a.create_time, a.update_time,
+        a.delete_flag, a.citys
+        from administer a
+        where a.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据手机号码查询用户对象 -->
+    <select id="selectByMobilePhone" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from administer
+        where
+        mobile_phone = #{phone,jdbcType=VARCHAR} and
+        delete_flag = 0
+    </select>
+
+    <!--根据manageIds查询用户-->
+    <select id="getByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
+      SELECT
+        t1.*
+      FROM
+        administer t1
+      LEFT JOIN
+        admin_manager t2 ON t1.id = t2.admin_id
+      WHERE
+        t1.delete_flag = 0
+        AND
+        t2.delete_flag = 0
+        <if test="manageIds != null">
+            AND t2.manager_id IN
+            <foreach collection="manageIds" item="manageId" separator="," open="(" close=")">
+                #{manageId,jdbcType=BIGINT}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectByUserName" resultMap="BaseResultMap"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from administer
+        where
+        user_name = #{userName,jdbcType=VARCHAR} and
+        delete_flag = 0
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from administer
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.Administer"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into administer (user_name, password, password_new, salt,
+        mobile_phone, creator_id, pic_url,
+        email, create_time, update_time,
+        delete_flag, citys)
+        values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+        #{passwordNew,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR},
+        #{mobilePhone,jdbcType=VARCHAR}, #{creatorId,jdbcType=BIGINT}, #{picUrl,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=INTEGER}, #{citys,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.Administer" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into administer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+
+            <if test="passwordNew != null">
+                password_new,
+            </if>
+
+            <if test="salt != null">
+                salt,
+            </if>
+
+            <if test="mobilePhone != null">
+                mobile_phone,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="picUrl != null">
+                pic_url,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="citys != null">
+                citys,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+
+            <if test="passwordNew != null">
+                #{passwordNew, jdbcType=VARCHAR},
+            </if>
+
+            <if test="salt != null">
+                #{salt,jdbcType=VARCHAR},
+            </if>
+
+            <if test="mobilePhone != null">
+                #{mobilePhone,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="picUrl != null">
+                #{picUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="citys != null">
+                #{citys,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.Administer">
+        update administer
+        <set>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+
+            <if test="passwordNew != null">
+                password_new = #{passwordNew,jdbcType=VARCHAR},
+            </if>
+
+            <if test="salt != null">
+                salt = #{salt, jdbcType=VARCHAR},
+            </if>
+
+            <if test="mobilePhone != null">
+                mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="picUrl != null">
+                pic_url = #{picUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="citys != null">
+                citys = #{citys,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.Administer">
+        update administer
+        set user_name = #{userName,jdbcType=VARCHAR},
+        password = #{password,jdbcType=VARCHAR},
+        password_new = #{passwordNew,jdbcType=VARCHAR},
+        salt = #{salt,jdbcType=VARCHAR},
+        mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+        creator_id = #{creatorId,jdbcType=BIGINT},
+        pic_url = #{picUrl,jdbcType=VARCHAR},
+        email = #{email,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        citys = #{citys,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updatePasswordByKey" parameterType="java.util.Map">
+        update
+        administer
+        set
+        password_new=#{passwordNew,jdbcType=VARCHAR},
+        salt = #{salt, jdbcType = VARCHAR},
+        update_time = NOW(),
+        password_update_time = NOW(),
+        password = NULL
+        where
+        id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectAllAdministers" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from
+        administer T
+        where
+        T.delete_flag = 0
+    </select>
+
+
+    <!-- 用户管理使用分页类 -->
+    <select id="queryPaginationAdminCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        SELECT
+        count(0)
+        FROM administer t1
+        LEFT JOIN admin_manager t3 ON t1.id = t3.admin_id
+        LEFT JOIN manager t2 ON t2.id = t3.manager_id
+        WHERE
+        t1.delete_flag = 0 and t3.delete_flag = 0
+
+        <if test="userName != null and userName != ''">
+            AND t1.user_name like CONCAT('%',CONCAT(#{userName},'%'))
+        </if>
+        <if test="mobilePhone != null and mobilePhone != ''">
+            AND t1.mobile_phone like CONCAT('%',CONCAT(#{mobilePhone},'%'))
+        </if>
+        <if test="managerIds != null">
+            and t3.manager_id in
+            <foreach item="item" index="index" collection="managerIds" open="(" separator="," close=")">  
+                 #{item}  
+            </foreach>
+        </if>
+        <if test="adminId != null">
+            and t1.id = #{adminId}
+        </if>
+    </select>
+
+    <!-- 用户管理使用分页类 -->
+    <select id="queryPaginationAdminList" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        SELECT
+        t1.id,t1.user_name,t1.mobile_phone,t1.creator_id,t1.email,t1.create_time,t1.update_time,
+        r.name as roleName ,t1.delete_flag, r.role_id as roleId, t2.name as managerName, t2.parent_id as
+        parentManagerId
+        FROM administer t1
+        LEFT JOIN admin_manager t3 ON t1.id = t3.admin_id
+        LEFT JOIN manager t2 ON t2.id = t3.manager_id
+        LEFT JOIN role r ON r.role_id = t2.role_id
+        WHERE
+        t1.delete_flag = 0 and t3.delete_flag = 0
+        <if test="userName != null and userName != ''">
+            AND t1.user_name like CONCAT('%',CONCAT(#{userName},'%'))
+        </if>
+        <if test="mobilePhone != null and mobilePhone != ''">
+            AND t1.mobile_phone like CONCAT('%',CONCAT(#{mobilePhone},'%'))
+        </if>
+        <if test="managerIds != null">
+            and t3.manager_id in
+            <foreach item="item" index="index" collection="managerIds" open="(" separator="," close=")">  
+			     #{item}  
+			</foreach>
+        </if>
+        <if test="adminId != null">
+            and t1.id = #{adminId}
+        </if>
+        ORDER BY
+        t1.update_time DESC,t1.create_time DESC
+        LIMIT
+        #{pageNum},
+        #{pageSize}
+    </select>
+
+    <select id="queryUserAuthoriesByMobile" parameterType="java.lang.String" resultMap="ResultMapAuthority">
+        SELECT distinct authority.AUTHORITY_NAME
+        FROM
+        administer admin,
+        admin_manager am,
+        manager m,
+        role_authority roleAuthority,
+        authority authority
+        WHERE
+        am.delete_flag = 0 and
+        admin.id=am.admin_id and
+        am.manager_id = m.id and
+        m.role_id=roleAuthority.role_id and
+        roleAuthority.authority_id=authority.AUTHORITY_ID and
+        admin.mobile_phone=#{mobilePhone}
+    </select>
+
+    <select id="selectRoleByManagerId" resultMap="RoleStatisticMap" parameterType="java.util.Map">
+        SELECT COUNT(*) AS number, r.name AS roleName, r.role_id AS roleId,
+        (SELECT name from manager WHERE id = #{managerId,jdbcType=BIGINT} ) AS managerName
+        FROM admin_manager admm
+        LEFT JOIN manager m ON admm.manager_id = m.id
+        LEFT JOIN role r ON m.role_id = r.role_id
+        WHERE
+        m.id IN
+        <foreach collection="managerIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        AND admm.delete_flag = 0
+        GROUP BY m.role_id
+        ORDER BY number desc
+        <if test="pageNum != null and pageNum != ''">
+            LIMIT
+            #{pageNum},
+            #{pageSize}
+        </if>
+    </select>
+
+    <select id="selectRoleCountByManagerId" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(0) FROM (
+        SELECT COUNT(*) AS number, r.name AS roleName, r.role_id AS roleId,
+        (SELECT name from manager WHERE id = #{managerId,jdbcType=BIGINT} ) AS managerName
+        FROM admin_manager admm
+        LEFT JOIN manager m ON admm.manager_id = m.id
+        LEFT JOIN role r ON m.role_id = r.role_id
+        WHERE
+        m.id IN
+        <foreach collection="managerIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        AND admm.delete_flag=0
+        GROUP BY m.role_id
+        )a
+    </select>
+
+    <select id="selectOneRoleCountByManangerId" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT COUNT(0) FROM (
+        SELECT COUNT(*) AS number, r.name AS roleName, r.role_id AS roleId,
+        (SELECT name from manager WHERE id = #{managerId,jdbcType=BIGINT} ) AS managerName
+        FROM admin_manager admm
+        LEFT JOIN manager m ON admm.manager_id = m.id
+        LEFT JOIN role r ON m.role_id = r.role_id
+        WHERE
+        r.role_id = #{roleId,jdbcType=BIGINT}
+        AND
+        admm.delete_flag=0
+        AND
+        m.id IN
+        <foreach collection="managerIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>)a
+    </select>
+
+    <select id="selectOneRoleByManagerId" resultMap="RoleStatisticMap" parameterType="java.util.Map">
+        SELECT COUNT(*) AS number, r.name AS roleName, r.role_id AS roleId,
+        (SELECT name from manager WHERE id = #{managerId,jdbcType=BIGINT} ) AS managerName
+        FROM admin_manager admm
+        LEFT JOIN manager m ON admm.manager_id = m.id
+        LEFT JOIN role r ON m.role_id = r.role_id
+        WHERE
+        r.role_id = #{roleId,jdbcType=BIGINT}
+        AND
+        admm.delete_flag=0
+        AND
+        m.id IN
+        <foreach collection="managerIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        ORDER BY number desc
+        <if test="pageNum != null and pageNum != ''">
+            LIMIT
+            #{pageNum},
+            #{pageSize}
+        </if>
+    </select>
+
+    <!-- 查询出未绑定的制卡专员 -->
+    <select id="selectUnboundCardmaker" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT T1.* FROM administer T1
+        WHERE NOT EXISTS
+        (SELECT T2.OPERATOR_ID FROM mdrc_cardmaker T2 WHERE T1.ID = T2.OPERATOR_ID AND T2.delete_flag=0)
+        AND T1.id IN
+        (SELECT
+        A.admin_id
+        FROM
+        admin_role A
+        INNER JOIN
+        role R
+        ON
+        A.role_id = R.role_id
+        INNER JOIN
+        role_authority RU
+        ON
+        R.role_id = RU.role_id
+        INNER JOIN
+        authority AU
+        ON
+        AU.AUTHORITY_ID = RU.authority_id
+        WHERE
+        AU.code=#{authCode,jdbcType=VARCHAR}
+        AND
+        AU.DELETE_FLAG = 0
+        AND
+        R.delete_flag = 0
+        )
+        AND
+        T1.delete_flag = 0
+    </select>
+
+    <select id="selectCustomerByDistrictId" resultMap="BaseResultMap">
+        SELECT
+        adm.user_name,
+        adm.password,
+        adm.password_new,
+        adm.salt,
+        adm.mobile_phone,
+        adm.creator_id,
+        adm.email,
+        adm.pic_url,
+        adm.create_time,
+        adm.update_time
+        FROM
+        administer adm
+        LEFT JOIN admin_role ar
+        ON adm.id = ar.admin_id
+        LEFT JOIN admin_district adi
+        ON ar.admin_id = adi.admin_id
+        WHERE
+        adi.district_id = #{districtId,jdbcType=BIGINT}
+        AND
+        ar.role_id = #{roleId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectEMByEnterpriseId" resultMap="BaseResultMap">
+        SELECT
+        adm.id, adm.user_name, adm.password, adm.password_new, adm.salt,
+        adm.mobile_phone, adm.creator_id, adm.pic_url, adm.email,
+        adm.create_time, adm.update_time,adm.delete_flag, adm.citys
+        FROM
+        administer adm
+        RIGHT JOIN admin_manager admm
+        ON adm.id = admm.admin_id
+        RIGHT JOIN manager m
+        ON admm.manager_id = m.id
+        RIGHT JOIN ent_manager entm
+        on m.id = entm.manager_id
+        WHERE
+        entm.enter_id = #{enterId,jdbcType=BIGINT}
+        and adm.delete_flag = 0 
+        and admm.delete_flag = 0
+        and entm.delete_flag = 0
+    </select>
+
+    <update id="updateUserNameBymobile" parameterType="java.lang.String">
+        update
+        administer
+        set
+        user_name = #{userName,jdbcType=VARCHAR}
+        where
+        mobile_phone = #{mobile,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 根据权限名查找所有用户 -->
+    <select id="queryAllUsersByAuthName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        a.*
+        from
+        administer a
+        inner join
+        admin_role b
+        on
+        a.id = b.admin_id
+        inner join
+        role c
+        on
+        b.role_id = c.role_id
+        inner join
+        role_authority d
+        on
+        d.role_id = c.role_id
+        inner join
+        authority e
+        on
+        e.AUTHORITY_ID = d.authority_id
+        where
+        e.AUTHORITY_NAME = #{authName,jdbcType=VARCHAR}
+        and
+        e.DELETE_FLAG = 0
+        and
+        c.delete_flag = 0
+        and
+        a.delete_flag = 0
+    </select>
+    
+</mapper>

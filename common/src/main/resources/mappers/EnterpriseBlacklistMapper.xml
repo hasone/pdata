@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.EnterpriseBlacklistMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.EnterpriseBlacklist">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enterprise_name" property="enterpriseName" jdbcType="VARCHAR"/>
+        <result column="key_name" property="keyName" jdbcType="VARCHAR"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+        <result column="creater_time" property="createrTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.EnterpriseBlacklist">
+        <!-- 此处可用于扩展 -->
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        id, enterprise_name, key_name, creator_id, creater_time, update_time
+    </sql>
+    
+    <!-- 插入企业黑名单 -->
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.EnterpriseBlacklist"
+                useGeneratedKeys="true" keyProperty="id">
+        insert into
+        enterprise_blacklist (enterprise_name, key_name,creator_id, creater_time, update_time)
+        values
+        (#{enterpriseName, jdbcType = VARCHAR}, 
+        #{keyName, jdbcType = VARCHAR},      
+        #{creatorId, jdbcType=BIGINT},
+        NOW(),
+        NOW())
+    </insert>
+    
+    <!-- 通过企业名称和关键词查询企业 -->
+    <select id="selectByEntNameKeyWord" parameterType="java.util.Map" 
+        resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        enterprise_blacklist ent
+        WHERE
+        ent.delete_flag =0
+        <if test="entName != null and entName != ''">
+            and ent.enterprise_name = #{entName, jdbcType = VARCHAR}
+        </if>
+        <if test="keyName != null and keyName != ''">
+            and ent.key_name = #{keyName, jdbcType = VARCHAR}
+        </if>
+    </select>
+    
+    <!-- 通过企业id查询企业 -->
+    <select id="selectById" parameterType="int" 
+        resultMap="ExtendsResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        enterprise_blacklist ent
+        WHERE
+        ent.delete_flag =0
+        <if test="id != null and id != ''">
+            and ent.id = #{id, jdbcType = BIGINT}
+        </if>
+    </select>
+    
+    <!-- 获取企业黑名单列表 ，并支持搜索 -->
+    <select id="showEntBlacklistPagResult" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        enterprise_blacklist ent
+        where
+        ent.delete_flag = 0
+        
+       	<if test="eName != null and eName != ''">
+            and ent.enterprise_name like CONCAT('%',CONCAT(#{eName},'%'))
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and ent.key_name like CONCAT('%',CONCAT(#{keyword},'%'))
+        </if>
+        
+        order by
+       	ent.creater_time DESC,
+        ent.update_time DESC,
+        ent.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+    
+    <!-- 获取企业黑名单列表数量 ， 并支持搜索 -->
+    <select id="showEntBlacklistPagCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+        enterprise_blacklist ent
+        where
+        ent.delete_flag = 0
+        
+        <if test="eName != null and eName != ''">
+            and ent.enterprise_name like CONCAT('%', CONCAT(#{eName}, '%'))
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and ent.key_name like CONCAT('%',CONCAT(#{keyword} ,'%'))
+        </if>
+        
+        order by
+       	ent.creater_time DESC,
+        ent.update_time DESC,
+        ent.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+    
+    <update id="updateById">
+        UPDATE
+        enterprise_blacklist
+        SET
+        enterprise_name = #{entName, jdbcType = VARCHAR},
+        key_name = #{keyName, jdbcType = VARCHAR},
+        creator_id = #{creatorId,jdbcType=BIGINT},
+        update_time = NOW()
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+    
+	<update id="deleteById" parameterType="java.lang.Long">
+        UPDATE
+        enterprise_blacklist
+        SET
+        delete_flag = 1
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+    
+    <!-- 通过企业名称模糊查询 -->
+    <select id="selectByEntName" parameterType="java.lang.String" 
+        resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        enterprise_blacklist ent
+        WHERE
+        ent.delete_flag =0
+        <if test="entName != null and entName != ''">
+            and ent.enterprise_name like CONCAT('%', CONCAT(#{entName}, '%'))
+        </if>
+    </select>
+    
+    <!-- 获取所有的企业黑名单 -->
+    <select id="getAllEntBlacklist"
+    	resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        enterprise_blacklist ent
+        WHERE
+        ent.delete_flag =0
+    </select>
+    
+    <!-- 获取所有的关键词 -->
+    <select id="getAllKeywordsList" resultType="java.lang.String">
+        SELECT
+        key_name
+        FROM
+        enterprise_blacklist ent
+        WHERE
+        ent.delete_flag =0
+    </select>
+    
+    <select id="selectByKeywordList"  resultType="java.lang.String">
+    	SELECT 
+    	ent.enterprise_name
+    	FROM 
+		enterprise_blacklist ent
+		WHERE
+			ent.delete_flag =0
+			<if test="keywordSet != null and keywordSet.size !=0 ">
+				and ent.key_name in
+	            <foreach item="item" index="index" collection="keywordSet" open="(" close=")" separator=",">
+	     			#{item}
+	    		</foreach>
+	        </if>
+ 	 </select>
+    
+</mapper>

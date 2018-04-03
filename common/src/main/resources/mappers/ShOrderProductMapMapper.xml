@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ShOrderProductMapMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ShOrderProductMap">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="order_list_id" property="orderListId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, product_id, order_list_id, create_time,
+        update_time, delete_flag
+    </sql>
+    
+    
+	<insert id="insert" parameterType="com.cmcc.vrp.province.model.ShOrderProductMap"  useGeneratedKeys="true" keyProperty="id">
+        insert into sh_order_product_map (product_id, order_list_id,
+        create_time, update_time, delete_flag)
+        values ( #{productId,jdbcType=BIGINT}, #{orderListId,jdbcType=BIGINT},
+		 NOW(), NOW(), #{deleteFlag,jdbcType=INTEGER})
+    </insert>   
+    
+	<select id="getByOrderListId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from sh_order_product_map
+        where order_list_id = #{oriderListId,jdbcType=BIGINT}
+        AND
+        delete_flag = 0
+    </select>
+    
+	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into sh_order_product_map (product_id, order_list_id,
+        create_time, update_time, delete_flag)
+        values
+        <foreach collection="list" item="record" separator=",">
+            (#{record.productId,jdbcType=BIGINT},
+            #{record.orderListId,jdbcType=BIGINT},
+            NOW(),
+            NOW(),
+            #{record.deleteFlag,jdbcType=INTEGER}          
+            )
+        </foreach>
+    </insert>
+	<update id="deleteByPrdId" parameterType="java.lang.Long">
+        UPDATE
+        sh_order_product_map
+        SET
+        delete_flag = 1,
+        update_time = NOW()
+        WHERE
+        product_id = #{productId, jdbcType = BIGINT}
+    </update>
+</mapper>

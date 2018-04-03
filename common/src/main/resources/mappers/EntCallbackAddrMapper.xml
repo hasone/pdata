@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.EntCallbackAddrMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.EntCallbackAddr">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="ent_id" property="entId" jdbcType="BIGINT"/>
+        <result column="callback_addr" property="callbackAddr" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, ent_id, callback_addr, create_time, update_time, delete_flag
+    </sql>
+
+    <!-- get by primary key -->
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        ent_callback_addr
+        where
+        id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="getByEntId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        ent_callback_addr
+        where
+        ent_id = #{entId,jdbcType=BIGINT}
+        and delete_flag = 0
+    </select>
+
+    <update id="delete" parameterType="java.lang.Long">
+        update ent_callback_addr
+        SET
+        delete_flag = 1,
+        update_time = NOW()
+        where
+        id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.EntCallbackAddr"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into
+        ent_callback_addr (ent_id, callback_addr, create_time,update_time, delete_flag)
+        values (
+        #{entId,jdbcType=BIGINT},
+        #{callbackAddr,jdbcType=VARCHAR},
+        NOW(),
+        NOW(),
+        #{deleteFlag,jdbcType=INTEGER})
+    </insert>
+
+    <update id="update">
+        UPDATE
+        ent_callback_addr
+        SET
+        callback_addr = #{newCallbackAddr, jdbcType = VARCHAR},
+        update_time = NOW()
+        WHERE
+        ent_id = #{entId, jdbcType = BIGINT}
+        and delete_flag = 0
+    </update>
+    
+    <update id="deleteByEntId" parameterType="java.lang.Long">
+        update ent_callback_addr
+        SET
+        delete_flag = 1,
+        update_time = NOW()
+        where
+        ent_id = #{entId,jdbcType=BIGINT}
+    </update>
+</mapper>

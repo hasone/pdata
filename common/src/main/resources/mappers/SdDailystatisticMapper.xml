@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.SdDailystatisticMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.SdDailystatistic" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+    <result column="database_count" property="databaseCount" jdbcType="INTEGER" />
+    <result column="database_originprice" property="databaseOriginprice" jdbcType="DOUBLE" />
+    <result column="database_discountprice" property="databaseDiscountprice" jdbcType="DOUBLE" />
+    <result column="bill_count" property="billCount" jdbcType="INTEGER" />
+    <result column="bil_originprice" property="bilOriginprice" jdbcType="DOUBLE" />
+    <result column="bill_discountprice" property="billDiscountprice" jdbcType="DOUBLE" />
+    <result column="huadanone_count" property="huadanoneCount" jdbcType="INTEGER" />
+    <result column="huadanone_originprice" property="huadanoneOriginprice" jdbcType="DOUBLE" />
+    <result column="huadanone_discountprice" property="huadanoneDiscountprice" jdbcType="DOUBLE" />
+    <result column="huadanthree_count" property="huadanthreeCount" jdbcType="INTEGER" />
+    <result column="huadanthree_originprice" property="huadanthreeOriginprice" jdbcType="DOUBLE" />
+    <result column="huadanthree_discountprice" property="huadanthreeDiscountprice" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, date, database_count, database_originprice, database_discountprice, bill_count, 
+    bil_originprice, bill_discountprice, huadanone_count, huadanone_originprice, huadanone_discountprice, 
+    huadanthree_count, huadanthree_originprice, huadanthree_discountprice
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sd_dailystatistic
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByDate" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sd_dailystatistic
+    where date = #{date,jdbcType=VARCHAR}
+  </select>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.SdDailystatistic" >
+    insert into sd_dailystatistic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="date != null" >
+        date,
+      </if>
+      <if test="databaseCount != null" >
+        database_count,
+      </if>
+      <if test="databaseOriginprice != null" >
+        database_originprice,
+      </if>
+      <if test="databaseDiscountprice != null" >
+        database_discountprice,
+      </if>
+      <if test="billCount != null" >
+        bill_count,
+      </if>
+      <if test="bilOriginprice != null" >
+        bil_originprice,
+      </if>
+      <if test="billDiscountprice != null" >
+        bill_discountprice,
+      </if>
+      <if test="huadanoneCount != null" >
+        huadanone_count,
+      </if>
+      <if test="huadanoneOriginprice != null" >
+        huadanone_originprice,
+      </if>
+      <if test="huadanoneDiscountprice != null" >
+        huadanone_discountprice,
+      </if>
+      <if test="huadanthreeCount != null" >
+        huadanthree_count,
+      </if>
+      <if test="huadanthreeOriginprice != null" >
+        huadanthree_originprice,
+      </if>
+      <if test="huadanthreeDiscountprice != null" >
+        huadanthree_discountprice,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="databaseCount != null" >
+        #{databaseCount,jdbcType=INTEGER},
+      </if>
+      <if test="databaseOriginprice != null" >
+        #{databaseOriginprice,jdbcType=DOUBLE},
+      </if>
+      <if test="databaseDiscountprice != null" >
+        #{databaseDiscountprice,jdbcType=DOUBLE},
+      </if>
+      <if test="billCount != null" >
+        #{billCount,jdbcType=INTEGER},
+      </if>
+      <if test="bilOriginprice != null" >
+        #{bilOriginprice,jdbcType=DOUBLE},
+      </if>
+      <if test="billDiscountprice != null" >
+        #{billDiscountprice,jdbcType=DOUBLE},
+      </if>
+      <if test="huadanoneCount != null" >
+        #{huadanoneCount,jdbcType=INTEGER},
+      </if>
+      <if test="huadanoneOriginprice != null" >
+        #{huadanoneOriginprice,jdbcType=DOUBLE},
+      </if>
+      <if test="huadanoneDiscountprice != null" >
+        #{huadanoneDiscountprice,jdbcType=DOUBLE},
+      </if>
+      <if test="huadanthreeCount != null" >
+        #{huadanthreeCount,jdbcType=INTEGER},
+      </if>
+      <if test="huadanthreeOriginprice != null" >
+        #{huadanthreeOriginprice,jdbcType=DOUBLE},
+      </if>
+      <if test="huadanthreeDiscountprice != null" >
+        #{huadanthreeDiscountprice,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.SdDailystatistic" >
+    update sd_dailystatistic
+    <set >
+      <if test="date != null" >
+        date = #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="databaseCount != null" >
+        database_count = #{databaseCount,jdbcType=INTEGER},
+      </if>
+      <if test="databaseOriginprice != null" >
+        database_originprice = #{databaseOriginprice,jdbcType=DOUBLE},
+      </if>
+      <if test="databaseDiscountprice != null" >
+        database_discountprice = #{databaseDiscountprice,jdbcType=DOUBLE},
+      </if>
+      <if test="billCount != null" >
+        bill_count = #{billCount,jdbcType=INTEGER},
+      </if>
+      <if test="bilOriginprice != null" >
+        bil_originprice = #{bilOriginprice,jdbcType=DOUBLE},
+      </if>
+      <if test="billDiscountprice != null" >
+        bill_discountprice = #{billDiscountprice,jdbcType=DOUBLE},
+      </if>
+      <if test="huadanoneCount != null" >
+        huadanone_count = #{huadanoneCount,jdbcType=INTEGER},
+      </if>
+      <if test="huadanoneOriginprice != null" >
+        huadanone_originprice = #{huadanoneOriginprice,jdbcType=DOUBLE},
+      </if>
+      <if test="huadanoneDiscountprice != null" >
+        huadanone_discountprice = #{huadanoneDiscountprice,jdbcType=DOUBLE},
+      </if>
+      <if test="huadanthreeCount != null" >
+        huadanthree_count = #{huadanthreeCount,jdbcType=INTEGER},
+      </if>
+      <if test="huadanthreeOriginprice != null" >
+        huadanthree_originprice = #{huadanthreeOriginprice,jdbcType=DOUBLE},
+      </if>
+      <if test="huadanthreeDiscountprice != null" >
+        huadanthree_discountprice = #{huadanthreeDiscountprice,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ActivityRecordMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ActivityRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="ent_id" property="entId" jdbcType="BIGINT"/>
+        <result column="activity_name" property="activityName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="activity_type" property="activityType" jdbcType="INTEGER"/>
+        <result column="activity_type_name" property="activityTypeName" jdbcType="VARCHAR"/>
+        <result column="rule_id" property="ruleId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,ent_id,activity_name,create_time,update_time,activity_type,activity_type_name,rule_id
+    </sql>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ActivityRecord" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into activity_record (ent_id,
+        activity_name,create_time,update_time,activity_type,activity_type_name,rule_id)
+        values (#{entId,jdbcType=BIGINT}, #{activityName,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},#{updateTime,jdbcType=TIMESTAMP},
+        #{activityType,jdbcType=INTEGER},#{activityTypeName,jdbcType=VARCHAR},
+        #{ruleId,jdbcType=BIGINT})
+    </insert>
+
+</mapper>

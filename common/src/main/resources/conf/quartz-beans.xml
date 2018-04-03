@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="schedulerFactory"
+          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <!-- quartz配置 -->
+        <property name="configLocation" value="file:/etc/pdata/conf/props/quartz.properties"/>
+        <!-- 自定义的任务工厂 -->
+        <property name="jobFactory">
+            <bean class="com.cmcc.vrp.province.quartz.AutowireJobFactory"/>
+        </property>
+
+
+        <!-- 定时任务 -->
+        <property name="jobDetails">
+            <list>
+                <ref bean="dailyStatistic"/>
+                <ref bean="monthlyStatistic"/>
+                <ref bean="yearlyStatistic"/>
+                <ref bean="cleanIndividualAccount"/>
+                
+                <ref bean="dailySupplierLimitStatistic"/>
+                <ref bean="dailyCheckSupplierBalance"/>
+                <ref bean="dailyJxQueryChargeResult"/>
+                <ref bean="gsAuth"/>
+                
+                <ref bean="dailyCkeckMdrcExpiredTime"/>
+                <ref bean="dailyStatisticAnalyse"/>
+            </list>
+        </property>
+
+        <property name="triggers">
+            <list>
+                <ref bean="dailyStatisticTrigger"/>
+                <ref bean="monthlyStatisticTrigger"/>
+                <ref bean="yearlyStatisticTrigger"/>
+                <ref bean="cleanIndividualAccountTrigger"/>
+                
+                <ref bean="dailySupplierLimitStatisticTrigger"/>
+                <ref bean="dailyCheckSupplierBalanceTrigger"/>
+                <ref bean="dailyJxQueryChargeResultTrigger"/>
+                <ref bean="gsAuthTrigger"/>
+                
+                <ref bean="dailyCkeckMdrcExpiredTimeTrigger"/>
+                <ref bean="dailyStatisticAnalyseTrigger"/>
+            </list>
+        </property>
+
+    </bean>
+
+    <!-- 任务线程池 -->
+    <bean id="threadPoolTaskExecutor"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!-- 核心线程数，默认为1 -->
+        <property name="corePoolSize" value="1000"/>
+        <!-- 最大线程数，默认为Integer.MAX_VALUE -->
+        <property name="maxPoolSize" value="2000"/>
+        <!-- 队列最大长度，一般需要设置值>=notifyScheduledMainExecutor.maxNum；默认为Integer.MAX_VALUE
+            <property name="queueCapacity" value="1000" /> -->
+        <!-- 线程池维护线程所允许的空闲时间，默认为60s -->
+        <property name="keepAliveSeconds" value="300"/>
+        <!-- 线程池对拒绝任务（无线程可用）的处理策略，目前只支持AbortPolicy、CallerRunsPolicy；默认为后者 -->
+        <property name="rejectedExecutionHandler">
+            <!-- AbortPolicy:直接抛出java.util.concurrent.RejectedExecutionException异常 -->
+            <!-- CallerRunsPolicy:主线程直接执行该任务，执行完之后尝试添加下一个任务到线程池中，可以有效降低向线程池内添加任务的速度 -->
+            <!-- DiscardOldestPolicy:抛弃旧的任务、暂不支持；会导致被丢弃的任务无法再次被执行 -->
+            <!-- DiscardPolicy:抛弃当前任务、暂不支持；会导致被丢弃的任务无法再次被执行 -->
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
+        </property>
+    </bean>
+
+    <!--  webservice接口的任务 -->
+    <bean id="SCchargeTask" class="com.cmcc.webservice.sichuan.task.ChargeTask" scope="prototype"/>
+	
+	<!-- 校验营销卡过期时间 -->
+	<bean name="dailyCkeckMdrcExpiredTime" 
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="Durability" value="true"/>
+        <property name="jobClass" value="com.cmcc.vrp.province.quartz.jobs.DailyCkeckMdrcExpiredTimeJob"/>
+    </bean>
+    
+	<bean id="dailyCkeckMdrcExpiredTimeTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="dailyCkeckMdrcExpiredTime"/>
+        <property name="cronExpression" value="0 0 0 * * ?"/> 
+        <!-- 每天0点执行 -->
+	</bean>
+	
+	<!-- 供应商及供应商产品限额定时任务 -->
+	<bean name="dailySupplierLimitStatistic" 
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="Durability" value="true"/>
+        <property name="jobClass" value="com.cmcc.vrp.province.quartz.jobs.DailySupplierLimitStatisticJob"/>
+    </bean>
+    
+	<bean id="dailySupplierLimitStatisticTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="dailySupplierLimitStatistic"/>
+        <property name="cronExpression" value="0 0 0 * * ?"/> 
+        <!-- 每天0点执行 -->
+	</bean>
+	
+	<!-- 通知客户经理供应商余额不足定时任务 -->
+	<bean name="dailyCheckSupplierBalance" 
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="Durability" value="true"/>
+        <property name="jobClass" value="com.cmcc.vrp.province.quartz.jobs.DailyCheckSupplierBalanceJob"/>
+    </bean>
+    
+    <!-- 产品强烈要求8点跑定时任务,这里不动 -->
+	<bean id="dailyCheckSupplierBalanceTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="dailyCheckSupplierBalance"/>
+        <property name="cronExpression" value="0 0 8 * * ?"/>
+        <!-- 每天8点执行 -->
+	</bean>
+	
+    <!-- 日统计表定时任务 -->
+    <bean name="dailyStatistic" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="Durability" value="true"/>
+        <property name="jobClass" value="com.cmcc.vrp.province.quartz.jobs.DailyStatisticJob"/>
+    </bean>
+
+    <bean id="dailyStatisticTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="dailyStatistic"/>
+        <!-- <property name="cronExpression" value="*/5 * * * * ?"/> --><!-- 每隔1秒钟触发一次 -->
+        <property name="cronExpression" value="0 0 1 * * ?"/>
+        <!-- 每天1点执行 -->
+    </bean>
+
+    <!-- 月统计表定时任务 -->
+    <bean name="monthlyStatistic"
+          class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="Durability" value="true"/>
+        <property name="jobClass" value="com.cmcc.vrp.province.quartz.jobs.MonthlyStatisticJob"/>
+    </bean>
+
+    <bean id="monthlyStatisticTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="monthlyStatistic"/>
+        <property name="cronExpression" value="0 0 2 1 * ?"/>
+        <!-- 每月1日2点执行 -->
+    </bean>
+
+    <!-- 年统计表定时任务 -->
+    <bean name="yearlyStatistic" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="Durability" value="true"/>
+        <property name="jobClass" value="com.cmcc.vrp.province.quartz.jobs.YearlyStatisticJob"/>
+    </bean>
+
+    <bean id="yearlyStatisticTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="yearlyStatistic"/>
+        <property name="cronExpression" value="0 0 3 1 1 ?"/><!-- 1月1日3点执行 -->
+    </bean>
+
+    <!-- 四川红包订购清空任务 -->
+    <bean name="cleanIndividualAccount"
+          class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="Durability" value="true"/>
+        <property name="jobClass"
+                  value="com.cmcc.vrp.province.quartz.jobs.CleanIndividualAccountJob"/>
+    </bean>
+
+    <bean id="cleanIndividualAccountTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="cleanIndividualAccount"/>
+        <property name="cronExpression" value="59 59 23 L * ?"/>
+    </bean>
+    
+	<!-- 江西获取前一天充值结果定时任务 -->
+	<bean name="dailyJxQueryChargeResult" 
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="Durability" value="true"/>
+        <property name="jobClass" value="com.cmcc.vrp.province.quartz.jobs.JxQueryChargeResultJob"/>
+    </bean>
+    
+    <!-- 江西获取前一天充值结果定时任务,每天八点执行 -->
+	<bean id="dailyJxQueryChargeResultTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="dailyJxQueryChargeResult"/>
+        <property name="cronExpression" value="0 15 8 * * ?"/>
+        <!--<property name="cronExpression" value="0/5 * * * * ?"/>-->
+        <!-- 每天8点15分触发 -->
+	</bean>
+	
+	
+	<!-- 甘肃获取验证码定时任务 -->
+	<bean name="gsAuth" 
+		class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="Durability" value="true"/>
+        <property name="jobClass" value="com.cmcc.vrp.province.quartz.jobs.GsAuthJob"/>
+    </bean>
+    
+    <!-- 甘肃获取验证码定时任务,每一个半个小时执行一次 -->
+	<bean id="gsAuthTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="gsAuth"/>
+        <property name="cronExpression" value="0 0/30 0/1 * * ?"/>
+        <!--<property name="cronExpression" value="0/5 * * * * ?"/>-->
+        <!-- 每一个半个小时执行一次 -->
+	</bean>
+    <bean name="dailyStatisticAnalyse" 
+        class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="Durability" value="true"/>
+        <property name="jobClass" value="com.cmcc.vrp.province.quartz.jobs.DailyStatisticAnalyseJob"/>
+    </bean>
+	    <!-- 日统计插入数据定时任务,每天0点15分执行 -->
+    <bean id="dailyStatisticAnalyseTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="dailyStatisticAnalyse"/>
+        <property name="cronExpression" value="0 15 0 * * ?"/>
+    </bean>
+</beans>

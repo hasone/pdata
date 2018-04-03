@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.SupplierPayRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.SupplierPayRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="supplier_id" property="supplierId" jdbcType="BIGINT" />
+    <result column="pay_money" property="payMoney" jdbcType="REAL" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+    <result column="operator_id" property="operatorId" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <resultMap type="com.cmcc.vrp.province.model.SupplierPayRecord" id="ExtendResultMap" extends="BaseResultMap">
+  	<result column="supplierName" property="supplierName" jdbcType="VARCHAR"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, supplier_id, pay_money, pay_time, note, create_time, update_time, delete_flag, operator_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from supplier_pay_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+   update
+   	supplier_pay_record
+   set
+   	delete_flag = 1,
+   	update_time = NOW()
+   where
+   	id = #{id,jdbcType=BIGINT}
+   	and delete_flag = 0
+  </update>
+  
+  <update id="deleteBysupplierId" parameterType="java.lang.Long">
+   update
+   	supplier_pay_record
+   set
+   	delete_flag = 1,
+   	update_time = NOW()
+   where
+   	supplier_id = #{supplierId,jdbcType=BIGINT}
+   	and delete_flag = 0
+  </update>
+  
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.SupplierPayRecord" 
+  useGeneratedKeys="true" keyProperty="id">
+    insert into supplier_pay_record (id, supplier_id, pay_money, 
+      pay_time, note, create_time, 
+      update_time, delete_flag, operator_id)
+    values (#{id,jdbcType=BIGINT}, #{supplierId,jdbcType=BIGINT}, #{payMoney,jdbcType=REAL}, 
+      #{payTime,jdbcType=TIMESTAMP}, #{note,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER}, #{operatorId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.SupplierPayRecord" 
+  useGeneratedKeys="true" keyProperty="id">
+    insert into supplier_pay_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="supplierId != null" >
+        supplier_id,
+      </if>
+      <if test="payMoney != null" >
+        pay_money,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+      <if test="operatorId != null" >
+        operator_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="supplierId != null" >
+        #{supplierId,jdbcType=BIGINT},
+      </if>
+      <if test="payMoney != null" >
+        #{payMoney,jdbcType=REAL},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="operatorId != null" >
+        #{operatorId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.SupplierPayRecord" >
+    update supplier_pay_record
+    <set >
+      <if test="supplierId != null" >
+        supplier_id = #{supplierId,jdbcType=BIGINT},
+      </if>
+      <if test="payMoney != null" >
+        pay_money = #{payMoney,jdbcType=REAL},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="operatorId != null" >
+        operator_id = #{operatorId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.SupplierPayRecord" >
+    update supplier_pay_record
+    set supplier_id = #{supplierId,jdbcType=BIGINT},
+      pay_money = #{payMoney,jdbcType=REAL},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      note = #{note,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      operator_id = #{operatorId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="countSupplierPayRecords" resultType="java.lang.Integer" parameterType="java.util.Map">
+	SELECT
+       count(*)
+    FROM 
+    	supplier_pay_record t1
+    left join 
+    	supplier t2 on t2.id = t1.supplier_id
+    WHERE
+       t1.delete_flag = 0 and t2.delete_flag = 0
+       <if test="supplierId != null and supplierId != ''">
+           AND t1.supplier_id = #{supplierId,jdbcType=BIGINT}
+       </if>
+       <if test="lessMoney != null and lessMoney != '' or lessMoney==0 ">
+           AND t1.pay_money &gt;= #{lessMoney}
+       </if>
+       <if test="moreMoney != null and moreMoney != '' or moreMoney==0">
+           AND t1.pay_money &lt;= #{moreMoney}
+       </if>
+       <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+           AND t1.pay_time &gt;= #{startTime} and t1.pay_time &lt;= #{endTime}
+       </if>
+  </select>
+  
+  <select id="querySupplierPayRecords" resultMap="ExtendResultMap" parameterType="java.util.Map">
+	SELECT
+       t1.*,
+       t2.name as supplierName
+    FROM 
+    	supplier_pay_record t1
+    left join 
+    	supplier t2 on t2.id = t1.supplier_id
+    WHERE
+       t1.delete_flag = 0 and t2.delete_flag = 0
+       <if test="supplierId != null and supplierId != ''">
+           AND t1.supplier_id = #{supplierId,jdbcType=BIGINT}
+       </if>
+       <if test="lessMoney != null and lessMoney != '' or lessMoney==0 ">
+           AND t1.pay_money &gt;= #{lessMoney}
+       </if>
+       <if test="moreMoney != null and moreMoney != '' or moreMoney==0 ">
+           AND t1.pay_money &lt;= #{moreMoney}
+       </if>
+       <if test="startTime != null and startTime != '' and endTime != null and endTime != ''">
+           AND t1.pay_time &gt;= #{startTime} and t1.pay_time &lt;= #{endTime}
+       </if>
+       order by 
+        	t1.id desc
+        <if test="pageSize != null and pageSize != '' and pageSize != -1">
+        	LIMIT
+        		#{pageNum},#{pageSize}
+        </if>
+  </select>
+  
+</mapper>

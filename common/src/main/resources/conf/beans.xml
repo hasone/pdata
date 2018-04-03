@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- boss -->
+    <!-- 省公司统一采用ProvinceBossServiceProxyServiceImpl -->
+    <bean name="bossServiceProxyService" class="com.cmcc.vrp.boss.ProvinceBossServiceProxyServiceImpl"/>
+
+    <!-- sms -->
+    <!-- 四川的发短信类 -->
+    <bean name="sendMessageService" class="com.cmcc.vrp.sms.sichuan.SCSendMessageServiceImpl"/>
+    <!-- sms -->
+    <!-- 用于需要cmpp发送短信时连接redis的下行队列的类，请确定redis。properties中属性redis.cmpp.url和redis.cmpp.downstream.queueName配置正确 -->
+    <!--<bean name="sendMessageService" class="com.cmcc.vrp.sms.cmppredis.CmppRedisSendMessageServiceImpl"/>-->
+
+    <!-- account & accountRecord -->
+    <!--  HuNanAccountServiceImpl 检查账户余额及扣减企业账户方法都直接返回true-->
+    <bean name="accountService" class="com.cmcc.vrp.province.service.impl.AccountServiceImpl"/>
+    <bean name="accountRecordService" class="com.cmcc.vrp.province.service.impl.AccountRecordServiceImpl"/>
+
+
+    <!-- product service -->
+
+    <bean name="productService" class="com.cmcc.vrp.province.service.impl.ProductServiceImpl"/>
+
+    <!-- ApprovalRelatedBoss Service -->
+    <bean name="EntApprovalRelatedBossService"
+          class="com.cmcc.vrp.province.service.impl.SCEntApprovalRelatedBossServiceImpl"/>
+
+    <bean name="ProductOnlineService" class="com.cmcc.vrp.province.service.impl.EmptyProductOnlineServiceIml"/>
+
+    <!-- 营销卡卡号和卡密规则 -->
+    <bean name="mdrcCardNumAndPwdService" class="com.cmcc.vrp.province.service.impl.DefaultCardNumAndPwdServiceImpl"/>
+    
+    <!-- 分发规则的配置 -->
+    <bean name="deliverRule" class="com.cmcc.vrp.queue.rule.ZiyingDeliverRuleByBoss"/>
+
+    <!-- 文件存储服务，需要使用s3服务的就是这个配置, 此时需要在common.properties配置文件中添加s3的配置 -->
+     <bean name="fileStoreService" class="com.cmcc.vrp.province.service.S3FileStoreServiceImpl"/> 
+
+    <!-- 如果使用本地系统来存储，则设置为LocalFileSystem那个，此时需要在全局配置中添加LOCAL_FILESYSTEM_STORE_PATH配置，并确保
+应用程序用这个目录有读写权限 -->
+    <!--<bean name="fileStoreService" class="com.cmcc.vrp.province.service.LocalFileSystemFileStoreServiceImpl"/>  -->
+</beans>

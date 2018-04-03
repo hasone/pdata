@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AdminChangeDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.AdminChangeDetail" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="request_id" property="requestId" jdbcType="BIGINT" />
+    <result column="enter_id" property="enterId" jdbcType="BIGINT" />
+    <result column="admin_id" property="adminId" jdbcType="BIGINT" />
+    <result column="src_name" property="srcName" jdbcType="VARCHAR" />
+    <result column="src_phone" property="srcPhone" jdbcType="VARCHAR" />
+    <result column="dest_name" property="destName" jdbcType="VARCHAR" />
+    <result column="dest_phone" property="destPhone" jdbcType="VARCHAR" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.AdminChangeDetail">
+        <result column="creatorName" property="creatorName" jdbcType="VARCHAR"/>
+        <result column="enterName" property="enterName" jdbcType="VARCHAR"/>
+        <result column="districtName" property="districtName" jdbcType="VARCHAR"/>
+        <result column="requestTime" property="requestTime" jdbcType="TIMESTAMP" />
+        <result column="virifyStatus" property="virifyStatus" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, request_id, enter_id, admin_id, src_name, src_phone, dest_name, dest_phone, comment, 
+    create_time, update_time, delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from admin_change_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from admin_change_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.AdminChangeDetail" >
+    insert into admin_change_detail (id, request_id, enter_id, 
+      admin_id, src_name, src_phone, 
+      dest_name, dest_phone, comment, 
+      create_time, update_time, delete_flag
+      )
+    values (#{id,jdbcType=BIGINT}, #{requestId,jdbcType=BIGINT}, #{enterId,jdbcType=BIGINT}, 
+      #{adminId,jdbcType=BIGINT}, #{srcName,jdbcType=VARCHAR}, #{srcPhone,jdbcType=VARCHAR}, 
+      #{destName,jdbcType=VARCHAR}, #{destPhone,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.AdminChangeDetail" >
+    insert into admin_change_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="requestId != null" >
+        request_id,
+      </if>
+      <if test="enterId != null" >
+        enter_id,
+      </if>
+      <if test="adminId != null" >
+        admin_id,
+      </if>
+      <if test="srcName != null" >
+        src_name,
+      </if>
+      <if test="srcPhone != null" >
+        src_phone,
+      </if>
+      <if test="destName != null" >
+        dest_name,
+      </if>
+      <if test="destPhone != null" >
+        dest_phone,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="requestId != null" >
+        #{requestId,jdbcType=BIGINT},
+      </if>
+      <if test="enterId != null" >
+        #{enterId,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="srcName != null" >
+        #{srcName,jdbcType=VARCHAR},
+      </if>
+      <if test="srcPhone != null" >
+        #{srcPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="destName != null" >
+        #{destName,jdbcType=VARCHAR},
+      </if>
+      <if test="destPhone != null" >
+        #{destPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.AdminChangeDetail" >
+    update admin_change_detail
+    <set >
+      <if test="requestId != null" >
+        request_id = #{requestId,jdbcType=BIGINT},
+      </if>
+      <if test="enterId != null" >
+        enter_id = #{enterId,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null" >
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="srcName != null" >
+        src_name = #{srcName,jdbcType=VARCHAR},
+      </if>
+      <if test="srcPhone != null" >
+        src_phone = #{srcPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="destName != null" >
+        dest_name = #{destName,jdbcType=VARCHAR},
+      </if>
+      <if test="destPhone != null" >
+        dest_phone = #{destPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.AdminChangeDetail" >
+    update admin_change_detail
+    set request_id = #{requestId,jdbcType=BIGINT},
+      enter_id = #{enterId,jdbcType=BIGINT},
+      admin_id = #{adminId,jdbcType=BIGINT},
+      src_name = #{srcName,jdbcType=VARCHAR},
+      src_phone = #{srcPhone,jdbcType=VARCHAR},
+      dest_name = #{destName,jdbcType=VARCHAR},
+      dest_phone = #{destPhone,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+   <select id="getByRequestId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from admin_change_detail
+    where request_id = #{requestId,jdbcType=BIGINT}
+  </select>
+  
+  <select id="getDetailByRequestId" resultMap="ExtendsResultMap" parameterType="java.lang.Long" >
+    select 
+    a.user_name as creatorName,acd.comment as comment,
+	acd.dest_phone as dest_phone,acd.dest_name as dest_name,
+	e.name as enterName,m2.name as districtName
+	from approval_request ar 
+	LEFT JOIN admin_change_detail acd on acd.request_id = ar.id 
+	LEFT JOIN administer a on a.id = ar.creator_id 
+	LEFT JOIN enterprises e on e.id = acd.enter_id 
+	LEFT JOIN ent_manager em on em.enter_id = e.id
+	LEFT JOIN manager m1 on m1.id= em.manager_id
+	LEFT JOIN manager m2 on m2.id= m1.parent_id
+	where ar.id = #{requestId,jdbcType=BIGINT}
+  </select>
+  
+  <select id="getVerifyingCount" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+    select count(*) from admin_change_detail acd 
+	INNER JOIN approval_request ar on ar.id = acd.request_id
+	INNER JOIN approval_process_definition apd on apd.id = ar.process_id
+	where acd.admin_id = #{adminId,jdbcType=BIGINT}
+	and ar.result = 0
+	and apd.stage &gt; 0
+  </select>
+  
+  <select id="getVerifyingCountByMobile" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select count(*) from admin_change_detail acd 
+    INNER JOIN approval_request ar on ar.id = acd.request_id
+    INNER JOIN approval_process_definition apd on apd.id = ar.process_id
+    where acd.dest_phone = #{mobile,jdbcType=VARCHAR}
+    and ar.result = 0
+    and apd.stage &gt; 0
+  </select>
+  
+  
+  <select id="getVirifyListPage" resultMap="ExtendsResultMap" parameterType="java.util.Map" >
+    select acd.request_id,ar.create_time as requestTime,ar.result as virifyStatus 
+    from admin_change_detail acd 
+    INNER JOIN approval_request ar on ar.id = acd.request_id
+    INNER JOIN approval_process_definition apd on apd.id = ar.process_id
+    where acd.delete_flag = 0 and apd.target_status &gt; 0
+     <if test="adminId != null and adminId != ''">
+        AND acd.admin_id = #{adminId}
+    </if>
+    <if test="startTime != null and startTime != ''">
+            and acd.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and acd.create_time &lt;= #{endTime}
+        </if>
+    LIMIT
+    #{pageNum},
+    #{pageSize}
+  </select>
+  
+  <!-- 用户管理使用分页类 -->
+    <select id="getVirifyListPageCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select count(0)
+    from admin_change_detail acd 
+    INNER JOIN approval_request ar on ar.id = acd.request_id
+    INNER JOIN approval_process_definition apd on apd.id = ar.process_id
+    where acd.delete_flag = 0 and apd.target_status &gt; 0
+     <if test="adminId != null and adminId != ''">
+        AND acd.admin_id = #{adminId}
+    </if>
+    <if test="beginTime != null and beginTime != ''">
+            and acd.create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and acd.create_time &lt;= #{endTime}
+        </if>
+    </select>
+    
+    <select id="getNoVirifyListPage" resultMap="ExtendsResultMap" parameterType="java.util.Map" >
+    select acd.request_id,ar.create_time as requestTime,ar.result as virifyStatus 
+    from admin_change_detail acd 
+    INNER JOIN approval_request ar on ar.id = acd.request_id
+   INNER JOIN approval_process_definition apd on apd.id = ar.process_id
+    where acd.delete_flag = 0 and apd.target_status = 0
+     <if test="adminId != null and adminId != ''">
+        AND acd.admin_id = #{adminId}
+    </if>
+    <if test="startTime != null and startTime != ''">
+            and acd.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and acd.create_time &lt;= #{endTime}
+        </if>
+    LIMIT
+    #{pageNum},
+    #{pageSize}
+  </select>
+  
+   <!-- 用户管理使用分页类 -->
+    <select id="getNoVirifyListPageCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select count(0)
+    from admin_change_detail acd 
+    INNER JOIN approval_request ar on ar.id = acd.request_id
+    INNER JOIN approval_process_definition apd on apd.id = ar.process_id
+    where acd.delete_flag = 0 and apd.target_status = 0
+     <if test="adminId != null and adminId != ''">
+        AND acd.admin_id = #{adminId}
+    </if>
+    <if test="beginTime != null and beginTime != ''">
+            and acd.create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and acd.create_time &lt;= #{endTime}
+        </if>
+    </select>
+  
+</mapper>

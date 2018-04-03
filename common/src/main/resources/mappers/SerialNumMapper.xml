@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.SerialNumMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.SerialNum">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="platform_serial_num" property="platformSerialNum" jdbcType="VARCHAR"/>
+        <result column="ec_serial_num" property="ecSerialNum" jdbcType="VARCHAR"/>
+        <result column="boss_req_serial_num" property="bossReqSerialNum" jdbcType="VARCHAR"/>
+        <result column="boss_resp_serial_num" property="bossRespSerialNum" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, platform_serial_num, ec_serial_num, boss_req_serial_num, boss_resp_serial_num,
+        create_time, update_time, delete_flag
+    </sql>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.SerialNum">
+        insert into serial_num (platform_serial_num, ec_serial_num, boss_req_serial_num,
+        boss_resp_serial_num, create_time, update_time,delete_flag)
+        values (#{platformSerialNum,jdbcType=VARCHAR},
+        #{ecSerialNum,jdbcType=VARCHAR},
+        #{bossReqSerialNum,jdbcType=VARCHAR},
+        #{bossRespSerialNum,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=INTEGER})
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into serial_num (platform_serial_num, ec_serial_num, boss_req_serial_num,
+        boss_resp_serial_num, create_time, update_time,delete_flag)
+        values
+        <foreach collection="records" item="record" separator=",">
+            (#{record.platformSerialNum,jdbcType=VARCHAR},
+            #{record.ecSerialNum,jdbcType=VARCHAR},
+            #{record.bossReqSerialNum,jdbcType=VARCHAR},
+            #{record.bossRespSerialNum,jdbcType=VARCHAR},
+            #{record.createTime,jdbcType=TIMESTAMP},
+            #{record.updateTime,jdbcType=TIMESTAMP},
+            #{record.deleteFlag,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
+    <select id="getByPltSerialNum" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        serial_num
+        where
+        platform_serial_num = #{platformSerialNum, jdbcType = VARCHAR}
+    </select>
+
+    <select id="getByEcSerialNum" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        serial_num
+        where
+        ec_serial_num = #{ecSerialNum, jdbcType = VARCHAR}
+    </select>
+
+    <select id="getByBossReqSerialNum" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        serial_num
+        where
+        boss_req_serial_num = #{bossReqSerialNum, jdbcType = VARCHAR}
+    </select>
+
+    <select id="getByBossRespSerialNum" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        serial_num
+        where
+        boss_resp_serial_num = #{bossRespSerialNum, jdbcType = VARCHAR}
+    </select>
+
+    <update id="update" parameterType="com.cmcc.vrp.province.model.SerialNum">
+        UPDATE
+        serial_num
+        <set>
+            <if test="platformSerialNum != null">
+                platform_serial_num = #{platformSerialNum, jdbcType = VARCHAR},
+            </if>
+            <if test="ecSerialNum !=null">
+                ec_serial_num = #{ecSerialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="bossReqSerialNum != null">
+                boss_req_serial_num = #{bossReqSerialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="bossRespSerialNum != null">
+                boss_resp_serial_num = #{bossRespSerialNum,jdbcType=VARCHAR}
+            </if>
+        </set>
+        WHERE
+        platform_serial_num = #{platformSerialNum, jdbcType = VARCHAR}
+    </update>
+
+    <update id="batchUpdate" parameterType="java.util.List">
+        UPDATE
+        serial_num
+        SET
+
+        ec_serial_num = CASE
+        <foreach collection="records" item="record" close="ELSE `ec_serial_num` END ,">
+            WHEN platform_serial_num =#{record.platformSerialNum} THEN #{record.ecSerialNum}
+        </foreach>
+        boss_req_serial_num = CASE
+        <foreach collection="records" item="record" close="ELSE `boss_req_serial_num` END ,">
+            WHEN platform_serial_num =#{record.platformSerialNum} THEN #{record.bossReqSerialNum}
+        </foreach>
+        boss_resp_serial_num = CASE
+        <foreach collection="records" item="record" close="ELSE `boss_resp_serial_num` END ,">
+            WHEN platform_serial_num =#{record.platformSerialNum} THEN #{record.bossRespSerialNum}
+        </foreach>
+        update_time = CASE
+        <foreach collection="records" item="record" close="ELSE `update_time` END ">
+            WHEN platform_serial_num =#{record.platformSerialNum} THEN NOW()
+        </foreach>
+        WHERE platform_serial_num
+        IN
+        <foreach collection="records" item="record" open="(" close=")" separator=",">
+            #{record.platformSerialNum, jdbcType = VARCHAR}
+        </foreach>
+
+    </update>
+    
+    <delete id="deleteByPlatformSerialNum">
+        delete 
+        from
+        serial_num
+        where platform_serial_num = #{platformSerialNum, jdbcType=VARCHAR}
+    </delete>
+    
+</mapper>

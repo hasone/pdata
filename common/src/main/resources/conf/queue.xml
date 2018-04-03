@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- RMQ集群环境下的主机地址解析器 -->
+    <bean name="multiAddressResolver" class="com.cmcc.vrp.queue.MultipleAddressResolver"/>
+
+    <!-- RMQ的连接工厂 -->
+    <bean name="connectionFactory" class="com.rabbitmq.client.ConnectionFactory">
+        <!--<property name="host" value="@{queue.ip}"/>-->
+        <!--<property name="port" value="@{queue.port}"/>-->
+        <property name="username" value="@{queue.username}"/>
+        <property name="password" value="@{queue.password}"/>
+        <property name="automaticRecoveryEnabled" value="true"/>
+    </bean>
+
+    <!-- RMQ的连接 -->
+    <bean name="connection" factory-bean="connectionFactory" factory-method="newConnection">
+        <constructor-arg name="addressResolver" ref="multiAddressResolver"/>
+    </bean>
+
+    <!-- RMQ的连接对象工厂类 -->
+    <bean id="channelPooledObjectFactory" class="com.cmcc.vrp.queue.ChannelPooledObjectFactory">
+        <constructor-arg name="connection" ref="connection"/>
+    </bean>
+
+    <!-- RMQ连接池配置 -->
+    <bean id="rmqPoolConfig" class="org.apache.commons.pool2.impl.GenericObjectPoolConfig">
+        <!-- 最大连接数 -->
+        <property name="maxTotal" value="10000"/>
+        <!-- 最大的连接等待数 -->
+        <property name="maxIdle" value="1000"/>
+        <!-- 最小的连接等待数 -->
+        <property name="minIdle" value="100"/>
+        <!-- 尝试获取连接最大等待时间 -->
+        <property name="maxWaitMillis" value="5000"/>
+        <!-- 调用borrowObject方法时进行校验 -->
+        <property name="testOnBorrow" value="true"/>
+    </bean>
+
+    <!-- RMQ连接池 -->
+    <bean id="rmqChannelPool" class="com.cmcc.vrp.queue.ChannelObjectPool">
+        <constructor-arg name="factory" ref="channelPooledObjectFactory"/>
+        <constructor-arg name="config" ref="rmqPoolConfig"/>
+    </bean>
+</beans>

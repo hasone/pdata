@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.PresentSerialNumMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.PresentSerialNum">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="block_serial_num" property="blockSerialNum" jdbcType="VARCHAR"/>
+        <result column="platform_serial_num" property="platformSerialNum" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, block_serial_num, platform_serial_num, create_time, update_time, delete_flag
+  </sql>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into present_serial_num (block_serial_num, platform_serial_num,create_time, update_time, delete_flag)
+        values
+            <foreach collection="psns" item="psn" index="index" separator=",">
+                (#{psn.blockSerialNum,jdbcType=VARCHAR},
+                    #{psn.platformSerialNum,jdbcType=VARCHAR},
+                    NOW(),
+                    NOW(),
+                    #{psn.deleteFlag,jdbcType=INTEGER})
+            </foreach>
+    </insert>
+
+    <select id="getByPltSn" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+          <include refid="Base_Column_List"/>
+        FROM
+          present_serial_num
+        WHERE
+          platform_serial_num = #{pltSn, jdbcType = VARCHAR}
+    </select>
+</mapper>

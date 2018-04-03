@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.EntFlowControlMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.EntFlowControl">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="countUpper" property="countUpper" jdbcType="BIGINT"/>
+        <result column="countNow" property="countNow" jdbcType="BIGINT"/>
+        <result column="countAddition" property="countAddition" jdbcType="BIGINT"/>
+        <result column="fcsms_flag" property="fcSmsFlag" jdbcType="INTEGER"/>
+        <result column="creator_id" property="createId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="updator_id" property="updatorId" jdbcType="BIGINT"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <!-- 显示企业流控列表,根据创建时间倒序,根据企业名称和编码搜索 -->
+    <select id="showForPageResultCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+        enterprises a
+        left join ent_manager em on em.enter_id = a.id
+        where
+        em.delete_flag = 0 and a.delete_flag = 0
+        <if test="code != null and code != ''">
+            and a.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="managerIds != null">
+            and em.manager_id in 
+            <foreach item="item" index="index" collection="managerIds" open="(" separator="," close=")">  
+                 #{item}  
+            </foreach>
+        </if>
+    </select>
+
+    <select id="showForPageResultList" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+        a.id as enterId,
+        a.name,
+        a.code,
+        a.fcsms_flag,
+        m2.name as cmManagerName,
+        IFNULL(ef.count_upper, -1) as countUpper
+        from
+        enterprises a
+        left join ent_manager em on em.enter_id = a.id
+        left join manager m on m.id = em.manager_id
+        left join manager m2 on m.parent_id = m2.id
+        left join ent_flowcontrol ef on ef.enter_id = a.id and ef.delete_flag = 0
+        where
+        a.delete_flag = 0 and em.delete_flag = 0
+        <if test="code != null and code != ''">
+            and a.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="managerIds != null">
+            and em.manager_id in
+            <foreach item="item" index="index" collection="managerIds" open="(" separator="," close=")">  
+                 #{item}  
+            </foreach>
+        </if>
+        order by
+        a.create_time DESC,
+        a.update_time desc,
+        a.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+   <!-- 有点复杂   by wgp on20170712 -->
+    <select id="getFlowControlRecordByEntId" resultMap="BaseResultMap">
+		select
+        ent.id as ent_id,
+        ent.name,
+        ent.code,
+        ent.fcsms_flag,
+        IFNULL(ef.count_upper, -1) as countUpper,
+		IFNULL(sum(case when efr.type=1 then efr.count end), 0) AS countAddition
+        from enterprises ent
+        left join ent_flowcontrol ef on ent.id = ef.enter_id
+        LEFT JOIN ent_flowcontrol_record efr on ent.id=efr.enter_id and efr.id &gt; 
+        	(select max(id) from ent_flowcontrol_record efr1
+        			where efr1.type = 0 and efr1.enter_id = #{entId,jdbcType=BIGINT})
+        where efr.create_time  &gt;= date_format(now(),'%Y-%m-%d 00:00:00') and ent.delete_flag = 0
+        and ent.id = #{entId,jdbcType=BIGINT}
+    </select>
+    <!--   <select id="getFlowControlRecordByEntId1" resultMap="BaseResultMap">
+        select
+        ent.id as ent_id,
+        ent.name,
+        ent.code,
+        ent.fcsms_flag,
+        IFNULL(ef.count_upper, -1) as countUpper,
+		IFNULL(sum(case when efr.type=1 then efr.count end), 0) AS countAddition
+        from enterprises ent
+        left join ent_flowcontrol ef on ent.id = ef.enter_id
+        LEFT JOIN ent_flowcontrol_record efr on ent.id=efr.enter_id 
+        where efr.create_time >= date_format(now(),'%Y-%m-%d 00:00:00') and ent.delete_flag = 0
+        and ent.id=#{entId,jdbcType=BIGINT}
+    </select> -->
+    
+
+	<!--  从 ent_flowcontrol 日上线额 中获取记录-->
+    <select id="getFlowControlUpperByEntId" resultMap="BaseResultMap">
+        select
+        enter_id,
+        IFNULL(count_upper, 0) as countUpper
+        from
+        ent_flowcontrol
+        where delete_flag = 0 and enter_id=#{entId,jdbcType=BIGINT}
+    </select>
+
+    <update id="updateSmsFlagByEntId">
+        UPDATE
+        enterprises
+        SET
+        update_time = NOW(),
+        fcsms_flag = #{fcSmsFlag, jdbcType = INTEGER}
+        WHERE
+        id = #{entId, jdbcType = BIGINT}
+    </update>
+
+    <insert id="insertEntFlowControlUpper" parameterType="com.cmcc.vrp.province.model.EntFlowControl">
+        insert into
+        ent_flowcontrol (enter_id, count_upper, creator_id, updator_id,
+        delete_flag, create_time, update_time)
+        values (#{enterId,jdbcType=BIGINT},
+        #{countUpper,jdbcType=BIGINT},
+        #{creatorId,jdbcType=BIGINT},
+        #{updatorId, jdbcType = BIGINT},
+        #{deleteFlag,jdbcType=INTEGER},
+        now(),
+        now())
+    </insert>
+
+    <update id="updateEntFlowControlUpper" parameterType="com.cmcc.vrp.province.model.EntFlowControl">
+        UPDATE
+        ent_flowcontrol
+        SET
+        count_upper = #{countUpper,jdbcType=BIGINT},
+        updator_id = #{updatorId, jdbcType = BIGINT},
+        update_time = NOW()
+        WHERE
+        enter_id = #{enterId, jdbcType = BIGINT}
+    </update>
+
+</mapper>

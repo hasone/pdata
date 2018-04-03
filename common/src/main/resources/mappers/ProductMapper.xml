@@ -1,0 +1,1624 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ProductMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.Product">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="product_code" property="productCode" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="defaultValue" property="defaultvalue" jdbcType="INTEGER"/>
+        <result column="isp" property="isp" jdbcType="VARCHAR"/>
+        <result column="ownership_region" property="ownershipRegion" jdbcType="VARCHAR"/>
+        <result column="roaming_region" property="roamingRegion" jdbcType="VARCHAR"/>
+        <result column="product_size" property="productSize" jdbcType="BIGINT"/>
+        <result column="count" property="count" jdbcType="DOUBLE"/>
+        <result column="flow_account_flag" property="flowAccountFlag" jdbcType="INTEGER"/>
+        <result column="flow_account_product_id" property="flowAccountProductId" jdbcType="BIGINT"/>
+        <result column="configurable_num_flag" property="configurableNumFlag" jdbcType="INTEGER"/>
+        <result column="illustration" property="illustration" jdbcType="VARCHAR"/>
+        <result column="product_customer_type" property="productCustomerType" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="ExtendResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.Product">
+        <result column="discount" property="discount" jdbcType="INTEGER"/>
+        <result column="productCustomerTypeName" property="productCustomerTypeName" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="ExtendResultMapForAccount" extends="BaseResultMap" type="com.cmcc.vrp.province.model.Product">
+        <result column="count" property="count" jdbcType="REAL"/>
+    </resultMap>
+    
+    <resultMap id="ExtendResultMapForSupplier" extends="BaseResultMap" type="com.cmcc.vrp.province.model.Product">
+        <result column="supplierOpStatus" property="supplierOpStatus" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, product_code, `type`, `name`, status, create_time, update_time, delete_flag, price,
+        defaultValue, isp, ownership_region, roaming_region, product_size, flow_account_flag, flow_account_product_id
+        ,configurable_num_flag, illustration, product_customer_type
+    </sql>
+
+
+    <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from product where delete_flag=0 and status = 1
+    </select>
+    
+    <select id="getPlatFormBySupplierId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    	select
+    		t1.*
+    	from
+    		product t1
+    	left join 
+    		supplier_product_map t2 on t2.platform_product_id = t1.id
+    	where 
+    		t1.delete_flag=0 and
+    		t2.delete_flag=0 and
+    		t2.supplier_product_id = #{supplierId}
+    	order by 
+    		t1.isp
+    </select>
+
+    <select id="selectDistinctProSize" resultMap="BaseResultMap">
+        select * from product where delete_flag=0 and status = 1 and id is not null and type=2 group by product_size;
+    </select>
+
+    <select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from product where delete_flag=0 and BINARY product_code = #{code,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="ExtendResultMap" parameterType="java.lang.Long">
+        select
+            p.id, p.product_code, p.`type`, p.`name`, p.status, p.create_time, p.update_time, p.delete_flag, p.price,
+	        p.defaultValue, p.isp, p.ownership_region, p.roaming_region, p.product_size, p.flow_account_flag, p.flow_account_product_id,
+	        p.configurable_num_flag, p.illustration, p.product_customer_type, c.name as productCustomerTypeName
+        from product p
+        LEFT JOIN customer_type c on c.id = p.product_customer_type
+        where p.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from product
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.Product" useGeneratedKeys="true" keyProperty="id">
+        insert into product (product_code, `type`, `name`,
+        status, create_time, update_time,
+        delete_flag, price, defaultValue,
+        isp, ownership_region, roaming_region,
+        product_size)
+        values (
+        #{productCode,jdbcType=VARCHAR},
+        #{type,jdbcType=INTEGER},
+        #{name,jdbcType=VARCHAR},
+        #{status,jdbcType=INTEGER},
+        NOW(),
+        NOW(),
+        #{deleteFlag,jdbcType=INTEGER},
+        #{price,jdbcType=INTEGER},
+        #{defaultvalue,jdbcType=INTEGER},
+        #{isp,jdbcType=VARCHAR},
+        #{ownershipRegion,jdbcType=VARCHAR},
+        #{roamingRegion,jdbcType=VARCHAR},
+        #{productSize,jdbcType=BIGINT})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.Product" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productCode != null">
+                product_code,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="defaultvalue != null">
+                defaultValue,
+            </if>
+            <if test="isp != null">
+                isp,
+            </if>
+            <if test="ownershipRegion != null">
+                ownership_region,
+            </if>
+            <if test="roamingRegion != null">
+                roaming_region,
+            </if>
+            <if test="productSize != null">
+                product_size,
+            </if>
+            <if test="flowAccountFlag != null">
+                flow_account_flag,
+            </if>
+            <if test="configurableNumFlag != null">
+                configurable_num_flag,
+            </if>
+            <if test="flowAccountProductId != null">
+                flow_account_product_id,
+            </if>
+            <if test="illustration != null">
+                illustration,
+            </if>
+            <if test="productCustomerType != null">
+                product_customer_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productCode != null">
+                #{productCode,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=INTEGER},
+            </if>
+            <if test="defaultvalue != null">
+                #{defaultvalue,jdbcType=INTEGER},
+            </if>
+            <if test="isp != null">
+                #{isp,jdbcType=VARCHAR},
+            </if>
+            <if test="ownershipRegion != null">
+                #{ownershipRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="roamingRegion != null">
+                #{roamingRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="productSize != null">
+                #{productSize,jdbcType=BIGINT},
+            </if>
+            <if test="flowAccountFlag != null">
+                #{flowAccountFlag,jdbcType=INTEGER},
+            </if>
+            <if test="configurableNumFlag != null">
+                #{configurableNumFlag,jdbcType=INTEGER},
+            </if>
+            <if test="flowAccountProductId != null">
+                #{flowAccountProductId,jdbcType=BIGINT},
+            </if>
+            <if test="illustration != null">
+                #{illustration,jdbcType=VARCHAR},
+            </if>
+            <if test="productCustomerType != null">
+                #{productCustomerType,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.Product">
+        update product
+        <set>
+            <if test="productCode != null">
+                product_code = #{productCode,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                `type` = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=INTEGER},
+            </if>
+            <if test="defaultvalue != null">
+                defaultValue = #{defaultvalue,jdbcType=INTEGER},
+            </if>
+            <if test="isp != null">
+                isp = #{isp,jdbcType=VARCHAR},
+            </if>
+            <if test="ownershipRegion != null">
+                ownership_region = #{ownershipRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="roamingRegion != null">
+                roaming_region = #{roamingRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="productSize != null">
+                product_size = #{productSize,jdbcType=BIGINT},
+            </if>
+            <if test="illustration != null">
+                illustration = #{illustration,jdbcType=VARCHAR},
+            </if>
+            <if test="productCustomerType != null">
+                product_customer_type = #{productCustomerType,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.Product">
+        update product
+        set product_code = #{productCode,jdbcType=VARCHAR},
+        type = #{type,jdbcType=INTEGER},
+        name = #{name,jdbcType=VARCHAR},
+        status = #{status,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        price = #{price,jdbcType=INTEGER},
+        defaultValue = #{defaultvalue,jdbcType=INTEGER},
+        isp = #{isp,jdbcType=VARCHAR},
+        ownership_region = #{ownershipRegion,jdbcType=VARCHAR},
+        roaming_region = #{roamingRegion,jdbcType=VARCHAR},
+        product_size = #{productSize,jdbcType=BIGINT}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectAllProducts" resultMap="BaseResultMap">
+        SELECT
+        	<include refid="Base_Column_List"/>
+        from
+        	product T
+        where
+        	T.delete_flag = 0
+        order by 
+        	T.isp
+    </select>
+
+    <select id="selectAllProductsON" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from
+        product T
+        where
+        T.delete_flag = 0 and T.status=1 and T.type != 0
+    </select>
+
+    <select id="getCurrencyProduct" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        product
+        WHERE
+        `type` = 0 <!-- 现金产品 -->
+    </select>
+
+    <select id="getFlowProduct" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        product
+        WHERE
+        `type` = 1 <!-- 流量池产品 -->
+    </select>
+
+    <!--根据企业id查找上架的关联产品-->
+    <select id="selectAllProductsByEnterId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        T1.id, T1.product_code, T1.name, T1.status, T1.product_size, T1.create_time, T1.update_time, T1.delete_flag,
+        T1.price, T1.type
+        from
+        product T1,ent_product T2
+        where
+        T2.delete_flag = 0
+        and
+        T2.enterprize_id = #{enterId,jdbcType=BIGINT}
+        and
+        T1.delete_flag = 0
+        and
+        T1.id=T2.product_id
+        and
+        T1.status = 1
+        and
+        T1.type != 0
+        and
+        T1.flow_account_flag != 1
+    </select>
+
+    <!--根据企业id查找所有关联产品-->
+    <select id="selectProductsByEnterId" parameterType="java.lang.Long" resultMap="ExtendResultMap">
+        SELECT
+        T1.*,
+        T2.discount
+        from
+        product T1,ent_product T2
+        where
+        T2.delete_flag = 0
+        and
+        T2.enterprize_id = #{enterId,jdbcType=BIGINT}
+        and
+        T1.delete_flag = 0
+        and
+        T1.id=T2.product_id
+        and
+        T1.type != 0
+        and
+        T1.flow_account_flag != 1
+    </select>
+
+    <!--根据产品模板id获取所有产品（上架和下架）-->
+    <select id="selectByProductTemplateId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        t1.*
+        FROM
+        product t1
+        LEFT JOIN
+        platform_product_template_map t2 ON t1.id = t2.platform_product_id
+        WHERE
+        t1.delete_flag = 0 AND
+        t2.delete_flag = 0 AND
+        t1.type !=0 AND
+        t1.flow_account_flag != 1 AND
+        t2.product_template_id = #{productTemplateId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectAllProductsByMdrcEnterId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        T1.id, T1.product_code, T1.name, T1.status, T1.product_size, T1.create_time, T1.update_time, T1.delete_flag,
+        T1.price
+        from
+        product T1,mdrc_entprd T2
+        where
+        T2.delete_flag = 0 and T2.enterprize_id = #{enterId,jdbcType=BIGINT} and T1.delete_flag = 0 and
+        T1.id=T2.product_id
+    </select>
+
+
+    <select id="selectAllProductsByAdminId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from
+        administer T1,admin_enter T2,ent_product T3,product T4
+        where
+        T1.id=#{adminId} and T2.admin_id=T1.id and T2.enter_id=T3.enterprize_id and T3.product_id =T4.id and
+        T1.delete_flag = 0 and T2.delete_flag = 0 and T3.delete_flag = 0 and T4.delete_flag = 0
+    </select>
+    
+    <!-- 根据产品模板ID获取平台产品 -->
+    <select id="listProductsByTemplateId" parameterType="java.util.Map" resultMap="BaseResultMap">
+    	SELECT
+			t1.*
+		FROM
+			product t1
+		LEFT JOIN
+			platform_product_template_map t2 ON t2.platform_product_id=t1.id
+		WHERE
+			t1.delete_flag=0 AND
+			t2.delete_flag=0 AND
+			t2.product_template_id = #{id}
+		ORDER BY
+			t2.id
+		<if test="pageNum != null and pageNum != '' and pageSize != null and pageSize != ''">
+			LIMIT	
+				#{pageNum},#{pageSize}
+		</if>
+    </select>
+    <!-- 根据产品模板ID获取平台产品 -->
+    <select id="countProductsByTemplate" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT
+			COUNT(*)
+		FROM
+			product t1
+		LEFT JOIN
+			platform_product_template_map t2 ON t2.platform_product_id=t1.id
+		WHERE
+			t1.delete_flag=0 AND
+			t2.delete_flag=0 AND
+			t2.product_template_id = #{id}
+    </select>
+
+
+    <!-- 产品管理使用分页类 -->
+    <select id="getProductCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        SELECT
+        count(0)
+        FROM product
+        <where>
+            product.delete_flag = '0'
+            and product.type != 0
+            <if test="productName != null and productName != ''">
+                and product.name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+            <if test="productCode != null and productCode != ''">
+                and product.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+            </if>
+            <if test="productSize != null">
+                and product.product_size = #{productsize,jdbcType=BIGINT}
+            </if>
+            <if test="isp != null and isp != ''">
+                and product.isp = #{isp,jdbcType=VARCHAR}
+            </if>
+            <if test="roamingRegion != null and roamingRegion != ''">
+                and product.roaming_region = #{roamingRegion,jdbcType=VARCHAR}
+            </if>
+            <if test="ownershipRegion != null and ownershipRegion != ''">
+                and product.ownership_region = #{ownershipRegion,jdbcType=VARCHAR}
+            </if>
+            <if test="flowAccountFlag != null and flowAccountFlag != ''">
+                and product.flow_account_flag = #{flowAccountFlag,jdbcType=INTEGER}
+            </if>
+
+            <choose>
+                <!-- 上架状态 -->
+                <when test="status == 'on'">
+                    and product.status = '1' and product.delete_flag = '0'
+                </when>
+
+                <!-- 下架状态 -->
+                <when test="status == 'off'">
+                    and product.status = '0' and product.delete_flag = '0'
+                </when>
+
+                <!-- 删除状态 -->
+                <when test="status == 'deleted'">
+                    and product.delete_flag = '1'
+                </when>
+
+                <!-- 所有状态 -->
+                <!-- <otherwise>
+                    and 1=1
+                </otherwise> -->
+            </choose>
+        </where>
+    </select>
+
+    <select id="getProListByProSizeEnterId" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+        p.id,
+        p.product_code,
+        p.name,
+        p.status,
+        p.product_size,
+        p.create_time,
+        p.update_time,
+        p.delete_flag,
+        p.price
+        FROM
+        product p
+        inner join
+        ent_product ep
+        on
+        ep.product_id = p.id
+        inner join
+        enterprises e
+        on
+        e.id = ep.enterprize_id
+        and
+        p.delete_flag = 0
+        and
+        ep.delete_flag = 0
+        and
+        e.delete_flag = 0
+        and
+        e.id = #{entId,jdbcType=BIGINT}
+        and
+        p.product_size = #{productSize,jdbcType=VARCHAR}
+        and
+        p.status = 1
+    </select>
+    
+    <!-- 用于产品模板创建，可以选择的产品列表，编辑是采用这个方法 -->
+    <select id="getProductListAvailable" parameterType="java.util.Map" resultMap="BaseResultMap">
+    	SELECT
+        	t1.id,
+        	t1.product_code,
+        	t1.name,
+        	t1.status,
+        	t1.product_size,
+        	t1.isp,
+        	t1.ownership_region,
+        	t1.roaming_region,
+        	t1.create_time,
+        	t1.update_time,
+        	t1.delete_flag,
+        	t1.price,
+        	t1.type
+        FROM product t1
+        <where>
+            t1.delete_flag = '0' and t1.flow_account_flag = 2
+            and t1.type != 0
+            <if test="productName != null and productName != ''">
+                and t1.name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+            <if test="productCode != null and productCode != ''">
+                and t1.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+            </if>
+            <if test="productSize != null">
+                and t1.product_size = #{productSize,jdbcType=BIGINT}
+            </if>
+            <if test="isp != null and isp != ''">
+                and t1.isp = #{isp,jdbcType=VARCHAR}
+            </if>
+            <if test="roamingRegion != null and roamingRegion != ''">
+                and t1.roaming_region = #{roamingRegion,jdbcType=VARCHAR}
+            </if>
+            <if test="ownershipRegion != null and ownershipRegion != ''">
+                and t1.ownership_region = #{ownershipRegion,jdbcType=VARCHAR}
+            </if>
+            <choose>
+                <!-- 上架状态 -->
+                <when test="status == 'on'">
+                    and t1.status = '1' and t1.delete_flag = '0'
+                </when>
+
+                <!-- 下架状态 -->
+                <when test="status == 'off'">
+                    and t1.status = '0' and t1.delete_flag = '0'
+                </when>
+
+                <!-- 删除状态 -->
+                <when test="status == 'deleted'">
+                    and t1.delete_flag = '1'
+                </when>
+            </choose>
+            <if test="productIdList != null and productIdList != ''">
+                AND t1.id NOT IN
+                <foreach collection="productIdList" item="productId" open="(" close=")" separator=",">
+                    #{productId}
+                </foreach>
+            </if>
+            <if test="productTemplateId != null and productTemplateId != ''">
+                and t1.id NOT IN
+                (
+                    SELECT
+                      p.id
+                    FROM
+                      product p
+                    LEFT JOIN
+                      platform_product_template_map pptm ON pptm.platform_product_id=p.id
+                    WHERE
+                      p.delete_flag=0 AND
+                      pptm.delete_flag=0 AND
+                      pptm.product_template_id = #{productTemplateId}
+                )
+            </if>
+        </where>
+        ORDER BY
+        	t1.update_time DESC,
+        	t1.create_time DESC
+        LIMIT
+        	#{pageNum},
+       	 	#{pageSize}
+    </select>
+    
+    <!-- 用于产品模板创建，可以选择的产品列表，编辑是采用这个方法 -->
+    <select id="countProductListAvailable" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	SELECT
+        	count(*)
+        FROM product t1
+        <where>
+            t1.delete_flag = '0' and t1.flow_account_flag = 2
+            and t1.type != 0
+            <if test="productName != null and productName != ''">
+                and t1.name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+            <if test="productCode != null and productCode != ''">
+                and t1.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+            </if>
+            <if test="productSize != null">
+                and t1.product_size = #{productSize,jdbcType=BIGINT}
+            </if>
+            <if test="isp != null and isp != ''">
+                and t1.isp = #{isp,jdbcType=VARCHAR}
+            </if>
+            <if test="roamingRegion != null and roamingRegion != ''">
+                and t1.roaming_region = #{roamingRegion,jdbcType=VARCHAR}
+            </if>
+            <if test="ownershipRegion != null and ownershipRegion != ''">
+                and t1.ownership_region = #{ownershipRegion,jdbcType=VARCHAR}
+            </if>
+            <choose>
+                <!-- 上架状态 -->
+                <when test="status == 'on'">
+                    and t1.status = '1' and t1.delete_flag = '0'
+                </when>
+
+                <!-- 下架状态 -->
+                <when test="status == 'off'">
+                    and t1.status = '0' and t1.delete_flag = '0'
+                </when>
+
+                <!-- 删除状态 -->
+                <when test="status == 'deleted'">
+                    and t1.delete_flag = '1'
+                </when>
+            </choose>
+            <if test="productIdList != null and productIdList != ''">
+                AND t1.id NOT IN
+                <foreach collection="productIdList" item="productId" open="(" close=")" separator=",">
+                    #{productId}
+                </foreach>
+            </if>
+            <if test="productTemplateId != null and productTemplateId != ''">
+                and t1.id NOT IN
+                (
+                SELECT
+                p.id
+                FROM
+                product p
+                LEFT JOIN
+                platform_product_template_map pptm ON pptm.platform_product_id=p.id
+                WHERE
+                p.delete_flag=0 AND
+                pptm.delete_flag=0 AND
+                pptm.product_template_id = #{productTemplateId}
+                )
+            </if>
+        </where>
+    </select>
+
+    <!-- 产品管理使用分页类 -->
+    <select id="getProductList" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+        id,product_code,name,status,product_size,isp,ownership_region,roaming_region,create_time,update_time,delete_flag,
+        price,type
+        FROM product
+        <where>
+            product.delete_flag = '0'
+            and product.type != 0
+            <if test="productName != null and productName != ''">
+                and product.name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+            <if test="productCode != null and productCode != ''">
+                and product.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+            </if>
+            <if test="productSize != null">
+                and product.product_size = #{productSize,jdbcType=BIGINT}
+            </if>
+            <if test="isp != null and isp != ''">
+                and product.isp = #{isp,jdbcType=VARCHAR}
+            </if>
+            <if test="roamingRegion != null and roamingRegion != ''">
+                and product.roaming_region = #{roamingRegion,jdbcType=VARCHAR}
+            </if>
+            <if test="ownershipRegion != null and ownershipRegion != ''">
+                and product.ownership_region = #{ownershipRegion,jdbcType=VARCHAR}
+            </if>
+            <if test="flowAccountFlag != null and flowAccountFlag != ''">
+                and product.flow_account_flag = #{flowAccountFlag,jdbcType=INTEGER}
+            </if>
+            <choose>
+                <!-- 上架状态 -->
+                <when test="status == 'on'">
+                    and product.status = '1' and product.delete_flag = '0'
+                </when>
+
+                <!-- 下架状态 -->
+                <when test="status == 'off'">
+                    and product.status = '0' and product.delete_flag = '0'
+                </when>
+
+                <!-- 删除状态 -->
+                <when test="status == 'deleted'">
+                    and product.delete_flag = '1'
+                </when>
+
+                <!-- 所有状态 -->
+                <!-- <otherwise>
+                    and 1=1
+                </otherwise> -->
+            </choose>
+        </where>
+        ORDER BY
+        product.update_time DESC,
+        product.create_time DESC
+        <if test="pageSize != null and pageSize != '' and pageSize != -1">
+            LIMIT
+            #{pageNum},
+            #{pageSize}
+        </if>
+    </select>
+
+    <select id="selectByProductName" resultMap="BaseResultMap"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where BINARY name = #{name,jdbcType=VARCHAR} and delete_flag = 0
+    </select>
+
+    <select id="selectByProductCode" resultMap="BaseResultMap"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where BINARY product_code = #{productCode,jdbcType=VARCHAR} and delete_flag = 0
+    </select>
+
+    <select id="selectPrdSizeById" resultType="java.lang.Long"
+            parameterType="java.lang.Long">
+        select product_size
+        from product
+        where id = #{id,jdbcType=BIGINT}
+        and delete_flag = 0
+    </select>
+
+    <select id="selectAllProductsByEnterCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select cp.id, cp.product_code, cp.name, cp.status, cp.product_size, cp.create_time, cp.update_time,
+        cp.delete_flag, cp.price from product cp,ent_product cep,enterprises ce
+        where cp.id = cep.product_id and cep.enterprize_id = ce.id and ce.delete_flag=0 and cep.delete_flag=0
+        and cp.delete_flag=0 and ce.code = #{code,jdbcType=VARCHAR}
+    </select>
+
+    <select id="batchSelectProductsByProductCodes" parameterType="java.util.Set" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        product
+        WHERE
+        BINARY product_code in (
+        <foreach collection="prdCodes" item="code" separator=",">
+            #{code, jdbcType = VARCHAR}
+        </foreach>
+        )
+    </select>
+
+    <select id="selectDefaultProductByCustomerType" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        product
+        where defaultValue = 1
+        and delete_flag = 0
+        and product_customer_type = #{productCustomerType, jdbcType=BIGINT};
+    </select>
+
+
+    <!-- 企业订购使用分页类 -->
+    <select id="getProductCountForEnter" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        SELECT
+        count(0)
+        FROM product
+        LEFT JOIN ent_product ep on product.id=ep.product_id
+		LEFT JOIN sh_order_product_map sopm on product.id=sopm.product_id
+        <where>
+            product.delete_flag = '0'
+            and ep.delete_flag = '0'
+            and product.type != 0
+            <if test="isp != null and isp != ''">
+                and product.isp = #{isp}
+            </if>
+            <if test="enterId != null and enterId != ''">
+                and ep.enterprize_id = #{enterId}
+            </if>
+            <if test="productName != null and productName != ''">
+                and product.name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+            <if test="productCode != null and productCode != ''">
+                and product.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+            </if>
+
+            <if test="size != null ">
+                and product.product_size = #{size}
+            </if>
+			<if test="orderId != null and orderId != ''">
+                and sopm.order_list_id = #{orderId}
+            </if>
+
+            <choose>
+                <!-- 上架状态 -->
+                <when test="status == 'on'">
+                    and product.status = '1' and product.delete_flag = '0'
+                </when>
+
+                <!-- 下架状态 -->
+                <when test="status == 'off'">
+                    and product.status = '0' and product.delete_flag = '0'
+                </when>
+
+                <!-- 删除状态 -->
+                <when test="status == 'deleted'">
+                    and product.delete_flag = '1'
+                </when>
+
+                <!-- 所有状态 -->
+                <!-- <otherwise>
+                    and 1=1
+                </otherwise> -->
+            </choose>
+        </where>
+    </select>
+    
+    <!-- account不为空时，营销活动获取记录采用这个 -->
+    <select id="getProductsWhenAccountIsNotEmpty"  parameterType="java.util.Map" 
+    resultMap="ExtendResultMapForAccount">
+    	SELECT
+        	product.id,
+        	product.product_code,
+        	product.type,
+        	product.name,
+        	product.status,
+        	product.product_size,
+        	product.create_time,
+        	product.update_time,
+        	product.delete_flag,
+        	product.price,
+        	product.defaultValue,
+        	product.isp,
+        	product.ownership_region,
+        	product.roaming_region,
+			t3.count as count
+        FROM product
+        LEFT JOIN ent_product ep on product.id=ep.product_id
+		LEFT JOIN account t3 ON t3.product_id = product.id
+        <where>
+        	t3.enter_id = t3.owner_id
+			AND	t3.enter_id = ep.enterprize_id
+			AND	product.delete_flag = '0'
+            and ep.delete_flag = '0'
+            and product.type != 0 
+            and t3.delete_flag = 0
+            <if test="productTypes != null and productTypes !=''">
+            	and product.type IN
+            	<foreach collection="productTypes" item="productType" separator="," open="(" close=")">
+            		#{productType}
+            	</foreach>
+            </if>
+            <if test="isp != null and isp != ''">
+                and product.isp = #{isp}
+            </if>
+            <if test="enterId != null and enterId != ''">
+            	and ep.enterprize_id = #{enterId}
+            </if>
+            <if test="status != null and status == 'on'">
+                and product.status = '1' and product.delete_flag = '0'
+            </if>
+            ORDER BY
+        		product.update_time DESC,
+        		product.create_time DESC
+        	<if test="pageSize != null and pageSize != '-1'">
+            	LIMIT
+            		#{pageNum},
+            		#{pageSize}
+        	</if>
+        </where>
+    </select>
+    
+    <select id="countProductsWhenAccountIsNotEmpty"  parameterType="java.util.Map" 
+    resultType="java.lang.Integer">
+    	SELECT
+        	count(*)
+        FROM product
+        LEFT JOIN ent_product ep on product.id=ep.product_id
+		LEFT JOIN account t3 ON t3.product_id = product.id
+        <where>
+        	t3.enter_id = t3.owner_id
+			AND	t3.enter_id = ep.enterprize_id
+			AND	product.delete_flag = '0'
+            and ep.delete_flag = '0'
+            and product.type != 0
+            <if test="isp != null and isp != ''">
+                and product.isp = #{isp}
+            </if>
+            <if test="enterId != null and enterId != ''">
+            	and ep.enterprize_id = #{enterId}
+            </if>
+            <if test="status != null and status == 'on'">
+                and product.status = '1' and product.delete_flag = '0'
+            </if>
+        </where>
+    </select>
+
+    <select id="getProducts" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        product.id,
+        product.product_code,
+        product.type,
+        product.name,
+        product.status,
+        product.product_size,
+        product.create_time,
+        product.update_time,
+        product.delete_flag,
+        product.price,
+        product.defaultValue,
+        product.isp,
+        product.ownership_region,
+        product.roaming_region,
+        t1.count as count
+        FROM product
+        LEFT JOIN account t1 ON t1.product_id = product.id
+        WHERE
+        t1.enter_id = t1.owner_id
+        <if test="enterId != null and enterId != ''">
+            and t1.enter_id = #{enterId}
+        </if>
+        <if test="products != null">
+            AND product.id IN
+            <foreach collection="products" item="product" separator="," open="(" close=")">
+                #{product.id}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- 企业订购使用分页类 -->
+    <select id="getProductListForEnter" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+        product.id,
+        product.product_code,
+        product.type,
+        product.name,
+        product.status,
+        product.product_size,
+        product.create_time,
+        product.update_time,
+        product.delete_flag,
+        product.price,
+        product.defaultValue,
+        product.isp,
+        product.ownership_region,
+        product.roaming_region
+        FROM product
+        LEFT JOIN ent_product ep on product.id=ep.product_id
+        LEFT JOIN sh_order_product_map sopm on product.id=sopm.product_id
+        <where>
+            product.delete_flag = '0'
+            and ep.delete_flag = '0'
+            and product.type != 0
+            <if test="productTypes != null and productTypes !=''">
+            	and product.type IN
+            	<foreach collection="productTypes" item="productType" separator="," open="(" close=")">
+            		#{productType}	
+            	</foreach>
+            </if>
+            <if test="isp != null and isp != ''">
+                and product.isp = #{isp}
+            </if>
+            <if test="enterId != null and enterId != ''">
+                and ep.enterprize_id = #{enterId}
+            </if>
+            <if test="productName != null and productName != ''">
+                and product.name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+            <if test="productCode != null and productCode != ''">
+                and product.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+            </if>
+
+            <if test="size != null ">
+                and product.product_size = #{size}
+            </if>
+            <if test="orderId != null and orderId != ''">
+                and sopm.order_list_id = #{orderId}
+            </if>
+
+            <choose>
+                <!-- 上架状态 -->
+                <when test="status == 'on'">
+                    and product.status = '1' and product.delete_flag = '0'
+                </when>
+
+                <!-- 下架状态 -->
+                <when test="status == 'off'">
+                    and product.status = '0' and product.delete_flag = '0'
+                </when>
+
+                <!-- 删除状态 -->
+                <when test="status == 'deleted'">
+                    and product.delete_flag = '1'
+                </when>
+
+                <!-- 所有状态 -->
+                <!-- <otherwise>
+                    and 1=1
+                </otherwise> -->
+            </choose>
+        </where>
+        ORDER BY
+        product.update_time DESC,
+        product.create_time DESC
+        <if test="pageSize != null and pageSize != '-1'">
+            LIMIT
+            #{pageNum},
+            #{pageSize}
+        </if>
+    </select>
+
+    <select id="getProductListInAccount" resultMap="BaseResultMap">
+        SELECT
+        T.*
+        from
+        product T
+        inner join
+        account A
+        on
+        T.id = A.product_id
+        inner join
+        enterprises E
+        on
+        E.id = A.enter_id
+        where
+        T.delete_flag = 0
+        and
+        E.delete_flag = 0
+        and
+        a.enter_id = #{entId,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insertBatchProduct" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product
+        (product_code, `type`, `name`,
+        status, create_time, update_time,
+        delete_flag, price, defaultValue,
+        isp, ownership_region, roaming_region,
+        product_size)
+        VALUES
+        <foreach collection="ProductList" item="product" separator=",">
+            (
+            #{product.productCode,jdbcType=VARCHAR},
+            #{product.type,jdbcType=INTEGER},
+            #{product.name,jdbcType=VARCHAR},
+            #{product.status,jdbcType=INTEGER},
+            NOW(),
+            NOW(),
+            #{product.deleteFlag,jdbcType=INTEGER},
+            #{product.price,jdbcType=INTEGER},
+            #{product.defaultvalue,jdbcType=INTEGER},
+            #{product.isp,jdbcType=VARCHAR},
+            #{product.ownershipRegion,jdbcType=VARCHAR},
+            #{product.roamingRegion,jdbcType=VARCHAR},
+            #{product.productSize,jdbcType=BIGINT})
+        </foreach>
+    </insert>
+
+    <delete id="deleteBatchProduct">
+        DELETE FROM product
+        WHERE id IN
+        <foreach collection="productIds" item="id" separator="," open="(" close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+
+    <update id="udpateBatchProduct">
+        <foreach collection="ProductList" item="PlatformProduct" index="index" open="" close="" separator=";">
+            UPDATE product
+            <set>
+                <if test="productCode != null">
+                    product_code = #{productCode,jdbcType=VARCHAR},
+                </if>
+                <if test="type != null">
+                    `type` = #{type,jdbcType=INTEGER},
+                </if>
+                <if test="name != null">
+                    `name` = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="status != null">
+                    status = #{status,jdbcType=INTEGER},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+
+                update_time = NOW(),
+
+                <if test="deleteFlag != null">
+                    delete_flag #{deleteFlag,jdbcType=INTEGER},
+                </if>
+                <if test="price != null">
+                    price = #{price,jdbcType=INTEGER},
+                </if>
+                <if test="defaultvalue != null">
+                    defaultValue = #{defaultvalue,jdbcType=INTEGER},
+                </if>
+                <if test="isp != null">
+                    isp = #{isp,jdbcType=VARCHAR},
+                </if>
+                <if test="ownershipRegion != null">
+                    ownership_region = #{ownershipRegion,jdbcType=VARCHAR},
+                </if>
+                <if test="roamingRegion != null">
+                    roaming_region = #{roamingRegion,jdbcType=VARCHAR},
+                </if>
+                <if test="productSize != null">
+                    product_size = #{productSize,jdbcType=BIGINT},
+                </if>
+            </set>
+        </foreach>
+    </update>
+
+    <select id="selectBatchByIds" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product
+        WHERE id IN
+        <foreach collection="ProductIds" item="id" separator=",">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </select>
+
+    <select id="selectBatchByCodes" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product
+        WHERE code IN
+        <foreach collection="Codes" item="code" separator=",">
+            #{code,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <!-- 企业订购产品信息分页类 -->
+    <select id="getProductCountFromEnterAccount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        SELECT
+        count(0)
+        FROM product
+        LEFT JOIN ent_product ep on product.id = ep.product_id
+        LEFT JOIN account on product.id=account.product_id and ep.enterprize_id = account.enter_id
+        <where>
+            product.delete_flag = '0'
+            and ep.delete_flag = '0'
+            and account.type = -1
+            <if test="enterId != null and enterId != ''">
+                and account.enter_id = #{enterId}
+            </if>
+            <if test="productName != null and productName != ''">
+                and product.name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+            <if test="productCode != null and productCode != ''">
+                and product.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+            </if>
+
+            <if test="size != null ">
+                and product.product_size = #{size}
+            </if>
+
+            <choose>
+                <!-- 上架状态 -->
+                <when test="status == 'on'">
+                    and product.status = '1' and product.delete_flag = '0'
+                </when>
+
+                <!-- 下架状态 -->
+                <when test="status == 'off'">
+                    and product.status = '0' and product.delete_flag = '0'
+                </when>
+
+                <!-- 删除状态 -->
+                <when test="status == 'deleted'">
+                    and product.delete_flag = '1'
+                </when>
+
+                <!-- 所有状态 -->
+                <!-- <otherwise>
+                    and 1=1
+                </otherwise> -->
+            </choose>
+        </where>
+    </select>
+
+    <!-- 企业订购使用分页类 -->
+    <select id="getProductListFromEnterAccount" parameterType="java.util.Map"
+            resultMap="ExtendResultMap">
+        SELECT
+        product.id,product.product_code,product.name,product.status,
+        product.product_size,product.create_time,product.update_time,
+        product.delete_flag, product.price, account.count,ep.discount
+        FROM product
+        LEFT JOIN ent_product ep on product.id = ep.product_id
+        LEFT JOIN account on product.id=account.product_id and ep.enterprize_id = account.enter_id
+        <where>
+            product.delete_flag = '0'
+            and ep.delete_flag = '0'
+            and account.type = -1
+            and account.delete_flag = '0'
+            <if test="enterId != null and enterId != ''">
+                and account.enter_id = #{enterId}
+            </if>
+            <if test="productName != null and productName != ''">
+                and product.name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+            <if test="productCode != null and productCode != ''">
+                and product.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+            </if>
+
+            <if test="size != null ">
+                and product.product_size = #{size}
+            </if>
+
+            <choose>
+                <!-- 上架状态 -->
+                <when test="status == 'on'">
+                    and product.status = '1' and product.delete_flag = '0'
+                </when>
+
+                <!-- 下架状态 -->
+                <when test="status == 'off'">
+                    and product.status = '0' and product.delete_flag = '0'
+                </when>
+
+                <!-- 删除状态 -->
+                <when test="status == 'deleted'">
+                    and product.delete_flag = '1'
+                </when>
+
+                <!-- 所有状态 -->
+                <!-- <otherwise>
+                    and 1=1
+                </otherwise> -->
+            </choose>
+        </where>
+        ORDER BY
+        product.update_time DESC,
+        product.create_time DESC
+        LIMIT
+        #{pageNum},
+        #{pageSize}
+    </select>
+
+    <select id="selectProductsByPrizes" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product
+        WHERE status = 1
+        AND delete_flag = 0
+        AND
+        id
+        IN
+        <foreach collection="prizeList" index="index" item="PrizeInfo" open="(" separator="," close=")">
+            #{PrizeInfo.productId}
+        </foreach>
+    </select>
+
+    <insert id="batchInsertProduct" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into product (product_code, `type`, `name`, status, create_time, update_time, delete_flag, price,
+        defaultValue, isp, ownership_region, roaming_region, product_size,flow_account_flag,flow_account_product_id)
+        values
+        <foreach collection="list" item="record" separator=",">
+            (#{record.productCode,jdbcType=VARCHAR},
+            #{record.type,jdbcType=INTEGER},
+            #{record.name,jdbcType=VARCHAR},
+            #{record.status,jdbcType=INTEGER},
+            #{record.createTime,jdbcType=TIMESTAMP},
+            #{record.updateTime,jdbcType=TIMESTAMP},
+            #{record.deleteFlag,jdbcType=INTEGER},
+            #{record.price,jdbcType=INTEGER},
+            #{record.defaultvalue,jdbcType=INTEGER},
+            #{record.isp,jdbcType=VARCHAR},
+            #{record.ownershipRegion,jdbcType=VARCHAR},
+            #{record.roamingRegion,jdbcType=VARCHAR},
+            #{record.productSize,jdbcType=BIGINT},
+            #{record.flowAccountFlag,jdbcType=INTEGER},
+            #{record.flowAccountProductId,jdbcType=BIGINT})
+        </foreach>
+    </insert>
+
+
+    <select id="selectProductByCreateTime" resultMap="BaseResultMap">
+        select
+        id, product_code, `type`, `name`, status, create_time, update_time, delete_flag, price,
+        defaultValue, isp, ownership_region, roaming_region, product_size
+        FROM product
+        WHERE
+        create_time = #{createTime,jdbcType=VARCHAR}
+    </select>
+
+    <update id="batchUpdate" parameterType="java.util.List">
+        UPDATE
+        product
+        SET
+        product_code = CASE
+        <foreach collection="list" item="item" close="ELSE `product_code` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.productCode, jdbcType = VARCHAR}
+        </foreach>
+        ,type = CASE
+        <foreach collection="list" item="item" close="ELSE `type` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.type, jdbcType = INTEGER}
+        </foreach>
+        ,name = CASE
+        <foreach collection="list" item="item" close="ELSE `name` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.name, jdbcType = VARCHAR}
+        </foreach>
+        ,status = CASE
+        <foreach collection="list" item="item" close="ELSE `status` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.status, jdbcType = INTEGER}
+        </foreach>
+        ,create_time = CASE
+        <foreach collection="list" item="item" close="ELSE `create_time` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.createTime, jdbcType = TIMESTAMP}
+        </foreach>
+        ,update_time = CASE
+        <foreach collection="list" item="item" close="ELSE `update_time` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.updateTime, jdbcType = TIMESTAMP}
+        </foreach>
+        ,delete_flag = CASE
+        <foreach collection="list" item="item" close="ELSE `delete_flag` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.deleteFlag, jdbcType = INTEGER}
+        </foreach>
+        ,price = CASE
+        <foreach collection="list" item="item" close="ELSE `price` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.price, jdbcType = INTEGER}
+        </foreach>
+        ,defaultValue = CASE
+        <foreach collection="list" item="item" close="ELSE `defaultValue` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.defaultvalue, jdbcType = INTEGER}
+        </foreach>
+        ,isp = CASE
+        <foreach collection="list" item="item" close="ELSE `isp` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.isp, jdbcType = VARCHAR}
+        </foreach>
+        ,ownership_region = CASE
+        <foreach collection="list" item="item" close="ELSE `ownership_region` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.ownershipRegion, jdbcType = VARCHAR}
+        </foreach>
+        ,roaming_region = CASE
+        <foreach collection="list" item="item" close="ELSE `roaming_region` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.roamingRegion, jdbcType = VARCHAR}
+        </foreach>
+        ,product_size = CASE
+        <foreach collection="list" item="item" close="ELSE `product_size` END">
+            WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.productSize, jdbcType = BIGINT}
+        </foreach>
+        WHERE
+        id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.id, jdbcType = BIGINT}
+        </foreach>
+    </update>
+
+    <select id="getProductsByPidWithDeleteFlag" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where id = #{productId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectProductByProductSize" resultMap="BaseResultMap">
+        select
+        id, product_code, `type`, `name`, status, create_time, update_time, delete_flag, price,
+        defaultValue, isp, ownership_region, roaming_region, product_size
+        FROM product
+        WHERE
+        product_size = #{productSize,jdbcType=VARCHAR}
+        and delete_flag = 0
+        and status = 1
+   </select>
+
+    <select id="selectFlowAccountProductByProductSize" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM product
+        WHERE
+        product_size = #{productSize,jdbcType=BIGINT}
+        and delete_flag = 0
+        and status = 1
+        and flow_account_flag = 1
+        and flow_account_product_id = #{productId, jdbcType=BIGINT}
+   </select>
+
+    <select id="selectPrdBySizeAndId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM product
+        WHERE
+        product_size = #{productSize,jdbcType=BIGINT}
+        and delete_flag = 0
+        and status = 1
+        and flow_account_product_id = #{productId, jdbcType=BIGINT}
+    </select>
+    
+    <select id ="getPrdsByType" resultMap="BaseResultMap">
+        select
+        DISTINCT(prd.id), prd.product_code, prd.type, prd.name, prd.status, prd.create_time, prd.update_time, prd.delete_flag, prd.price,
+        prd.defaultValue, prd.isp, prd.ownership_region, prd.roaming_region, prd.product_size, prd.flow_account_flag
+        FROM product prd
+        LEFT JOIN ent_product entprd on prd.id = entprd.product_id
+        WHERE
+          prd.delete_flag = 0 and prd.flow_account_flag in (0,2) 
+          <if test="diffId != null and diffId != ''">
+          and prd.id != #{diffId}
+          </if>
+          and prd.type in 
+          <foreach collection="types" item="record" open="(" close=")" separator=",">
+             #{record}
+          </foreach>  
+          <if test="entId != null and entId != ''">
+          and (prd.type = 0 or prd.type = 5 or entprd.enterprize_id = #{entId})
+          </if>
+        ORDER by prd.type desc,prd.id asc
+           
+    </select>
+    
+    
+     <!-- 产品管理使用分页类 -->
+    <select id="getPrdsByTypePageList" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        SELECT
+        id,product_code,name,status,product_size,isp,ownership_region,roaming_region,create_time,update_time,delete_flag,
+        price
+        FROM product
+        <where>
+            and delete_flag = 0 and flow_account_flag in (0,2)           
+            <if test="productName != null and productName != ''">
+                and name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+            and type in 
+            <foreach collection="types" item="record" open="(" close=")" separator=",">
+                 #{record}
+            </foreach>  
+        </where>
+        ORDER BY
+        product.update_time DESC,
+        product.create_time DESC
+        LIMIT
+        #{pageNum},
+        #{pageSize}
+    </select>
+    
+    
+     <!-- 产品管理使用分页类 -->
+    <select id="getPrdsByTypePageCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        SELECT
+        count(0)
+        FROM product
+        <where>
+            and delete_flag = 0 and flow_account_flag in (0,2)           
+            <if test="productName != null and productName != ''">
+                and name like CONCAT('%',CONCAT(#{productName},'%'))
+            </if>
+            and type in 
+            <foreach collection="types" item="record" open="(" close=")" separator=",">
+                 #{record}
+            </foreach>  
+        </where>
+    </select>
+    
+     <select id="getBySplIdWithoutDel" parameterType="java.lang.Long" resultMap="ExtendResultMapForSupplier">
+        SELECT
+			pp.*,
+			sp.op_status as supplierOpStatus
+        FROM
+        	supplier_product sp
+        LEFT JOIN
+        	supplier_product_map spm
+        ON
+        	sp.id = spm.supplier_product_id	
+        LEFT JOIN
+        	product pp
+        ON
+        	spm.platform_product_id = pp.id
+        WHERE
+        	sp.id = #{splPid, jdbcType = BIGINT}
+    </select>
+	<select id="getProductsByOrderListId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    	select
+    		t1.*
+    	from
+    		product t1
+    	left join 
+    		sh_order_product_map t2 on t2.product_id = t1.id
+    	where 
+    		t1.delete_flag=0 and
+    		t2.delete_flag=0 and
+    		t2.order_list_id = #{oriderListId}
+    	order by 
+    		t1.isp
+    </select>
+	<select id="showForPageResultCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select
+    		count(*)
+    	from
+    		product t1
+    	left join 
+    		sh_order_product_map t2 on t2.product_id = t1.id
+    	where 
+    		t1.delete_flag=0 and
+    		t2.delete_flag=0 
+    		<if test="productCode != null and productCode != ''">
+            	and t1.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+        	</if>
+			<if test="productName != null and productName != ''">
+            	and t1.name like CONCAT('%',CONCAT(#{productName},'%'))
+        	</if>
+			<if test="oriderListId != null and oriderListId != ''">
+            	and t2.order_list_id = #{oriderListId}
+        	</if>
+			<if test="productSize != null and productSize != ''">
+            	and t1.product_size like CONCAT('%',CONCAT(#{productSize},'%'))
+        	</if>
+    </select>
+	<select id="showForPageResultList" parameterType="java.util.Map"
+            resultMap="BaseResultMap">         
+            select
+    		t1.*
+    	from
+    		product t1
+    	left join 
+    		sh_order_product_map t2 on t2.product_id = t1.id
+    	where 
+    		t1.delete_flag=0 and
+    		t2.delete_flag=0 
+    		<if test="productCode != null and productCode != ''">
+            	and t1.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+        	</if>
+			<if test="productName != null and productName != ''">
+            	and t1.name like CONCAT('%',CONCAT(#{productName},'%'))
+        	</if>
+			<if test="orderId != null and orderId != ''">
+            	and t2.order_list_id = #{orderId}
+        	</if>
+			<if test="productSize != null and productSize != ''">
+            	and t1.product_size like CONCAT('%',CONCAT(#{productSize},'%'))
+        	</if>
+        	<if test="pageNum != null and pageNum != '' and pageSize != null and pageSize != ''">
+			LIMIT	
+				#{pageNum},#{pageSize}
+			</if>
+    </select>
+ 	<select id="getOrderProductByMap" parameterType="java.util.Map"
+            resultMap="BaseResultMap">         
+            select
+    		t1.*
+    	from
+    		product t1
+    	left join 
+    		sh_order_product_map t2 on t2.product_id = t1.id
+    	where 
+    		t1.delete_flag=0 and
+    		t2.delete_flag=0 
+    		<if test="productCode != null and productCode != ''">
+            	and t1.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+        	</if>
+			<if test="productName != null and productName != ''">
+            	and t1.name like CONCAT('%',CONCAT(#{productName},'%'))
+        	</if>
+			<if test="orderId != null and orderId != ''">
+            	and t2.order_list_id = #{orderId}
+        	</if>
+    </select>
+    
+    <select id="selectByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from product where delete_flag=0 and type = #{type}
+    </select>
+</mapper>

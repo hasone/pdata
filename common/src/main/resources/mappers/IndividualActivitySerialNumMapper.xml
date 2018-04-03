@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.IndividualActivitySerialNumMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.IndividualActivitySerialNum" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="system_num" property="systemNum" jdbcType="VARCHAR" />
+    <result column="ec_serial_num" property="ecSerialNum" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, system_num, ec_serial_num, create_time, update_time, delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from individual_activity_serial_num
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from individual_activity_serial_num
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.IndividualActivitySerialNum" >
+    insert into individual_activity_serial_num (id, system_num, ec_serial_num, 
+      create_time, update_time, delete_flag
+      )
+    values (#{id,jdbcType=INTEGER}, #{systemNum,jdbcType=VARCHAR}, #{ecSerialNum,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.IndividualActivitySerialNum" >
+    insert into individual_activity_serial_num
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="systemNum != null" >
+        system_num,
+      </if>
+      <if test="ecSerialNum != null" >
+        ec_serial_num,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="systemNum != null" >
+        #{systemNum,jdbcType=VARCHAR},
+      </if>
+      <if test="ecSerialNum != null" >
+        #{ecSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.IndividualActivitySerialNum" >
+    update individual_activity_serial_num
+    <set >
+      <if test="systemNum != null" >
+        system_num = #{systemNum,jdbcType=VARCHAR},
+      </if>
+      <if test="ecSerialNum != null" >
+        ec_serial_num = #{ecSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.IndividualActivitySerialNum" >
+    update individual_activity_serial_num
+    set system_num = #{systemNum,jdbcType=VARCHAR},
+      ec_serial_num = #{ecSerialNum,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

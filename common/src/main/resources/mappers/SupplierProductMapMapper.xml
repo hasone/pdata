@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.SupplierProductMapMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.SupplierProductMap">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="platform_product_id" property="platformProductId" jdbcType="BIGINT"/>
+        <result column="supplier_product_id" property="supplierProductId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="prior_flag" property="priorFlag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, platform_product_id, supplier_product_id, create_time, update_time, delete_flag, prior_flag
+    </sql>
+
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        supplier_product_map
+        where
+        id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <insert id="create" parameterType="com.cmcc.vrp.province.model.SupplierProductMap"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into
+        supplier_product_map (platform_product_id, supplier_product_id,create_time, update_time, delete_flag)
+        values
+        (#{platformProductId,jdbcType=BIGINT},
+        #{supplierProductId,jdbcType=BIGINT},
+        NOW(),
+        NOW(),
+        #{deleteFlag,jdbcType=INTEGER})
+    </insert>
+
+    <insert id="batchInsert">
+        insert into
+        supplier_product_map (platform_product_id, supplier_product_id,create_time, update_time, delete_flag)
+        values
+        <foreach collection="supplierProductMaps" item="spm" separator=",">
+            (#{spm.platformProductId,jdbcType=BIGINT},
+            #{spm.supplierProductId,jdbcType=BIGINT},
+            NOW(),
+            NOW(),
+            #{spm.deleteFlag,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
+    <update id="deleteByPlftPid" parameterType="java.lang.Long">
+        UPDATE
+        supplier_product_map
+        SET
+        delete_flag = 1,
+        update_time = NOW()
+        WHERE
+        platform_product_id = #{plftPid, jdbcType = BIGINT}
+    </update>
+
+    <update id="deleteByPlftPidAndSplPid">
+        UPDATE
+        supplier_product_map
+        SET
+        delete_flag = 1,
+        update_time = NOW()
+        WHERE
+        platform_product_id = #{plftPid, jdbcType = BIGINT} AND
+        supplier_product_id = #{splPid, jdbcType = BIGINT}
+    </update>
+
+    <update id="deleteBySplPid" parameterType="java.lang.Long">
+        UPDATE
+        supplier_product_map
+        SET
+        delete_flag = 1,
+        update_time = NOW()
+        WHERE
+        supplier_product_id = #{splPid, jdbcType = BIGINT}
+    </update>
+
+    <update id="deleteBySupplierId" parameterType="java.lang.Long">
+        UPDATE
+        supplier_product_map spm
+        LEFT JOIN
+        supplier_product sp
+        ON
+        sp.id = spm.supplier_product_id
+        SET
+        spm.delete_flag = 1,
+        spm.update_time = NOW()
+        WHERE
+        sp.supplier_id = #{supplierId, jdbcType = BIGINT} and spm.delete_flag = 0
+    </update>
+	
+	<!-- 更据平台产品id查询上架状态为1的供应商产品 -->
+	<select id="getOnshelfByPltfPid" parameterType="java.lang.Long"
+            resultMap="com.cmcc.vrp.province.dao.SupplierProductMapper.ExtendsResultMap3">
+        SELECT
+        sp.id,
+        sp.name,
+        sp.isp,
+        sp.supplier_id,
+        sp.code,
+        sp.`size`,
+        sp.ownership_region,
+        sp.roaming_region,
+        sp.price,
+        sp.feature,
+        sp.status,
+        sp.create_time,
+        sp.update_time,
+        sp.delete_flag,
+        sp.illustration,
+        sp.limit_money,
+        sp.limit_money_flag,
+        
+        s.limit_money as supplierLimitMoney,
+        s.limit_money_flag as supplierLimitMoneyFlag
+
+
+
+
+        FROM
+        supplier_product_map spm
+        LEFT JOIN supplier_product sp ON spm.supplier_product_id = sp.id
+        LEFT JOIN supplier s ON s.id = sp.supplier_id
+        WHERE
+        spm.platform_product_id = #{pltfPid, jdbcType = BIGINT}
+        and spm.delete_flag = 0 
+        and sp.delete_flag = 0 
+        and sp.status = 1
+        and s.status = 1
+        and s.delete_flag = 0
+    </select>
+    
+    <!-- 更据平台产品id查询关联的所有供应商产品 -->
+    <select id="getByPltfPid" parameterType="java.lang.Long"
+            resultMap="com.cmcc.vrp.province.dao.SupplierProductMapper.BaseResultMap">
+        SELECT
+        sp.id,
+        sp.name,
+        sp.isp,
+        sp.supplier_id,
+        sp.code,
+        sp.`size`,
+        sp.ownership_region,
+        sp.roaming_region,
+        sp.price,
+        sp.feature,
+        sp.status,
+        sp.create_time,
+        sp.update_time,
+        sp.delete_flag
+        FROM
+        supplier_product_map spm
+        LEFT JOIN
+        supplier_product sp
+        ON
+        spm.supplier_product_id = sp.id
+        WHERE
+        spm.platform_product_id = #{pltfPid, jdbcType = BIGINT}
+        and spm.delete_flag = 0 
+        and sp.delete_flag = 0 
+    </select>
+
+    <select id="getBySplPid" parameterType="java.lang.Long"
+            resultMap="com.cmcc.vrp.province.dao.ProductMapper.BaseResultMap">
+        SELECT
+        pp.id,
+        pp.product_code,
+        pp.`type`,
+        pp.`name`,
+        pp.status,
+        pp.create_time,
+        pp.update_time,
+        pp.delete_flag,
+        pp.price,
+        pp.defaultValue,
+        pp.isp,
+        pp.ownership_region,
+        pp.roaming_region,
+        pp.product_size
+        FROM
+        supplier_product_map spm
+        LEFT JOIN
+        product pp
+        ON
+        spm.platform_product_id = pp.id
+        WHERE
+        spm.supplier_product_id = #{splPid, jdbcType = BIGINT} AND
+        spm.delete_flag = 0 AND
+        pp.delete_flag = 0
+    </select>
+
+    <select id="getBySpplierId" parameterType="java.lang.Long"
+            resultMap="com.cmcc.vrp.province.dao.ProductMapper.BaseResultMap">
+        SELECT
+        pp.id,
+        pp.product_code,
+        pp.`type`,
+        pp.`name`,
+        pp.status,
+        pp.create_time,
+        pp.update_time,
+        pp.delete_flag,
+        pp.price,
+        pp.defaultValue,
+        pp.isp,
+        pp.ownership_region,
+        pp.roaming_region,
+        pp.product_size
+        FROM
+        supplier_product_map spm
+        LEFT JOIN
+        product pp
+        ON
+        spm.platform_product_id = pp.id
+        LEFT JOIN
+        supplier_product sp
+        ON spm.supplier_product_id = sp.id
+        WHERE
+        sp.supplier_id = #{supplierId, jdbcType = BIGINT} AND
+        sp.delete_flag = 0 AND
+        spm.delete_flag = 0 AND
+        pp.delete_flag = 0
+    </select>
+    
+    <update id="batchUpdate" parameterType="java.util.List">
+        UPDATE
+          supplier_product_map
+        SET
+          platform_product_id = CASE
+          <foreach collection="list" item="item" close="ELSE `platform_product_id` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.platformProductId, jdbcType = BIGINT}
+          </foreach>
+          ,supplier_product_id = CASE
+          <foreach collection="list" item="item" close="ELSE `supplier_product_id` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.supplierProductId, jdbcType = BIGINT}
+          </foreach>
+            ,create_time = CASE
+          <foreach collection="list" item="item" close="ELSE `create_time` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.createTime, jdbcType = TIMESTAMP}
+          </foreach>
+           ,update_time = CASE
+          <foreach collection="list" item="item" close="ELSE `update_time` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.updateTime, jdbcType = TIMESTAMP}
+          </foreach>
+           ,delete_flag = CASE
+          <foreach collection="list" item="item" close="ELSE `delete_flag` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.deleteFlag, jdbcType = INTEGER}
+          </foreach>
+        WHERE
+          id in
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item.id, jdbcType = BIGINT}
+            </foreach>
+   </update>
+   
+   <select id="selectBySplPidWithOutDeleteFlag" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        supplier_product_map
+        where
+        supplier_product_id = #{splPid,jdbcType=BIGINT}
+    </select>
+    
+    <select id="getBySplPidWithoutDel" parameterType="java.lang.Long"
+            resultMap="com.cmcc.vrp.province.dao.ProductMapper.BaseResultMap">
+        SELECT
+        pp.id,
+        pp.product_code,
+        pp.`type`,
+        pp.`name`,
+        pp.status,
+        pp.create_time,
+        pp.update_time,
+        pp.delete_flag,
+        pp.price,
+        pp.defaultValue,
+        pp.isp,
+        pp.ownership_region,
+        pp.roaming_region,
+        pp.product_size
+        FROM
+        	supplier_product_map spm
+        LEFT JOIN
+        	product pp
+        ON
+        	spm.platform_product_id = pp.id
+        WHERE
+        	spm.supplier_product_id = #{splPid, jdbcType = BIGINT}
+    </select>
+    <update id="clearPriorSupplier" parameterType="java.lang.Long">
+        UPDATE
+        supplier_product_map
+        SET
+        prior_flag = 0,
+        update_time = NOW()
+        WHERE
+        platform_product_id = #{prdId, jdbcType = BIGINT}
+    </update>
+    <update id="updatePriorSupplier" parameterType="java.lang.Long">
+        UPDATE
+        supplier_product_map spm
+        LEFT JOIN
+        supplier_product sp
+        ON
+        sp.id = spm.supplier_product_id
+        SET
+        spm.prior_flag = 1,
+        spm.update_time = NOW()
+        WHERE
+        sp.supplier_id = #{supplierId, jdbcType = BIGINT} 
+        and spm.platform_product_id = #{prdId, jdbcType = BIGINT}
+    </update>
+    <select id="getBypltfpidAndSplpid" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        supplier_product_map
+        where
+        supplier_product_id = #{splId,jdbcType=BIGINT}
+        and platform_product_id=#{prdId,jdbcType=BIGINT} 
+        and delete_flag=0
+    </select>
+    <update id="clearPriorSupplierBySplId" parameterType="java.lang.Long">
+        UPDATE
+        supplier_product_map
+        SET
+        prior_flag = 0,
+        update_time = NOW()
+        WHERE
+        supplier_product_id = #{splId, jdbcType = BIGINT}
+    </update>
+    <update id="clearPriorSupplierBySupplierId" parameterType="java.lang.Long">
+        UPDATE
+        supplier_product_map spm
+        LEFT JOIN
+        supplier_product sp
+        ON
+        sp.id = spm.supplier_product_id
+        SET
+        spm.prior_flag = 0,
+        spm.update_time = NOW()
+        WHERE
+        sp.supplier_id = #{supplierId, jdbcType = BIGINT} 
+    </update>
+</mapper>

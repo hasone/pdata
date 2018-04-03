@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.EnterpriseChangeDetailMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.EnterpriseChangeDetail">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="request_id" property="requestId" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="is_cooperate" property="isCooperate" jdbcType="INTEGER"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.EnterpriseChangeDetail">
+        insert into enterprise_change_detail (id, request_id, type,
+        is_cooperate, delete_flag)
+        values (#{id,jdbcType=BIGINT}, #{requestId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER},
+        #{isCooperate,jdbcType=INTEGER}, #{deleteFlag,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.EnterpriseChangeDetail">
+        insert into enterprise_change_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="requestId != null">
+                request_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="isCooperate != null">
+                is_cooperate,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="requestId != null">
+                #{requestId,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="isCooperate != null">
+                #{isCooperate,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+</mapper>

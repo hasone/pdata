@@ -1,0 +1,123 @@
+body {
+    overflow: hidden
+}
+
+.user-info {
+    height: 100%;
+    overflow: hidden
+}
+
+.photo {
+    border-right: 2px solid #95a0aa;
+    float: left;
+    height: 100%;
+    line-height: 60px
+}
+
+.logout {
+    display: inline-block;
+    float: left;
+    height: 100%;
+    width: 80px;
+    text-align: center
+}
+
+.logout a {
+    width: 23px;
+    height: 26px;
+    display: inline-block;
+    margin-top: 15px;
+    margin-left: -15px;
+    background: url(../imgs/logout.png) center center no-repeat
+}
+
+.cm-accordion-menu .menu-header {
+    padding-top: 7px;
+    font-size: 16px;
+    line-height: 32px
+}
+
+.cm-accordion-menu .menu-header span {
+    margin-left: 10px
+}
+
+.navbar-fixed-top.navbar {
+    left: 200px
+}
+
+#accordion {
+    width: 200px;
+    box-shadow: none
+}
+
+.cm-accordion-menu.white > ul > li > a {
+    border-left: 4px solid transparent
+}
+
+.cm-accordion-menu.white > ul > li.active > a {
+    color: #3daeec;
+    border-left: 4px solid #3daeec
+}
+
+.cm-accordion-menu ul > li .submenu li.active > a {
+    color: #3daeec
+}
+
+.cm-accordion-menu ul > li .submenu li > a {
+    padding-left: 50px
+}
+
+.cm-accordion-menu ul > li .submenu li.active > a, .cm-accordion-menu ul > li .submenu li:hover > a {
+    border-left-color: #3daeec
+}
+
+.desktop-wrap {
+    left: 200px;
+    top: 60px;
+    bottom: 45px;
+}
+
+.desktop-wrap #desktop {
+    width: 100%;
+    height: 100%
+}
+
+.menu-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-position: center center;
+    background-repeat: no-repeat
+}
+
+.icon-qygl {
+    background-image: url(../imgs/icon-qygl.png)
+}
+
+.icon-yx {
+    background-image: url(../imgs/icon-yx.png)
+}
+
+.icon-yy {
+    background-image: url(../imgs/icon-yy.png)
+}
+
+.icon-zm {
+    background-image: url(../imgs/icon-zm.png)
+}
+
+.icon-dx {
+    background-image: url(../imgs/icon-dx.png)
+}
+
+.icon-qudao {
+    background-image: url(../imgs/icon-qudao.png)
+}
+
+.icon-cp {
+    background-image: url(../imgs/icon-cp.png)
+}
+
+.icon-user {
+    background-image: url(../imgs/icon-user.png)
+}

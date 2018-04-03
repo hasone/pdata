@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.MdrcActiveDetailMapper">
+	<resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.MdrcActiveDetail">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="request_id" property="requestId" jdbcType="BIGINT" />
+		<result column="config_id" property="configId" jdbcType="BIGINT" />
+		<result column="start_card_number" property="startCardNumber" jdbcType="VARCHAR" />
+		<result column="end_card_number" property="endCardNumber" jdbcType="VARCHAR" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+		<result column="image" property="image" jdbcType="VARCHAR" />
+		<result column="image_key" property="imageKey" jdbcType="VARCHAR" />
+		<result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+		<result column="ent_id" property="entId" jdbcType="BIGINT" />
+		<result column="template_id" property="templateId" jdbcType="BIGINT" />
+		<result column="product_id" property="productId" jdbcType="BIGINT" />
+		<result column="active_status" property="activeStatus" jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="ExtendBaseResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.MdrcActiveDetail">
+        <result column="result" property="result" jdbcType="INTEGER"/><!-- 激活审批状态 -->
+        <result column="serialNumber" property="serialNumber" jdbcType="VARCHAR"/><!-- 批次号 -->
+        <result column="amount" property="amount" jdbcType="INTEGER"/><!-- 制卡总数 -->
+        <result column="configName" property="configName" jdbcType="VARCHAR"/><!-- 卡名称 -->
+               
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, request_id, config_id, start_card_number, end_card_number, count,
+		image, image_key,
+		delete_flag, ent_id, template_id, product_id, active_status
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from mdrc_active_detail
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<!-- 根据请求审批request_id查找 -->
+	<select id="selectByRequestId" resultMap="ExtendBaseResultMap"
+		parameterType="java.lang.Long">
+		SELECT
+			T1.*,
+			t2.serial_number as serialNumber,
+			t2.amount as amount,
+			t2.config_name as configName
+		FROM
+			mdrc_active_detail t1
+		LEFT JOIN
+			mdrc_batch_config t2 on t1.config_id = t2.id
+		WHERE
+			request_id = #{requestId,jdbcType=BIGINT}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from mdrc_active_detail
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.cmcc.vrp.province.model.MdrcActiveDetail">
+		insert into mdrc_active_detail (id, request_id, config_id,
+		start_card_number, end_card_number, count,
+		image, image_key, delete_flag, ent_id, template_id,
+		product_id, active_status
+		)
+		values (#{id,jdbcType=BIGINT}, #{requestId,jdbcType=BIGINT},
+		#{configId,jdbcType=BIGINT},
+		#{startCardNumber,jdbcType=VARCHAR}, #{endCardNumber,jdbcType=VARCHAR}, #{count,jdbcType=INTEGER},
+		#{image,jdbcType=VARCHAR}, #{imageKey,jdbcType=VARCHAR},
+		#{deleteFlag,jdbcType=INTEGER},
+		#{entId,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT},
+		#{activeStatus,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.MdrcActiveDetail">
+		insert into mdrc_active_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="requestId != null">
+				request_id,
+			</if>
+			<if test="configId != null">
+				config_id,
+			</if>
+			<if test="startCardNumber != null">
+				start_card_number,
+			</if>
+			<if test="endCardNumber != null">
+				end_card_number,
+			</if>
+			<if test="count != null">
+				count,
+			</if>
+			<if test="image != null">
+				image,
+			</if>
+			<if test="imageKey != null">
+				image_key,
+			</if>
+			<if test="deleteFlag != null">
+				delete_flag,
+			</if>
+			<if test="entId != null">
+				ent_id,
+			</if>
+			<if test="templateId != null">
+				template_id,
+			</if>
+			<if test="productId != null">
+				product_id,
+			</if>
+			<if test="activeStatus != null">
+				active_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="requestId != null">
+				#{requestId,jdbcType=BIGINT},
+			</if>
+			<if test="configId != null">
+				#{configId,jdbcType=BIGINT},
+			</if>
+			<if test="startCardNumber != null">
+				#{startCardNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="endCardNumber != null">
+				#{endCardNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="count != null">
+				#{count,jdbcType=INTEGER},
+			</if>
+			<if test="image != null">
+				#{image,jdbcType=VARCHAR},
+			</if>
+			<if test="imageKey != null">
+				#{imageKey,jdbcType=VARCHAR},
+			</if>
+			<if test="deleteFlag != null">
+				#{deleteFlag,jdbcType=INTEGER},
+			</if>
+			<if test="entId != null">
+				#{entId,jdbcType=BIGINT},
+			</if>
+			<if test="templateId != null">
+				#{templateId,jdbcType=BIGINT},
+			</if>
+			<if test="productId != null">
+				#{productId,jdbcType=BIGINT},
+			</if>
+			<if test="activeStatus != null">
+				#{activeStatus,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<!--根据requestId跟新 -->
+	<update id="updateByRequestIdSelective" parameterType="com.cmcc.vrp.province.model.MdrcActiveDetail">
+		update mdrc_active_detail
+		<set>
+			<if test="configId != null">
+				config_id = #{configId,jdbcType=BIGINT},
+			</if>
+			<if test="startCardNumber != null">
+				start_card_number = #{startCardNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="endCardNumber != null">
+				end_card_number = #{endCardNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="count != null">
+				count = #{count,jdbcType=INTEGER},
+			</if>
+			<if test="image != null">
+				image = #{image,jdbcType=VARCHAR},
+			</if>
+			<if test="imageKey != null">
+				image_key = #{imageKey,jdbcType=VARCHAR},
+			</if>
+			<if test="deleteFlag != null">
+				delete_flag = #{deleteFlag,jdbcType=INTEGER},
+			</if>
+			<if test="entId != null">
+				ent_id = #{entId,jdbcType=BIGINT},
+			</if>
+			<if test="templateId != null">
+				template_id = #{templateId,jdbcType=BIGINT},
+			</if>
+			<if test="productId != null">
+				product_id = #{productId,jdbcType=BIGINT},
+			</if>
+			<if test="activeStatus != null">
+				active_status = #{activeStatus,jdbcType=INTEGER},
+			</if>
+		</set>
+		where request_id = #{requestId,jdbcType=BIGINT}
+	</update>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.MdrcActiveDetail">
+		update mdrc_active_detail
+		<set>
+			<if test="configId != null">
+				config_id = #{configId,jdbcType=BIGINT},
+			</if>
+			<if test="startCardNumber != null">
+				start_card_number = #{startCardNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="endCardNumber != null">
+				end_card_number = #{endCardNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="count != null">
+				count = #{count,jdbcType=INTEGER},
+			</if>
+			<if test="image != null">
+				image = #{image,jdbcType=VARCHAR},
+			</if>
+			<if test="imageKey != null">
+				image_key = #{imageKey,jdbcType=VARCHAR},
+			</if>
+			<if test="deleteFlag != null">
+				delete_flag = #{deleteFlag,jdbcType=INTEGER},
+			</if>
+			<if test="entId != null">
+				ent_id = #{entId,jdbcType=BIGINT},
+			</if>
+			<if test="templateId != null">
+				template_id = #{templateId,jdbcType=BIGINT},
+			</if>
+			<if test="productId != null">
+				product_id = #{productId,jdbcType=BIGINT},
+			</if>
+			<if test="activeStatus != null">
+				active_status = #{activeStatus,jdbcType=INTEGER},
+			</if>
+		</set>
+		where request_id = #{requestId,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.MdrcActiveDetail">
+		update mdrc_active_detail
+		set request_id = #{requestId,jdbcType=BIGINT},
+		config_id = #{configId,jdbcType=BIGINT},
+		start_card_number = #{startCardNumber,jdbcType=VARCHAR},
+		end_card_number = #{endCardNumber,jdbcType=VARCHAR},
+		count = #{count,jdbcType=INTEGER},
+		image = #{image,jdbcType=VARCHAR},
+		image_key = #{imageKey,jdbcType=VARCHAR},
+		delete_flag = #{deleteFlag,jdbcType=INTEGER},
+		ent_id = #{entId,jdbcType=BIGINT},
+		template_id = #{templateId,jdbcType=BIGINT},
+		product_id = #{productId,jdbcType=BIGINT},
+		active_status = #{activeStatus,jdbcType=INTEGER}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+
+	<select id="selectByconfigIdAndStatus" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		t1.*,
+		t2.result as result
+		FROM
+		mdrc_active_detail t1
+		LEFT JOIN
+		approval_request t2 on t2.id = t1.request_id
+		LEFT JOIN
+		mdrc_batch_config t3 on t3.id = t1.config_id
+		WHERE
+		t3.id = #{configId,jdbcType=BIGINT}
+		AND
+		t2.result = #{status,jdbcType=INTEGER}
+	</select>
+</mapper>

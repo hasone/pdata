@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.SupplierProductAccountMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.SupplierProductAccount">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="supplier_product_id" property="supplierProductId" jdbcType="BIGINT"/>
+        <result column="ent_sync_list_id" property="entSyncListId" jdbcType="BIGINT"/>
+        <result column="count" property="count" jdbcType="DOUBLE"/>
+        <result column="min_count" property="minCount" jdbcType="DOUBLE"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, supplier_product_id, ent_sync_list_id, count, min_count, create_time, update_time, delete_flag
+    </sql>
+    
+	<insert id="createSupplierProductAccount" parameterType="com.cmcc.vrp.province.model.SupplierProductAccount"
+	            useGeneratedKeys="true" keyProperty="id">
+        insert into
+        supplier_product_account (supplier_product_id, ent_sync_list_id, count, create_time, update_time, delete_flag)
+        values
+        (#{supplierProductId,jdbcType=BIGINT},
+        #{entSyncListId,jdbcType=BIGINT},
+        #{count,jdbcType=DOUBLE},
+        NOW(),
+        NOW(),
+        #{deleteFlag,jdbcType=INTEGER})
+    </insert>
+    
+    <update id="updateSupplierProductAccount">
+        UPDATE
+        supplier_product_account
+        SET
+        `count` = #{count, jdbcType = REAL},
+        update_time = NOW()
+        WHERE
+        supplier_product_id = #{supplierProductId, jdbcType = BIGINT} AND
+        `count` >= `min_count`
+    </update>
+    
+    <select id="getInfoBySupplierProductId" resultMap="BaseResultMap">
+    	SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        supplier_product_account
+        WHERE
+        supplier_product_id = #{supplierProductId, jdbcType = BIGINT} 
+    </select>
+
+    <select id="getCountBySupplierProductId">
+    	SELECT
+        count
+        FROM
+        supplier_product_account
+        WHERE
+        supplier_product_id = #{supplierProductId, jdbcType = BIGINT} 
+    </select>
+	<select id="getInfoByEntSyncListId" resultMap="BaseResultMap">
+    	SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        supplier_product_account
+        WHERE
+        ent_sync_list_id = #{entSyncListId, jdbcType = BIGINT} 
+    </select>
+    <select id="getById" resultMap="BaseResultMap">
+    	SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        supplier_product_account
+        WHERE
+        id = #{id, jdbcType = BIGINT} 
+    </select>
+    <update id="updateById">
+        UPDATE
+        supplier_product_account
+        SET
+        `count` = `count` + #{count, jdbcType = REAL},
+        update_time = NOW()
+        WHERE
+        id = #{id, jdbcType = BIGINT} AND
+        `count` + #{count, jdbcType = REAL} >= `min_count`
+    </update>
+</mapper>

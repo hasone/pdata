@@ -1,0 +1,822 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ActivitiesMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.Activities">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="activity_id" property="activityId" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="ent_id" property="entId" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="ExtendResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.Activities">
+        <result column="userCount" property="userCount" jdbcType="BIGINT"/>
+        <result column="prizeCount" property="prizeCount" jdbcType="BIGINT"/>
+        <result column="productSize" property="productSize" jdbcType="BIGINT"/>
+        <result column="download" property="download" jdbcType="INTEGER"/>
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="currentCount" property="currentCount" jdbcType="BIGINT"/>
+        <result column="targetCount" property="targetCount" jdbcType="BIGINT"/>
+        <result column="banner" property="banner" jdbcType="VARCHAR"/>
+        <result column="logo" property="logo" jdbcType="VARCHAR"/>
+        <result column="payResult" property="payResult" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="GDCrowdFundingResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.Activities">
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="currentCount" property="currentCount" jdbcType="BIGINT"/>
+        <result column="crowdFundingResult" property="crowdFundingResult" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, activity_id, type, ent_id, name, start_time, end_time, creator_id, status, delete_flag,
+        create_time, update_time
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        activities
+        where
+        id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from activities
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" useGeneratedKeys="true"
+            keyProperty="id" parameterType="com.cmcc.vrp.province.model.Activities">
+        insert into activities (id, activity_id, type,
+        ent_id, name, start_time,
+        end_time, creator_id, status,
+        delete_flag, create_time, update_time
+        )
+        values (#{id,jdbcType=BIGINT}, #{activityId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+        #{entId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP},
+        #{endTime,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER},
+        #{deleteFlag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <insert id="insertSelective" useGeneratedKeys="true"
+            keyProperty="id" parameterType="com.cmcc.vrp.province.model.Activities">
+        insert into activities
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="activityId != null">
+                activity_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="entId != null">
+                ent_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="activityId != null">
+                #{activityId,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="entId != null">
+                #{entId,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.Activities">
+        update activities
+        <set>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="entId != null">
+                ent_id = #{entId,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = now(),
+            </if>
+        </set>
+        where activity_id = #{activityId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.Activities">
+        update activities
+        set activity_id = #{activityId,jdbcType=VARCHAR},
+        type = #{type,jdbcType=INTEGER},
+        ent_id = #{entId,jdbcType=BIGINT},
+        name = #{name,jdbcType=VARCHAR},
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+        creator_id = #{creatorId,jdbcType=BIGINT},
+        status = #{status,jdbcType=INTEGER},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectByActivityId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from activities
+        where activity_id = #{activityId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectActivityListByActivityId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from activities
+        where activity_id = #{activityId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByEntId" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        activities
+        WHERE
+        delete_flag = 0
+        <if test="entId != null and entId !=''">
+            AND ent_id = #{entId,jdbcType=BIGINT}
+        </if>
+        <if test="status != null">
+            AND status IN
+            <foreach collection="status" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="type != null">
+             AND type = #{type,jdbcType=INTEGER}
+        </if>
+    </select>
+    
+    <!-- 用户查找广东微信大转盘最新的活动 -->
+    <select id="selectLastWxLottery" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        activities
+        WHERE
+        delete_flag = 0
+        <if test="entId != null and entId !=''">
+            AND ent_id = #{entId,jdbcType=BIGINT}
+        </if>
+        <if test="type != null and type !=''">
+            AND type = #{type,jdbcType=INTEGER}
+        </if>
+        ORDER BY create_time desc
+    </select>
+
+    <!-- 获取活动记录 -->
+    <select id="selectByMap" parameterType="java.util.Map" resultMap="ExtendResultMap">
+        SELECT DISTINCT
+        t1.*,
+        t2.user_count AS userCount,
+        t2.prize_count as prizeCount,
+        t2.download AS download,
+        t3.name AS entName
+        FROM
+        activities t1
+        LEFT JOIN
+        activity_info t2 ON t1.activity_id = t2.activity_id
+        LEFT JOIN
+        enterprises t3 ON t3.id = t1.ent_id
+        WHERE
+        t1.delete_flag = 0 AND
+        t2.delete_flag = 0
+        <if test="enterprises != null">
+            AND t1.ent_id IN
+            <foreach collection="enterprises" item="item" open="(" close=")" separator=",">
+                #{item.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="name != null and name != ''">
+            AND t1.name LIKE CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="startTime != null and startTime !=''">
+            AND t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            AND t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="activityStartTime != null and activityStartTime !=''">
+            AND t1.start_time &gt;= #{activityStartTime}
+        </if>
+        <if test="activityEndTime != null and activityEndTime !=''">
+            AND t1.start_time &lt;= #{activityEndTime}
+        </if>
+        <if test="type != null and type !=''">
+            AND t1.type IN (#{type})
+        </if>
+        <if test="statusList != null">
+            AND t1.status IN
+            <foreach collection="statusList" item="status" open="(" close=")" separator=",">
+                #{status,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="creatorId != null">
+            AND t1.creator_id = #{creatorId,jdbcType=BIGINT}            
+        </if>
+        ORDER BY
+        t1.create_time DESC,
+        t1.update_time DESC,
+        t1.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <!-- 统计活动记录 -->
+    <select id="countByMap" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT
+        count(DISTINCT t1.activity_id)
+        FROM
+        activities t1
+        LEFT JOIN
+        activity_info t2 ON t1.activity_id = t2.activity_id
+        LEFT JOIN
+        enterprises t3 ON t3.id = t1.ent_id
+        WHERE
+        t1.delete_flag = 0 AND
+        t2.delete_flag = 0
+        <if test="enterprises != null">
+            AND t1.ent_id IN
+            <foreach collection="enterprises" item="item" open="(" close=")" separator=",">
+                #{item.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="name != null and name != ''">
+            AND t1.name LIKE CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="startTime != null and startTime !=''">
+            AND t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            AND t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="activityStartTime != null and activityStartTime !=''">
+            AND t1.start_time &gt;= #{activityStartTime}
+        </if>
+        <if test="activityEndTime != null and activityEndTime !=''">
+            AND t1.start_time &lt;= #{activityEndTime}
+        </if>
+        <if test="types != null and types !=''">
+            AND t1.type IN
+            <foreach collection="types" item="type" open="(" close=")" separator=",">
+                #{type,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <!--
+        <if test="type != null and type !=''">
+            AND t1.type = #{type,jdbcType=INTEGER}
+        </if>
+        -->
+        <if test="statusList != null">
+            AND t1.status IN
+            <foreach collection="statusList" item="status" open="(" close=")" separator=",">
+                #{status,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="creatorId != null">
+            AND t1.creator_id = #{creatorId,jdbcType=BIGINT}            
+        </if>
+
+    </select>
+
+    <!--获取活动记录，用于广东众筹-->
+    <select id="selectByMapForGDCrowdFunding" parameterType="java.util.Map" resultMap="GDCrowdFundingResultMap">
+        SELECT
+        t1.*,
+        t2.current_count AS currentCount,
+        t2.result AS crowdFundingResult,
+        t3.name AS entName
+        FROM
+        activities t1
+        LEFT JOIN
+        crowdfunding_activity_detail t2 ON t1.activity_id = t2.activity_id
+        LEFT JOIN
+        enterprises t3 ON t3.id = t1.ent_id
+        WHERE
+        t1.delete_flag = 0 AND
+        t2.delete_flag = 0
+        <if test="enterprises != null">
+            AND t1.ent_id IN
+            <foreach collection="enterprises" item="item" open="(" close=")" separator=",">
+                #{item.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="name != null and name != ''">
+            AND t1.name LIKE CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="entName != null and entName != ''">
+            AND t3.name LIKE CONCAT('%',CONCAT(#{entName},'%'))
+        </if>
+        <if test="startTime != null and startTime !=''">
+            AND t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            AND t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="type != null and type !=''">
+            AND t1.type IN (#{type})
+        </if>
+        <if test="statusList != null">
+            AND t1.status IN
+            <foreach collection="statusList" item="status" open="(" close=")" separator=",">
+                #{status,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="creatorId != null">
+            AND t1.creator_id = #{creatorId,jdbcType=BIGINT}
+        </if>
+        ORDER BY
+        t1.create_time DESC,
+        t1.update_time DESC,
+        t1.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <!--获取活动记录，用于广东众筹-->
+    <select id="countByMapGDCrowdFunding" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT
+        COUNT(*)
+        FROM
+        activities t1
+        LEFT JOIN
+        crowdfunding_activity_detail t2 ON t1.activity_id = t2.activity_id
+        LEFT JOIN
+        enterprises t3 ON t3.id = t1.ent_id
+        WHERE
+        t1.delete_flag = 0 AND
+        t2.delete_flag = 0
+        <if test="enterprises != null">
+            AND t1.ent_id IN
+            <foreach collection="enterprises" item="item" open="(" close=")" separator=",">
+                #{item.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="name != null and name != ''">
+            AND t1.name LIKE CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="entName != null and entName != ''">
+            AND t3.name LIKE CONCAT('%',CONCAT(#{entName},'%'))
+        </if>
+        <if test="startTime != null and startTime !=''">
+            AND t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            AND t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="type != null and type !=''">
+            AND t1.type IN (#{type})
+        </if>
+        <if test="statusList != null">
+            AND t1.status IN
+            <foreach collection="statusList" item="status" open="(" close=")" separator=",">
+                #{status,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="creatorId != null">
+            AND t1.creator_id = #{creatorId,jdbcType=BIGINT}
+        </if>
+        ORDER BY
+        t1.create_time DESC,
+        t1.update_time DESC,
+        t1.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <!-- 获取活动记录,用于营销模板 -->
+    <!-- 不能连接activity_prize表来获取产品size字段，因为营销活动存在产品大小不一致，导致查出重复数据-->
+    <select id="selectByMapForActivityTemplate" parameterType="java.util.Map" resultMap="ExtendResultMap">
+        SELECT DISTINCT
+        t1.*,
+        t3.name as entName,
+        t2.prize_count as prizeCount
+        FROM
+        activities t1
+        LEFT JOIN
+        activity_info t2 ON t1.activity_id = t2.activity_id
+        LEFT JOIN
+        enterprises t3 ON t3.id = t1.ent_id
+        LEFT JOIN
+        activity_prize t4 on t4.activity_id = t1.activity_id
+        WHERE
+        t1.delete_flag = 0 AND
+        t2.delete_flag = 0
+        <if test="enterprises != null">
+            AND t1.ent_id IN
+            <foreach collection="enterprises" item="item" open="(" close=")" separator=",">
+                #{item.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="name != null and name != ''">
+            AND t1.name LIKE CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="entName != null and entName != ''">
+            AND t3.name LIKE CONCAT('%',CONCAT(#{entName},'%'))
+        </if>
+        <if test="startTime != null and startTime !=''">
+            AND t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            AND t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="activityStartTime != null and activityStartTime !=''">
+            AND t1.start_time &gt;= #{activityStartTime}
+        </if>
+        <if test="activityEndTime != null and activityEndTime !=''">
+            AND t1.start_time &lt;= #{activityEndTime}
+        </if>
+        <if test="types != null and types !=''">
+            AND t1.type IN
+            <foreach collection="types" item="type" open="(" close=")" separator=",">
+                #{type,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <!--
+        <if test="type != null and type !=''">
+            AND t1.type IN (#{type})
+        </if>
+        -->
+        <if test="statusList != null">
+            AND t1.status IN
+            <foreach collection="statusList" item="status" open="(" close=")" separator=",">
+                #{status,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="creatorId != null">
+            AND t1.creator_id = #{creatorId,jdbcType=BIGINT}
+        </if>
+        ORDER BY
+        t1.create_time DESC,
+        t1.update_time DESC,
+        t1.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <!-- 获取活动记录,用于个人红包 -->
+    <select id="selectByMapForRedpacket" parameterType="java.util.Map" resultMap="ExtendResultMap">
+        SELECT
+        t1.*
+        FROM
+        activities t1
+        WHERE
+        t1.delete_flag = 0
+        <if test="enterprises != null">
+            AND t1.ent_id IN
+            <foreach collection="enterprises" item="item" open="(" close=")" separator=",">
+                #{item.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="name != null and name != ''">
+            AND t1.name LIKE CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="startTime != null and startTime !=''">
+            AND t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            AND t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="activityStartTime != null and activityStartTime !=''">
+            AND t1.start_time &gt;= #{activityStartTime}
+        </if>
+        <if test="activityEndTime != null and activityEndTime !=''">
+            AND t1.start_time &lt;= #{activityEndTime}
+        </if>
+        <if test="types != null and types !=''">
+            AND t1.type IN
+            <foreach collection="types" item="type" open="(" close=")" separator=",">
+                #{type,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="creatorId != null">
+            AND t1.creator_id = #{creatorId,jdbcType=BIGINT}            
+        </if>
+        <if test="statusList != null">
+            AND t1.status IN
+            <foreach collection="statusList" item="status" open="(" close=")" separator=",">
+                #{status,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        ORDER BY
+        t1.create_time DESC,
+        t1.update_time DESC,
+        t1.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <!-- 统计活动记录,用于个人红包 -->
+    <select id="countByMapForRedpacket" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM
+        activities t1
+        WHERE
+        t1.delete_flag = 0
+        <if test="enterprises != null">
+            AND t1.ent_id IN
+            <foreach collection="enterprises" item="item" open="(" close=")" separator=",">
+                #{item.id,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="name != null and name != ''">
+            AND t1.name LIKE CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="startTime != null and startTime !=''">
+            AND t1.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            AND t1.create_time &lt;= #{endTime}
+        </if>
+        <if test="activityStartTime != null and activityStartTime !=''">
+            AND t1.start_time &gt;= #{activityStartTime}
+        </if>
+        <if test="activityEndTime != null and activityEndTime !=''">
+            AND t1.start_time &lt;= #{activityEndTime}
+        </if>
+        <if test="types != null and types !=''">
+            AND t1.type IN
+            <foreach collection="types" item="type" open="(" close=")" separator=",">
+                #{type,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="creatorId != null">
+            AND t1.creator_id = #{creatorId,jdbcType=BIGINT}            
+        </if>
+        <if test="statusList != null">
+            AND t1.status IN
+            <foreach collection="statusList" item="status" open="(" close=")" separator=",">
+                #{status,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        ORDER BY
+        t1.create_time DESC,
+        t1.update_time DESC,
+        t1.id
+    </select>
+
+    <!--上下架-->
+    <update id="changeStatus">
+        UPDATE
+        activities
+        SET
+        status = #{status,jdbcType=INTEGER}
+        WHERE
+        activity_id = #{activityId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="batchChangeStatus" parameterType="java.util.Map">
+        UPDATE
+        activities
+        SET
+        status = #{status,jdbcType=INTEGER}
+        WHERE
+        id in
+        <foreach collection="activities" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    
+    <select id="selectWxCrowdfundingActivityList" parameterType="java.util.Map" resultMap="ExtendResultMap">
+        SELECT 
+        a.*,
+        cad.current_count AS currentCount,
+        cad.target_count as targetCount,
+        cad.banner as banner,
+        cad.logo as logo,
+        e.name as entName
+        FROM
+        activities a
+        LEFT JOIN
+        crowdfunding_activity_detail cad ON cad.activity_id = a.activity_id
+        LEFT JOIN
+        enterprises e ON e.id = a.ent_id
+        LEFT JOIN
+        enterprises_ext_info info on info.enter_id = e.id
+        WHERE
+        a.delete_flag = 0 AND
+        cad.delete_flag = 0
+        <!-- 如果传递了手机号，筛选出该手机号未参加的活动 -->
+        <!-- <if test="mobile !=null and mobile !=''">
+            AND a.activity_id not in (select w.activity_id from activity_win_record w where w.own_mobile=#{mobile} or charge_mobile=#{mobile})
+        </if>
+         -->
+        <if test="activityIds !=null">
+            AND a.activity_id not in 
+            <foreach collection="activityIds" item="item" open="(" close=")" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>    
+        <if test="activityName != null and activityName != ''">
+            AND a.name LIKE CONCAT('%',CONCAT(#{activityName},'%'))
+        </if>
+        <if test="startTime != null and startTime !=''">
+            AND a.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            AND a.create_time &lt;= #{endTime}
+        </if>
+        <if test="activityStartTime != null and activityStartTime !=''">
+            AND a.start_time &gt;= #{activityStartTime}
+        </if>
+        <if test="activityEndTime != null and activityEndTime !=''">
+            AND a.start_time &lt;= #{activityEndTime}
+        </if>
+        <if test="type != null and type !=''">
+            AND a.type IN (#{type})
+        </if>
+        <if test="status != null">
+            AND a.status IN (#{status,jdbcType=INTEGER})            
+        </if>
+        <if test="creatorId != null">
+            AND a.creator_id = #{creatorId,jdbcType=BIGINT}            
+        </if>
+        <if test="joinType != null">
+            AND info.join_type = #{joinType,jdbcType=INTEGER}            
+        </if>
+        ORDER BY
+        a.create_time DESC,
+        a.update_time DESC,
+        a.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <!-- 只用于众筹活动，我的活动列表搜索 -->
+    <select id="selectMyCrowdfundingActivityList" parameterType="java.util.Map" resultMap="ExtendResultMap">
+        SELECT 
+        a.*,
+        cad.current_count AS currentCount,
+        cad.target_count as targetCount,
+        cad.banner as banner,
+        cad.result as result,
+        cad.logo as logo,
+        e.name as entName,
+        awr.pay_result as payResult
+        FROM
+        activity_win_record awr
+        LEFT JOIN 
+        activities a ON a.activity_id = awr.activity_id
+        LEFT JOIN
+        crowdfunding_activity_detail cad ON cad.activity_id = a.activity_id
+        LEFT JOIN
+        enterprises e ON e.id = a.ent_id
+        LEFT JOIN
+        enterprises_ext_info info on info.enter_id = e.id
+        WHERE
+        a.delete_flag = 0 AND
+        cad.delete_flag = 0
+        <if test="ownMobile != null and ownMobile != ''">
+            AND awr.own_mobile = #{ownMobile,jdbcType=VARCHAR}
+        </if>
+        <if test="activityName != null and activityName != ''">
+            AND a.name LIKE CONCAT('%',CONCAT(#{activityName},'%'))
+        </if>
+        <if test="startTime != null and startTime !=''">
+            AND a.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+            AND a.create_time &lt;= #{endTime}
+        </if>
+        <if test="activityStartTime != null and activityStartTime !=''">
+            AND a.start_time &gt;= #{activityStartTime}
+        </if>
+        <if test="activityEndTime != null and activityEndTime !=''">
+            AND a.start_time &lt;= #{activityEndTime}
+        </if>
+        <if test="type != null and type !=''">
+            AND a.type IN (#{type})
+        </if>
+        <if test="status != null">
+            AND a.status IN (#{status,jdbcType=INTEGER})            
+        </if>
+        <if test="creatorId != null">
+            AND a.creator_id = #{creatorId,jdbcType=BIGINT}            
+        </if>
+        <if test="joinType != null">
+            AND info.join_type = #{joinType,jdbcType=INTEGER}            
+        </if>
+        <if test="payResult != null">
+            AND awr.pay_result = #{payResult,jdbcType=INTEGER}            
+        </if>
+        ORDER BY 
+        a.create_time DESC,
+        a.update_time DESC,
+        FIELD(a.status, 2, 0, 1, 3, 4),
+        FIELD(cad.result, 1, 0, 2),
+        FIELD(awr.pay_result, 0, 1, 2, 3, 4, 5, 6, -1),
+        a.id
+        <if test="pageNum != null and pageSize != null">
+        LIMIT
+        #{pageNum},#{pageSize}
+        </if>
+    </select>
+    
+    <select id="selectForOrder" resultMap="BaseResultMap">
+	    select
+	        a.id, a.activity_id, a.type, a.ent_id, a.name, a.start_time, a.end_time, a.creator_id, a.status, a.delete_flag,
+            a.create_time, a.update_time
+	    from
+	        activities a
+	        left join individual_activity_order iao on iao.activity_id = a.activity_id
+	        left join individual_flow_order ifo on ifo.id=iao.order_id
+	    where
+	        a.creator_id = #{creatorId,jdbcType=BIGINT}
+	        and a.type = #{type}
+	        and a.status = #{status}
+	        and a.delete_flag = 0
+	        <if test="orderSystemNum!=null and orderSystemNum !=''">
+	           and ifo.system_num = #{orderSystemNum}
+	        </if>	        
+    </select>
+
+</mapper>

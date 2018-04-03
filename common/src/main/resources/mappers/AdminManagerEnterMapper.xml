@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AdminManagerEnterMapper">
+
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.AdminManagerEnter">
+        <result column="admin_id" property="adminId" jdbcType="BIGINT"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.AdminManagerEnter">
+        insert into admin_manager_enter (admin_id, enter_id)
+        values (#{adminId,jdbcType=BIGINT}, #{enterId,jdbcType=BIGINT})
+    </insert>
+
+    <delete id="deleteAdminManagerEnter" parameterType="com.cmcc.vrp.province.model.AdminManagerEnter">
+        delete
+        from
+        admin_manager_enter
+        where admin_id = #{adminId,jdbcType=BIGINT} and
+        enter_id = #{enterId,jdbcType=BIGINT}
+    </delete>
+
+    <select id="selectAdminByEnterId" parameterType="java.lang.Long"
+            resultType="com.cmcc.vrp.province.model.Administer">
+        SELECT a.user_name as userName,a.mobile_phone as mobilePhone, a.id,a.email as email
+        from admin_manager_enter ame, administer a
+        where ame.admin_id = a.id
+        and ame.enter_id = #{enterId,jdbcType=BIGINT}
+    </select>
+
+    <update id="updateAdminByEnterId">
+        UPDATE
+        admin_manager_enter
+        SET
+        admin_id = #{adminId,jdbcType=BIGINT}
+        WHERE
+        enter_id = #{enterId,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectAMEByEntId" resultMap="BaseResultMap">
+        SELECT
+        ame.admin_id,
+        ame.enter_id
+        FROM
+        admin_manager_enter ame
+        WHERE
+        ame.enter_id = #{enterId,jdbcType=BIGINT}
+    </select>
+
+</mapper>

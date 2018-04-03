@@ -1,0 +1,957 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.MdrcCardInfoMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.MdrcCardInfo">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="config_id" property="configId" jdbcType="BIGINT"/>
+        <result column="card_number" property="cardNumber" jdbcType="VARCHAR"/>
+        <result column="card_password" property="cardPassword" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="BIT"/>
+        <result column="op_status" property="opStatus" jdbcType="BIT"/>
+        <result column="user_mobile" property="userMobile" jdbcType="VARCHAR"/>
+        <result column="user_ip" property="userIp" jdbcType="VARCHAR"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="deadline" property="deadline" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="stored_time" property="storedTime" jdbcType="TIMESTAMP"/>
+        <result column="activated_time" property="activatedTime" jdbcType="TIMESTAMP"/>
+        <result column="bound_time" property="boundTime" jdbcType="TIMESTAMP"/>
+        <result column="used_time" property="usedTime" jdbcType="TIMESTAMP"/>
+        <result column="locked_time" property="lockedTime" jdbcType="TIMESTAMP"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="unlock_time" property="unlockTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP"/>
+        <result column="extend_time" property="extendTime" jdbcType="TIMESTAMP"/>
+        <result column="deactivate_time" property="deactivateTime" jdbcType="TIMESTAMP"/>
+        <result column="charge_status" property="chargeStatus" jdbcType="INTEGER"/>
+        <result column="charge_msg" property="chargeMsg" jdbcType="VARCHAR"/>
+        <result column="request_serial_number" property="requestSerialNumber" jdbcType="VARCHAR"/>
+        <result column="reponse_serial_number" property="reponseSerialNumber" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, config_id, card_number, card_password, status, op_status,
+        user_mobile, user_ip,start_time,
+        deadline,
+        create_time, stored_time,
+        activated_time, bound_time, used_time, locked_time,
+        unlock_time, delete_time, extend_time,deactivate_time,
+        enter_id, product_id,
+        charge_status,charge_msg,
+        request_serial_number,reponse_serial_number,
+        salt
+    </sql>
+
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.MdrcCardInfo">
+        <result column="productSize" property="productSize" jdbcType="VARCHAR"/><!-- 产品大小 -->
+        <result column="year" property="year" jdbcType="INTEGER"/><!-- 年份 -->
+    </resultMap>
+    
+    <resultMap id="ChargeResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.MdrcCardInfo">
+        <result column="enterpriseName" property="enterpriseName" jdbcType="VARCHAR"/>
+        <result column="serialNumber" property="serialNumber" jdbcType="VARCHAR"/><!-- 批次號 -->
+    </resultMap>
+    
+    <select id="selectMdrcCardInfos" parameterType="java.util.Map" resultMap="BaseResultMap">
+    	select
+    		t1.id,
+    		t1.status,
+    		t2.id as configId
+    	from 
+    		mdrc_card_info_${year} t1
+    	left join 
+    		mdrc_batch_config t2 on t2.id = t1.config_id
+    	left join 
+    		enterprises t3 on t3.id = t2.enterprise_id
+    	where
+    		t1.status != 10
+    		<if test="eName != null">
+    			and t3.name = #{eName,jdbcType=VARCHAR}
+    		</if>	
+    		<if test="enterprises != null">
+    			and t3.id in 
+    			<foreach collection="enterprises" item="item" open="(" close=")" separator="," index="">
+    				#{item.id, jdbcType = BIGINT}
+    			</foreach>
+    		</if>
+    		<if test="status != null">
+    			and t1.status = #{status, jdbcType = BIT}
+    		</if>
+    </select>
+    
+    <select id="selectForShowChargeResult" parameterType="java.util.Map" resultMap="ChargeResultMap">
+    	select
+    		t1.*,
+    		t2.serial_number as serialNumber,
+    		t3.name as enterpriseName
+    	from 
+    		mdrc_card_info_${year} t1
+    	left join 
+    		mdrc_batch_config t2 on t2.id = t1.config_id
+    	left join 
+    		enterprises t3 on t3.id = t2.enterprise_id
+    	where
+    		t1.status != 10
+    		<if test="mobile != null">
+    			and t1.user_mobile = #{mobile,jdbcType=VARCHAR}
+    		</if>	
+    		<if test="chargeStatus != null">
+    			and t1.charge_status = #{chargeStatus,jdbcType=INTEGER}
+    		</if>	
+    		<if test="status != null">
+    			and t1.status = #{status, jdbcType = BIT}
+    		</if>
+    		<if test="enterprises != null">
+    			and t3.id in 
+    			<foreach collection="enterprises" item="item" open="(" close=")" separator="," index="">
+    				#{item.id, jdbcType = BIGINT}
+    			</foreach>
+    		</if>
+    		ORDER BY 
+    			t1.used_time desc
+	        <if test="pageNum != null and pageSize != null">
+	            LIMIT
+	            #{pageNum},
+	            #{pageSize}
+	        </if>
+    </select>
+    
+    <select id="countForShowChargeResult" parameterType="java.util.Map" resultType="java.lang.Integer">
+    	select
+    		count(*)
+    	from 
+    		mdrc_card_info_${year} t1
+    	left join 
+    		mdrc_batch_config t2 on t2.id = t1.config_id
+    	left join 
+    		enterprises t3 on t3.id = t2.enterprise_id
+    	where
+    		t1.status != 10
+    		<if test="mobile != null">
+    			and t1.user_mobile = #{mobile,jdbcType=VARCHAR}
+    		</if>	
+    		<if test="chargeStatus != null">
+    			and t1.charge_status = #{chargeStatus,jdbcType=INTEGER}
+    		</if>	
+    		<if test="status != null">
+    			and t1.status = #{status, jdbcType = BIT}
+    		</if>
+    		<if test="enterprises != null">
+    			and t3.id in 
+    			<foreach collection="enterprises" item="item" open="(" close=")" separator="," index="">
+    				#{item.id, jdbcType = BIGINT}
+    			</foreach>
+    		</if>
+    </select>
+
+    <!-- 批量生成卡数据 -->
+    <insert id="batchInsert">
+        insert into
+        mdrc_card_info_${year}
+        (config_id, card_number, card_password, status, op_status,user_mobile, user_ip,start_time,deadline,
+        create_time, stored_time,activated_time, bound_time, used_time, locked_time,
+        unlock_time, delete_time, extend_time,deactivate_time,enter_id, product_id)
+        VALUES
+        <foreach collection="records" separator="," item="record">
+            (#{record.configId, jdbcType = BIGINT},
+            #{record.cardNumber, jdbcType = VARCHAR},
+            #{record.cardPassword, jdbcType = VARCHAR},
+            #{record.status, jdbcType = BIT},
+            #{record.opStatus, jdbcType = BIT},
+            #{record.userMobile, jdbcType = VARCHAR},
+            #{record.userIp, jdbcType = VARCHAR},
+            #{record.startTime, jdbcType = TIMESTAMP},
+            #{record.deadline, jdbcType = TIMESTAMP},
+            NOW(),NULL, NULL, NULL, NULL, NULL,
+            NULL, NULL, NULL, NULL, NULL,NULL)
+        </foreach>
+    </insert>
+
+    <!-- 动态更新记录 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.MdrcCardInfo">
+        update mdrc_card_info_${year}
+        <set>
+            <if test="configId != null">
+                config_id = #{configId,jdbcType=BIGINT},
+            </if>
+            <if test="cardNumber != null">
+                card_number = #{cardNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="cardPassword != null">
+                card_password = #{cardPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=BIT},
+            </if>
+            <if test="userMobile != null">
+                user_mobile = #{userMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="userIp != null">
+                user_ip = #{userIp,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deadline != null">
+                deadline = #{deadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="storedTime != null">
+                stored_time = #{storedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="activatedTime != null">
+                activated_time = #{activatedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="boundTime != null">
+                bound_time = #{boundTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="usedTime != null">
+                used_time = #{usedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lockedTime != null">
+                locked_time = #{lockedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deactivateTime != null">
+                deactivate_time = #{deactivateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enterId != null">
+                enter_id = #{enterId,jdbcType=BIGINT},
+            </if>
+            <if test="productId != null">
+                product_id = #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="chargeStatus != null">
+                charge_status = #{chargeStatus,jdbcType=INTEGER},
+            </if>
+            <if test="chargeMsg != null">
+                charge_msg = #{chargeMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="requestSerialNumber != null">
+                request_serial_number = #{requestSerialNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="reponseSerialNumber != null">
+                reponse_serial_number = #{reponseSerialNumber,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 统计卡状态 -->
+    <select id="statistics" resultType="java.util.HashMap"
+            parameterType="java.util.Map">
+        select
+        <foreach collection="cardStatus.keys" item="key" separator=",">
+            <if test="key != null ">
+                COUNT(`status` = ${key} OR NULL) AS '${key}'
+            </if>
+        </foreach>
+        from mdrc_card_info_${year}
+        <where>
+            op_status = 7
+            <if test="configId != null and configId != -1 ">
+                AND config_id = #{configId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 统计卡状态 -->
+    <select id="statisticsOpStatus" resultType="java.util.HashMap"
+            parameterType="java.util.Map">
+        select
+        <foreach collection="cardStatus.keys" item="key" separator=",">
+            <if test="key != null ">
+                COUNT(`op_status` = ${key} OR NULL) AS '${key}'
+            </if>
+        </foreach>
+        from mdrc_card_info_${year}
+        <where>
+            <if test="configId != null and configId != -1 ">
+                AND config_id = #{configId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 统计不合法的card数量 -->
+    <select id="countInvalidCard" resultType="java.lang.Long">
+        select
+        count(0)
+        from
+        mdrc_card_info_${year}
+        where
+        config_id = #{configId} and
+        status != #{cardStatus} and
+        card_number
+        between
+        #{startSerial,jdbcType=VARCHAR}
+        and
+        #{endSerial,jdbcType=VARCHAR}
+    </select>
+
+
+    <!-- 统计未激活的数量 -->
+    <select id="countNotActive" resultType="java.lang.Long">
+        select
+        count(0)
+        from
+        mdrc_card_info_${year}
+        where
+        config_id = #{configId} and
+        status = #{cardStatus} and
+        card_number
+        not between
+        #{startSerial,jdbcType=VARCHAR}
+        and
+        #{endSerial,jdbcType=VARCHAR}
+
+    </select>
+
+    <!-- 统计数量 -->
+    <select id="queryMdrcCount" resultType="java.lang.Long" parameterType="java.util.Map">
+        SELECT
+        count(0)
+        FROM
+        mdrc_card_info_${year} a
+        INNER JOIN
+        mdrc_batch_config b
+        ON
+        a.config_id = b.id
+        WHERE
+        a.config_id = #{configId,jdbcType=BIGINT}
+        <if test="manageId != null ">
+            AND b.manager_id = #{manageId,jdbcType=BIGINT}
+        </if>
+        <if test="cardStatus != null and cardStatus != '' ">
+            AND a.status IN
+            <foreach collection="cardStatus" item="item" open="(" close=")" separator="," index="">
+                #{item,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="cardNumber != null and cardNumber != ''">
+            AND a.card_number LIKE CONCAT('%',CONCAT(#{cardNumber},'%'))
+        </if>
+        <if test="entId != null and entId != ''">
+            AND a.enter_id =#{entId,jdbcType=BIGINT}
+        </if>
+
+        ORDER BY
+        a.card_number ASC,a.create_time DESC
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="queryMdrcList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        a.*
+        FROM
+        mdrc_card_info_${year} a
+        INNER JOIN
+        mdrc_batch_config b
+        ON
+        a.config_id = b.id
+        WHERE
+        a.config_id = #{configId,jdbcType=BIGINT}
+        <if test="manageId != null ">
+            AND b.manager_id = #{manageId,jdbcType=BIGINT}
+        </if>
+        <if test="cardStatus != null and cardStatus != '' ">
+            AND a.status IN
+            <foreach collection="cardStatus" item="item" open="(" close=")" separator="," index="">
+                #{item,jdbcType=BIGINT}
+            </foreach>
+        </if>
+        <if test="cardNumber != null and cardNumber != ''">
+            AND a.card_number LIKE CONCAT('%',CONCAT(#{cardNumber},'%'))
+        </if>
+        ORDER BY
+        a.card_number ASC,a.create_time DESC
+        <if test="pageNum != null and pageSize != null">
+            LIMIT
+            #{pageNum},
+            #{pageSize}
+        </if>
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="queryNotActiveList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        a.*
+        FROM
+        mdrc_card_info_${year} a
+        INNER JOIN
+        mdrc_batch_config b
+        ON
+        a.config_id = b.id
+        WHERE
+        a.config_id = #{configId,jdbcType=BIGINT}
+
+        and a.status = #{status,jdbcType=BIGINT}
+
+        ORDER BY
+        a.card_number ASC
+
+    </select>
+
+    <!-- 根据卡号查询 -->
+    <select id="selectByCardNumber" resultMap="ExtendsResultMap" parameterType="java.lang.String">
+        select
+        ${year} as 'year',
+        <include refid="Base_Column_List"/>
+        from
+        mdrc_card_info_${year}
+        where
+        card_number =#{cardnumber, jdbcType=VARCHAR}
+    </select>
+
+    <!-- 根据主键查询 -->
+    <select id="selectByPrimaryKey" resultMap="ExtendsResultMap" parameterType="java.util.Map">
+        select
+        ${year} as 'year',
+        <include refid="Base_Column_List"/>
+        from
+        mdrc_card_info_${year}
+        where
+        id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据规则ID查询查询详细信息，包括产品信息 -->
+    <select id="selectByConfigId" resultMap="ExtendsResultMap" parameterType="java.util.Map">
+        select
+        card.*,
+        config.this_year as year,
+        temp.pro_size as productSize
+        from
+        mdrc_card_info_${year} card
+        inner join
+        mdrc_batch_config config
+        on
+        card.config_id = config.id
+        inner join
+        mdrc_template temp
+        on
+        config.template_id = temp.id
+        where
+        config_id = #{configId,jdbcType=BIGINT}
+        order by
+        card.id
+    </select>
+
+
+    <!-- 避免重复 -->
+    <sql id="updateSubClause">
+        <!-- 1新制卡, 2已入库、3已激活、4已使用、5已过期、6已锁定 -->
+        <choose>
+            <when test="newStatus!=null and newStatus == 1">
+                ,create_time = NOW()
+            </when>
+
+            <when test="newStatus!=null and newStatus == 2">
+                ,stored_time = NOW()
+            </when>
+
+            <when test="newStatus!=null and newStatus == 3">
+                ,activated_time = NOW()
+            </when>
+
+            <!--  <when test="newStatus!=null and newStatus == 4">
+                ,bound_time = NOW()
+            </when>-->
+
+            <when test="newStatus!=null and newStatus == 4">
+                ,used_time = NOW()
+            </when>
+            <when test="newStatus!=null and newStatus == 6">
+                ,locked_time = NOW()
+            </when>
+        </choose>
+    </sql>
+
+    <!-- 批量更新卡状态 -->
+    <update id="batchUpdateStatusById" parameterType="java.util.Map">
+        update
+        mdrc_card_info_${year}
+        set
+        status = #{newStatus, jdbcType=INTEGER}
+        <include refid="updateSubClause"/>
+        where
+        id in
+        <foreach collection="ids" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+
+        and status = #{oldStatus, jdbcType=INTEGER} <!-- 期望的当前状态，即更新的前置条件-->
+    </update>
+    
+    <!-- 更据configId更改卡状态 -->
+    <update id="changeStatusByConfigId" parameterType="java.lang.Long">
+    	update
+    		mdrc_card_info_${year}
+    	set
+    		status = #{status, jdbcType=INTEGER}
+    	where
+    		config_id = #{configId, jdbcType=BIGINT}
+    </update>
+
+
+    <!-- 批量更新卡状态 -->
+    <!-- update *** set *** where *** in (**, **, **) and ***-->
+    <update id="batchUpdateStatus" parameterType="java.util.Map">
+        update
+        mdrc_card_info_${year}
+        set
+        status = #{newStatus, jdbcType=INTEGER}
+        <include refid="updateSubClause"/>
+        where
+        card_number in
+        <foreach collection="cardNums" item="cn" open="(" separator="," close=")">
+            #{cn}
+        </foreach>
+
+        and status = #{oldStatus, jdbcType=INTEGER} <!-- 期望的当前状态，即更新的前置条件-->
+    </update>
+
+    <!-- 批量过期 -->
+    <update id="batchExpire">
+        update
+        mdrc_card_info_${year}
+        set
+        op_status = 6
+        where
+        card_number in
+        <foreach collection="cardNums" item="cn" open="(" separator="," close=")">
+            #{cn}
+        </foreach>
+    </update>
+
+    <!-- 单张过期 -->
+    <update id="expire">
+        update
+        mdrc_card_info_${year}
+        set
+        op_status = 6
+        where
+        card_number = #{cardNum, jdbcType = VARCHAR}
+    </update>
+
+    <!-- 更新单张卡 -->
+    <update id="updateStatus" parameterType="java.util.Map">
+        update
+        mdrc_card_info_${year}
+        set
+        status = #{newStatus, jdbcType=INTEGER}
+        <include refid="updateSubClause"/>
+        where
+        card_number = #{cardNum, jdbcType=VARCHAR}
+        and status IN
+        <foreach collection="oldStatus" item="os" open="(" close=")">
+            #{os, jdbcType = INTEGER}
+        </foreach>
+    </update>
+
+    <!-- 由卡密选择卡 -->
+    <select id="selectByPwd" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        mdrc_card_info_${year}
+        where
+        card_password = #{pwd, jdbcType = VARCHAR}
+    </select>
+
+    <!-- 批量更新卡密 -->
+    <update id="batchUpdatePassword" parameterType="java.util.Map">
+        update mdrc_card_info_${year}
+        set card_password =
+        case card_number
+        <foreach collection="cards" item="card" separator=" ">
+            when #{card.cardNumber,jdbcType=VARCHAR} then #{card.cardPassword,jdbcType=VARCHAR}
+        </foreach>
+        end
+        ,
+        salt =
+        case card_number
+        <foreach collection="cards" item="card" separator=" ">
+            when #{card.cardNumber,jdbcType=VARCHAR} then #{card.salt,jdbcType=VARCHAR}
+        </foreach>
+        end
+        where
+        card_number in
+        <foreach collection="cards" item="card" separator="," open="(" close=")">
+            #{card.cardNumber, jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <!-- 全部激活 -->
+    <update id="activateByConfigId" parameterType="java.util.Map">
+        update
+        mdrc_card_info_${year}
+        set
+        status = #{newStatus, jdbcType="INTEGER"},
+        enter_id = #{enterId, jdbcType="BIGINT"},
+        product_id = #{proId, jdbcType="BIGINT"}
+        where
+        config_id = #{configId, jdbcType="BIGINT"},
+        and
+        status = #{oldStatus, jdbcType=INTEGER} <!-- 期望的当前状态，即更新的前置条件-->
+    </update>
+
+    <!-- 根据ID批量激活 -->
+    <update id="batchActivate" parameterType="java.util.Map">
+        update
+        mdrc_card_info_${year}
+        set
+        status = #{newStatus, jdbcType=INTEGER},
+        enter_id = #{enterId, jdbcType="BIGINT"},
+        product_id = #{proId, jdbcType="BIGINT"}
+        where
+        id in
+        <foreach collection="ids" item="item" open="(" separator="," close=")">
+            #{item,jdbcType="BIGINT"}
+        </foreach>
+        and status = #{oldStatus, jdbcType=INTEGER} <!-- 期望的当前状态，即更新的前置条件-->
+    </update>
+
+    <!-- 根据卡号区间激活 -->
+    <update id="internalActivate" parameterType="java.util.Map">
+        update
+        mdrc_card_info_${year}
+        set
+        status = #{newStatus, jdbcType=INTEGER},
+        enter_id = #{enterId, jdbcType=BIGINT},
+        product_id = #{proId, jdbcType=BIGINT},
+        activated_time = now()
+        where
+        card_number
+        between
+        #{beginCardNum,jdbcType=VARCHAR}
+        and
+        #{endCardNum,jdbcType=VARCHAR}
+        and
+        status = #{oldStatus, jdbcType=INTEGER} <!-- 期望的当前状态，即更新的前置条件-->
+    </update>
+
+    <!-- 7正常， 8已锁定， 9已销卡-->
+    <update id="updateOpStatus">
+        update
+        mdrc_card_info_${year}
+        set
+        op_status = #{newOpStatus, jdbcType=INTEGER}
+        <choose>
+            <when test="newOpStatus == 7">
+                , unlock_time = NOW()
+            </when>
+
+            <when test="newOpStatus == 8">
+                , locked_time = NOW()
+            </when>
+
+            <when test="newOpStatus == 9">
+                , delete_time = NOW()
+            </when>
+        </choose>
+        where
+        card_number = #{cardNum, jdbcType=VARCHAR}
+    </update>
+
+    <!-- 7正常， 8已锁定， 9已销卡-->
+    <update id="batchUpdateOpStatus">
+        update
+        mdrc_card_info_${year}
+        set
+        op_status = #{newOpStatus, jdbcType=INTEGER}
+        <choose>
+            <when test="newOpStatus == 7">
+                , unlock_time = NOW()
+            </when>
+
+            <when test="newOpStatus == 8">
+                , locked_time = NOW()
+            </when>
+
+            <when test="newOpStatus == 9">
+                , delete_time = NOW()
+            </when>
+        </choose>
+        where
+        card_number in
+        <foreach collection="cardNums" item="cardNum" open="(" close=")" separator=",">
+            #{cardNum, jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <!-- 使用卡 -->
+    <update id="use">
+        update
+        mdrc_card_info_${year}
+        set
+        status = 5,
+        user_mobile = #{mobile, jdbcType = VARCHAR},
+        user_ip = #{ip, jdbcType = VARCHAR},
+        used_time = NOW(),
+        request_serial_number = #{serial, jdbcType = VARCHAR}
+        where
+        card_number = #{cardNum, jdbcType=VARCHAR}
+    </update>
+
+    <!-- 延期卡 -->
+    <update id="extend">
+        update
+        mdrc_card_info_${year}
+        <set>
+            deadline = #{newDeadline, jdbcType = TIMESTAMP},
+            extend_time = NOW(),
+
+            <if test="updateOpStatus != null and updateOpStatus == true">
+                op_status = 7
+            </if>
+        </set>
+
+        where
+        card_number = #{cardNum, jdbcType=VARCHAR}
+    </update>
+
+    <!-- 单张去激活 -->
+    <update id="deactivate" parameterType="java.util.Map">
+        update
+        mdrc_card_info_${year}
+        set
+        status = #{newStatus, jdbcType=INTEGER},
+        product_id = null,
+        enter_id = null,
+        deactivate_time = now()
+        where
+        card_number = #{cardNum,jdbcType=VARCHAR}
+        and
+        status = #{oldStatus, jdbcType=INTEGER} <!-- 期望的当前状态，即更新的前置条件-->
+    </update>
+
+    <!-- 批量去激活 -->
+    <update id="batchDeactivate" parameterType="java.util.Map">
+        update
+        mdrc_card_info_${year}
+        set
+        status = #{newStatus, jdbcType=INTEGER},
+        product_id = null,
+        enter_id = null,
+        deactivate_time = now()
+        where
+        card_number in
+        <foreach collection="cardNums" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and
+        status = #{oldStatus, jdbcType=INTEGER} <!-- 期望的当前状态，即更新的前置条件-->
+    </update>
+
+    <!-- 单张激活 -->
+    <update id="activate" parameterType="java.util.Map">
+        update
+        mdrc_card_info_${year}
+        <set>
+        	<if test="newStatus != null">
+                status = #{newStatus, jdbcType=INTEGER},
+            </if>
+            <if test="1 == 1">
+                activated_time = now(),
+            </if>           	
+            <if test="entId != null">
+                enter_id = #{entId, jdbcType=BIGINT},
+            </if>
+            <if test="pltPid != null">
+                product_id = #{pltPid, jdbcType = BIGINT},
+            </if>
+        </set>
+        where
+        card_number = #{cardNum,jdbcType=VARCHAR}
+        and
+        status = #{oldStatus, jdbcType=INTEGER} <!-- 期望的当前状态，即更新的前置条件-->
+    </update>
+
+    <update id="updateChargeResult">
+        update
+        mdrc_card_info_${year}
+        set
+        charge_status = #{chargeStatus, jdbcType=INTEGER},
+        charge_msg = #{chargeMsg, jdbcType = VARCHAR}
+        where
+        card_number = #{cardNum, jdbcType=VARCHAR}
+    </update>
+
+    <!-- 查询列表 -->
+    <select id="queryMdrcListByEntId" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        a.*
+        FROM
+        mdrc_card_info_${year} a
+        INNER JOIN
+        mdrc_batch_config b
+        ON
+        a.config_id = b.id
+        WHERE
+        a.config_id = #{configId,jdbcType=BIGINT}
+        <if test="manageId != null ">
+            AND b.manager_id = #{manageId,jdbcType=BIGINT}
+        </if>
+        <if test="status != null and status != -1 ">
+            AND a.status = #{status,jdbcType=BIGINT}
+        </if>
+        <if test="cardNumber != null and cardNumber != ''">
+            AND a.card_number LIKE CONCAT('%',CONCAT(#{cardNumber},'%'))
+        </if>
+        <if test="entId != null and entId != ''">
+            AND a.enter_id =#{entId,jdbcType=BIGINT}
+        </if>
+        ORDER BY
+        a.card_number ASC,a.create_time DESC
+    </select>
+	
+	
+    <select id="getBycreateTime" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        mdrc_card_info_${year} mci
+        WHERE
+        mci.create_time >= #{begin, jdbcType = TIMESTAMP} AND
+        mci.create_time &lt; #{end, jdbcType = TIMESTAMP}
+        GROUP BY
+        mci.create_time
+    </select>
+    
+    <select id="getByStoredTime" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        mdrc_card_info_${year} mci
+        WHERE
+        mci.stored_time >= #{begin, jdbcType = TIMESTAMP} AND
+        mci.stored_time &lt; #{end, jdbcType = TIMESTAMP}
+        GROUP BY
+        mci.stored_time
+    </select>
+    
+    <select id="getByBoundTime" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        mdrc_card_info_${year} mci
+        WHERE
+        mci.bound_time >= #{begin, jdbcType = TIMESTAMP} AND
+        mci.bound_time &lt; #{end, jdbcType = TIMESTAMP}
+        GROUP BY
+        mci.bound_time
+    </select>
+    
+    <select id="getByActivatedTime" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        mdrc_card_info_${year} mci
+        WHERE
+        mci.activated_time >= #{begin, jdbcType = TIMESTAMP} AND
+        mci.activated_time &lt; #{end, jdbcType = TIMESTAMP}
+        GROUP BY
+        mci.activated_time
+    </select>
+    
+    <select id="getByUsedTime" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        mdrc_card_info_${year} mci
+        WHERE
+        mci.used_time >= #{begin, jdbcType = TIMESTAMP} AND
+        mci.used_time &lt; #{end, jdbcType = TIMESTAMP}
+        GROUP BY
+        mci.used_time
+    </select>
+    
+    <select id="getByLockedTime" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        mdrc_card_info_${year} mci
+        WHERE
+        mci.locked_time >= #{begin, jdbcType = TIMESTAMP} AND
+        mci.locked_time &lt; #{end, jdbcType = TIMESTAMP}
+        GROUP BY
+        mci.locked_time
+    </select>
+    
+    <select id="getBySerialNum" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        mdrc_card_info_${year} mci
+        WHERE
+        mci.config_id = #{configId, jdbcType = BIGINT}
+    </select>
+    
+    <select id="getByDeactivateTime" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        mdrc_card_info_${year} mci
+        WHERE
+        mci.deactivate_time >= #{begin, jdbcType = TIMESTAMP} AND
+        mci.deactivate_time &lt; #{end, jdbcType = TIMESTAMP}
+        GROUP BY
+        mci.deactivate_time
+    </select>
+    
+    <select id="getByUnlockTime" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        mdrc_card_info_${year} mci
+        WHERE
+        mci.unlock_time >= #{begin, jdbcType = TIMESTAMP} AND
+        mci.unlock_time &lt; #{end, jdbcType = TIMESTAMP}
+        GROUP BY
+        mci.unlock_time
+    </select>
+    
+    <select id="getCardNumbersByCount" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT
+        	mci.card_number
+        FROM
+        	mdrc_card_info_${year} mci
+        LEFT JOIN
+        	mdrc_batch_config c on c.id = mci.config_id	
+        WHERE
+        	c.id = #{configId,jdbcType=BIGINT}
+        and
+        	mci.status = #{status,jdbcType=INTEGER}
+        order by
+        	mci.card_number asc
+        limit 0, #{count,jdbcType=BIGINT}	
+    </select>
+    
+    <!-- 批量更新卡状态 -->
+    <update id="batchUpdateByConfigId" parameterType="java.util.Map">
+        update
+        mdrc_card_info_${year}
+        <set>
+        	<if test="newStatus != null">
+                status = #{newStatus, jdbcType=INTEGER},
+            </if>
+            <if test="newStatus == 2"><!-- 已签收-->
+                stored_time = now(),
+            </if>           	
+            <if test="newStatus == 3"><!-- 已激活-->
+                activated_time = now(),
+            </if>    
+            <if test="newStatus == 4"><!-- 已绑定-->
+                bound_time = now(),
+            </if> 
+            <if test="newStatus == 5"><!-- 已使用-->
+                used_time = now(),
+            </if>       	                          
+        </set>  
+        where
+        config_id = #{configId, jdbcType=BIGINT} 
+        and status = #{oldStatus, jdbcType=INTEGER} <!-- 期望的当前状态，即更新的前置条件-->
+    </update>
+</mapper>

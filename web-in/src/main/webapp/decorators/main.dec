@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<#global  contextPath = rc.contextPath />
+<html>
+	
+	<#include "/freeMarker/index.ftl" encoding="utf-8" >
+ </html> 

@@ -1,0 +1,1771 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.EnterpriseMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.Enterprise">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="app_secret" property="appSecret" jdbcType="VARCHAR"/>
+        <result column="app_key" property="appKey" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+        <result column="ent_name" property="entName" jdbcType="VARCHAR"/>
+        <result column="discount" property="discount" jdbcType="BIGINT"/>
+        <result column="district_id" property="districtId" jdbcType="BIGINT"/>
+        <result column="customer_type_id" property="customerTypeId" jdbcType="BIGINT"/>
+        <result column="business_type_id" property="businessTypeId" jdbcType="BIGINT"/>
+        <result column="pay_type_id" property="payTypeId" jdbcType="BIGINT"/>
+        <result column="interface" property="interfaceFlag" jdbcType="INTEGER"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="licence_start_time" property="licenceStartTime" jdbcType="TIMESTAMP"/>
+        <result column="licence_end_time" property="licenceEndTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="cm_phone" property="cmPhone" jdbcType="VARCHAR"/>
+        <result column="cm_email" property="cmEmail" jdbcType="VARCHAR"/>
+        <result column="interface_expire_time" property="interfaceExpireTime" jdbcType="TIMESTAMP"/>
+        <result column="interface_approval_status" property="interfaceApprovalStatus" jdbcType="INTEGER"/>
+    
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, code, phone, create_time, update_time,
+        delete_flag,creator_id,app_secret,ent_name,discount,district_id,
+        customer_type_id,business_type_id,pay_type_id,start_time,
+        end_time,interface, app_key,email,status,licence_end_time,licence_start_time,
+        cm_phone,cm_email,interface_expire_time,interface_approval_status
+    </sql>
+
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.Enterprise">
+        <result column="cmManagerName" property="cmManagerName" jdbcType="VARCHAR"/>
+        <result column="customerTypeName" property="customerTypeName" jdbcType="VARCHAR"/>
+        <result column="businessTypeName" property="businessTypeName" jdbcType="VARCHAR"/>
+        <result column="payTypeName" property="payTypeName" jdbcType="VARCHAR"/>
+        <result column="discountName" property="discountName" jdbcType="VARCHAR"/>
+        <result column="giveMoneyName" property="giveMoneyName" jdbcType="VARCHAR"/>
+        <result column="productId" property="productId" jdbcType="BIGINT"/>
+        <result column="productName" property="productName" jdbcType="VARCHAR"/>
+        <result column="productType" property="productType" jdbcType="BIGINT"/>
+        <result column="stopCount" property="stopCount" jdbcType="BIGINT"/>
+        <result column="alertCount" property="alertCount" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="EnterprisesCountMap" type="com.cmcc.vrp.province.model.EnterprisesCount">
+        <result column="createTime" property="createTime" jdbcType="VARCHAR"/>
+        <result column="enterCount" property="enterCount" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="EnterpriseStatisticMap" type="com.cmcc.vrp.province.module.EnterpriseStatisticModule">
+        <result column="districtName" property="districtName" jdbcType="VARCHAR"/>
+        <result column="number" property="number" jdbcType="INTEGER"/>
+        <result column="date" property="date" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="EnterpriseBenefitMap" type="com.cmcc.vrp.province.module.EnterpriseBenefitModule">
+        <result column="enterId" property="enterId" jdbcType="BIGINT"/>
+        <result column="benefit" property="benefit" jdbcType="DOUBLE"/>
+    </resultMap>
+
+    <!-- 潜在客户列表 -->
+    <resultMap id="PotentialEnterResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.Enterprise">
+        <result column="enterpriseManagerPhone" property="enterpriseManagerPhone" jdbcType="VARCHAR"/>
+        <result column="enterpriseManagerName" property="enterpriseManagerName" jdbcType="VARCHAR"/>
+        <result column="customerManagerName" property="customerManagerName" jdbcType="VARCHAR"/>
+        <result column="customerManagerPhone" property="customerManagerPhone" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="RelatedProductTemplateResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.Enterprise" >
+        <result column="mapCreateTime" property="mapCreateTime" jdbcType="TIMESTAMP"/>
+        <result column="productTemplateId" property="productTemplateId" jdbcType="BIGINT" />
+        <result column="mapId" property="mapId" jdbcType="BIGINT" />
+    </resultMap>
+    
+    <resultMap id="GDExtendsResultMap" extends="ExtendsResultMap" type="com.cmcc.vrp.province.model.Enterprise">
+        <result column="ecPrdCode" property="ecPrdCode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectByEnterName" parameterType="java.lang.String" resultType="java.lang.Long">
+        select id
+        from
+        enterprises
+        where
+        name=#{enterName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        enterprises
+        WHERE
+        id=#{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectEnterprisesByCode" parameterType="java.lang.String"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        enterprises
+        where
+        code= #{code,jdbcType=VARCHAR} and delete_flag != 1
+    </select>
+
+    <select id="selectEnterprisesByName" parameterType="java.lang.String"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        enterprises
+        where
+        name= #{name,jdbcType=VARCHAR} and delete_flag != 1
+    </select>
+
+    <!--仅查找正常状态企业-->
+    <select id="selectByPrimaryKey" resultMap="ExtendsResultMap"
+            parameterType="java.lang.Long">
+        select
+        a.id,
+        a.name,
+        a.code,
+        a.phone,
+        a.app_key,
+        a.app_secret,
+        a.create_time,
+        a.update_time,
+        a.delete_flag,
+        a.creator_id,
+        a.ent_name,
+        a.discount,
+        a.start_time,
+        a.end_time,
+        a.discount,
+        a.district_id,
+        a.customer_type_id,
+        a.business_type_id,
+        a.pay_type_id,
+        a.start_time,
+        a.end_time,
+        a.interface,
+        a.licence_start_time,
+        a.licence_end_time,
+        a.status,
+        a.interface_expire_time,
+        a.interface_approval_status,
+        d3.name as districtName,
+        d2.name as cityName,
+        d1.name as provinceName,
+        ct.name as customerTypeName,
+        bt.name as busniessTypeName,
+        pt.name as payTypeName,
+        d.name as discountName,
+        gm.name as giveMoneyName,
+        a.email,
+        a.cm_email,
+        cm_phone
+        from
+        enterprises a
+        left join district d3 on a.district_id = d3.id
+        left join district d2 on d3.parent_id=d2.id
+        left join district d1 on d1.id = d2.parent_id
+        left join customer_type ct on a.customer_type_id = ct.id
+        left join business_type bt on a.business_type_id = bt.id
+        left join pay_type pt on a.pay_type_id = pt.id
+        left join discount d on d.id = a.discount
+        left join give_money_enter gme on a.id = gme.enter_id
+        left join give_money gm on gm.id = gme.give_money_id
+        where a.id = #{id,jdbcType=BIGINT}
+        AND delete_flag!=1
+    </select>
+
+    <!--查找企业，不考虑企业状态-->
+    <select id="selectByPrimaryKeyForActivity" resultMap="ExtendsResultMap"
+            parameterType="java.lang.Long">
+        select
+        a.id,
+        a.name,
+        a.code,
+        a.phone,
+        a.app_key,
+        a.app_secret,
+        a.create_time,
+        a.update_time,
+        a.delete_flag,
+        a.creator_id,
+        a.ent_name,
+        a.discount,
+        a.start_time,
+        a.end_time,
+        a.discount,
+        a.district_id,
+        a.customer_type_id,
+        a.business_type_id,
+        a.pay_type_id,
+        a.start_time,
+        a.end_time,
+        a.interface,
+        a.licence_start_time,
+        a.licence_end_time,
+        a.status,
+        d3.name as districtName,
+        d2.name as cityName,
+        d1.name as provinceName,
+        ct.name as customerTypeName,
+        bt.name as busniessTypeName,
+        pt.name as payTypeName,
+        d.name as discountName,
+        gm.name as giveMoneyName,
+        a.email,
+        a.cm_email,
+        cm_phone
+        from
+        enterprises a
+        left join district d3 on a.district_id = d3.id
+        left join district d2 on d3.parent_id=d2.id
+        left join district d1 on d1.id = d2.parent_id
+        left join customer_type ct on a.customer_type_id = ct.id
+        left join business_type bt on a.business_type_id = bt.id
+        left join pay_type pt on a.pay_type_id = pt.id
+        left join discount d on d.id = a.discount
+        left join give_money_enter gme on a.id = gme.enter_id
+        left join give_money gm on gm.id = gme.give_money_id
+        where a.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByAppKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from enterprises
+        where app_key = #{appKey,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        enterprises
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.Enterprise">
+        insert into
+        enterprises (id, name, code, app_secret,
+        phone, create_time, update_time,
+        delete_flag,creator_id, ent_name,discount,district_id,customer_type_id,business_type_id,pay_type_id,
+        start_time,end_time,interface, app_key,email)
+        values (#{id,jdbcType=BIGINT},
+        #{name,jdbcType=VARCHAR},
+        #{code,jdbcType=VARCHAR},
+        #{appSecret, jdbcType = VARCHAR},
+        #{phone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=INTEGER},#{creatorId,jdbcType=BIGINT},
+        #{entName,jdbcType=VARCHAR},#{discount,jdbcType=INTEGER},
+        #{customerTypeId,jdbcType=BIGINT},#{businessTypeId,jdbcType=BIGINT},
+        #{payTypeId,jdbcType=BIGINT},#{startTime,jdbcType=TIMESTAMP},
+        #{endTime,jdbcType=TIMESTAMP},#{interfaceFlag,jdbcType=INTEGER},
+        #{appKey, jdbcType=VARCHAR},
+        #{email, jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" useGeneratedKeys="true"
+            keyProperty="id" parameterType="com.cmcc.vrp.province.model.Enterprise">
+        insert into enterprises
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null and name != ''">
+                name,
+            </if>
+            <if test="code != null and code != ''">
+                code,
+            </if>
+            <if test="phone != null and phone != ''">
+                phone,
+            </if>
+            <if test="appSecret != null and appSecret != ''">
+                app_secret,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="creatorId != null and creatorId != ''">
+                creator_Id,
+            </if>
+            <if test="entName != null and entName != ''">
+                ent_name,
+            </if>
+            <if test="discount != null and discount != ''">
+                discount,
+            </if>
+            <if test="districtId != null and districtId != ''">
+                district_id,
+            </if>
+            <if test="customerTypeId != null and customerTypeId != ''">
+                customer_type_id,
+            </if>
+            <if test="businessTypeId != null and businessTypeId != ''">
+                business_type_id,
+            </if>
+            <if test="payTypeId != null and payTypeId != ''">
+                pay_type_id,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="interfaceFlag != null">
+                interface,
+            </if>
+            <if test="appKey != null and appKey != ''">
+                app_key,
+            </if>
+            <if test="email != null and email != ''">
+                email,
+            </if>
+            <if test="licenceStartTime != null">
+                licence_start_time,
+            </if>
+            <if test="licenceEndTime != null">
+                licence_end_time,
+            </if>
+            <if test="status != null and status != ''">
+                status,
+            </if>
+            <if test="cmEmail != null and cmEmail != ''">
+                cm_email,
+            </if>
+            <if test="cmPhone != null and cmPhone != ''">
+                cm_phone,
+            </if>
+            <if test="interfaceExpireTime != null">
+                interface_expire_time,
+            </if>
+            <if test="interfaceApprovalStatus != null">
+                interface_approval_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="name != null and name != ''">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null and code != ''">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null and phone != ''">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="appSecret != null and appSecret != ''">
+                #{appSecret,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="creatorId != null and creatorId != ''">
+                #{creatorId,jdbcType=BIGINT},
+            </if>
+            <if test="entName != null and entName != ''">
+                #{entName,jdbcType=BIGINT},
+            </if>
+            <if test="discount != null and discount != ''">
+                #{discount,jdbcType=INTEGER},
+            </if>
+            <if test="districtId != null and districtId != ''">
+                #{districtId,jdbcType=BIGINT},
+            </if>
+            <if test="customerTypeId != null and customerTypeId != ''">
+                #{customerTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="businessTypeId != null and businessTypeId != ''">
+                #{businessTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="payTypeId != null and payTypeId != ''">
+                #{payTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="interfaceFlag != null">
+                #{interfaceFlag,jdbcType=INTEGER},
+            </if>
+            <if test="appKey != null and appKey != ''">
+                #{appKey,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null and email != ''">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="licenceStartTime != null">
+                #{licenceStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="licenceEndTime != null">
+                #{licenceEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null and status != ''">
+                #{status,jdbcType = TINYINT},
+            </if>
+            <if test="cmEmail != null and cmEmail != ''">
+                #{cmEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="cmPhone != null and cmPhone != ''">
+                #{cmPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="interfaceExpireTime != null">
+                #{interfaceExpireTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="interfaceApprovalStatus != null">
+                #{interfaceApprovalStatus,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.Enterprise">
+        update enterprises
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null and code != ''">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="appSecret != null and appSecret != ''">
+                app_secret = #{appSecret,jdbcType=VARCHAR},
+            </if>
+            <if test="appKey != null and appKey != ''">
+                app_key = #{appKey,jdbcType=VARCHAR},
+            </if>
+            <if test="entName != null and entName != ''">
+                ent_name = #{entName,jdbcType=VARCHAR},
+            </if>
+            <if test="discount != null and discount != ''">
+                discount = #{discount,jdbcType=INTEGER},
+            </if>
+            <if test="districtId != null and districtId != ''">
+                district_id = #{districtId,jdbcType=BIGINT},
+            </if>
+            <if test="customerTypeId != null and customerTypeId != ''">
+                customer_type_id = #{customerTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="businessTypeId != null and businessTypeId != ''">
+                business_type_id = #{businessTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="payTypeId != null and payTypeId != ''">
+                pay_type_id = #{payTypeId,jdbcType=BIGINT},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="interfaceFlag != null">
+                interface = #{interfaceFlag,jdbcType=INTEGER},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="licenceStartTime != null">
+                licence_start_time = #{licenceStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="licenceEndTime != null">
+                licence_end_time = #{licenceEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cmPhone != null and cmPhone != ''">
+                cm_phone = #{cmPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="cmEmail != null and cmEmail != ''">
+                cm_email = #{cmEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="interfaceExpireTime != null">
+                interface_expire_time = #{interfaceExpireTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="interfaceApprovalStatus != null">
+                interface_approval_status = #{interfaceApprovalStatus,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.Enterprise">
+        update
+        enterprises
+        set name = #{name,jdbcType=VARCHAR},
+        code =
+        #{code,jdbcType=VARCHAR},
+        phone = #{phone,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time =
+        #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag =
+        #{deleteFlag,jdbcType=INTEGER},
+        app_secret = #{appSecret,jdbcType=VARCHAR},
+        app_key = #{appKey,jdbcType=VARCHAR},
+        ent_name = #{entName,jdbcType=VARCHAR},
+        discount = #{discount,jdbcType=INTEGER},
+        district_id = #{districtId,jdbcType=BIGINT},
+        customer_type_id = #{customerTypeId,jdbcType=BIGINT},
+        business_type_id = #{businessTypeId,jdbcType=BIGINT},
+        pay_type_id = #{payTypeId,jdbcType=BIGINT},
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+        interface = #{interfaceFlag,jdbcType=INTEGER},
+        email = #{email,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="queryAllEnterpriseList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        enterprises t
+        where
+        t.delete_flag != 1
+    </select>
+
+    <select id="getEnterpriseListByProSize" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        t.*, count(distinct t.name)
+        FROM
+        enterprises t
+        LEFT JOIN ent_product ep on ep.enterprize_id = t.id
+        ,product p
+
+        where
+        t.delete_flag != 1
+        and ep.delete_flag = 0
+        and t.delete_flag = 0
+        and p.size = #{proSize,jdbcType=BIGINT}
+        and p.id = ep.product_id
+
+        group by t.name
+
+
+    </select>
+    
+     <!-- 显示企业账户列表 -->
+    <select id="showEnterprisesAccountsForPageResult" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        select
+        a.id,
+        a.name,
+        a.code,
+        a.phone,
+        a.app_secret,
+        a.create_time,
+        a.update_time,
+        a.delete_flag,
+        a.creator_id,
+        a.ent_name,
+        a.discount,
+        a.status,
+        a.start_time,
+        a.end_time,
+        a.interface,
+        a.interface_approval_status,
+        d.name as discountName,
+        m2.name as cmManagerName,
+        p.id as productId,
+        p.name as productName,
+        p.type as productType,
+        at.count as currencyCount,
+        at.alert_count as alertCount,
+        at.stop_count as stopCount
+        from
+        enterprises a
+        left join account at on at.owner_id = a.id
+        left join product p on at.product_id = p.id
+        left join customer_type ct on a.customer_type_id = ct.id
+        left join ent_manager em on em.enter_id = a.id
+        left join manager m on m.id = em.manager_id
+        left join manager m2 on m.parent_id = m2.id
+        left join discount d on d.id = a.discount
+        where
+        a.delete_flag IN (0,2,3) and em.delete_flag = 0 <!-- 查询未删除的数据 -->
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and a.delete_flag in (${deleteFlag})
+        </if>
+        <if test="productTypeList != null">
+            and p.type in
+            <foreach collection="productTypeList" item="productType" open="(" close=")" index="index" separator=",">
+                #{productType,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="code != null and code != ''">
+            and a.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="phone != null and phone != ''">
+            and a.phone like CONCAT('%',CONCAT(#{phone},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="status != null and status != ''">
+            and a.status = #{status,jdbcType = TINYINT}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and a.create_time &lt;= #{endTime}
+        </if>
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+        <!-- and a.create_time &lt;= now() -->
+
+        order by
+        a.create_time DESC,
+        a.update_time desc,
+        a.id,
+        at.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+    
+     <!-- 显示企业账户列表 -->
+    <select id="showEnterprisesAccountsCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+        enterprises a
+        left join account at on at.owner_id = a.id
+        left join product p on at.product_id = p.id
+        left join customer_type ct on a.customer_type_id = ct.id
+        left join ent_manager em on em.enter_id = a.id
+        left join manager m on m.id = em.manager_id
+        left join manager m2 on m.parent_id = m2.id
+        left join discount d on d.id = a.discount
+        where
+        a.delete_flag IN (0,2,3) and em.delete_flag = 0 <!-- 查询未删除的数据 -->
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and a.delete_flag in (${deleteFlag})
+        </if>
+        <if test="productTypeList != null">
+            and p.type in
+            <foreach collection="productTypeList" item="productType" open="(" close=")" index="index" separator=",">
+                #{productType,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        <if test="code != null and code != ''">
+            and a.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="phone != null and phone != ''">
+            and a.phone like CONCAT('%',CONCAT(#{phone},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="status != null and status != ''">
+            and a.status = #{status,jdbcType = TINYINT}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and a.create_time &lt;= #{endTime}
+        </if>
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+    </select>
+    
+
+    <!-- 显示企业列表,根据创建时间倒序,根据企业名称搜索 -->
+    <select id="showEnterprisesForPageResult" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        select
+        a.id,
+        a.name,
+        a.code,
+        a.phone,
+        a.app_secret,
+        a.create_time,
+        a.update_time,
+        a.delete_flag,
+        a.creator_id,
+        a.ent_name,
+        a.discount,
+        a.status,
+        a.start_time,
+        a.end_time,
+        a.interface,
+        a.interface_approval_status,
+        d.name as discountName,
+        m2.name as cmManagerName,
+        ct.name as customerTypeName
+        from
+        enterprises a
+        left join customer_type ct on a.customer_type_id = ct.id
+        left join ent_manager em on em.enter_id = a.id
+        left join manager m on m.id = em.manager_id
+        left join manager m2 on m.parent_id = m2.id
+        left join discount d on d.id = a.discount
+        <if test="productTemplateName != null and productTemplateName != ''">
+            LEFT JOIN  product_template_enterprise_map ptem ON ptem.enterprise_id = a.id
+            LEFT JOIN product_template pt1 ON ptem.product_template_id = pt1.id
+        </if>
+        where
+        a.delete_flag IN (0,2,3) and em.delete_flag = 0 <!-- 查询未删除的数据 -->
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and a.delete_flag in (${deleteFlag})
+        </if>
+        <if test="code != null and code != ''">
+            and a.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="status != null and status != ''">
+            and a.status = #{status,jdbcType = TINYINT}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and a.create_time &lt;= #{endTime}
+        </if>
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+        <if test="productTemplateName != null and productTemplateName != ''">
+            and pt1.name like CONCAT('%',CONCAT(#{productTemplateName},'%'))
+            and pt1.delete_flag = 0
+            and ptem.delete_flag = 0
+        </if>
+        <!-- and a.create_time &lt;= now() -->
+        order by
+        a.create_time DESC,
+        a.update_time desc,
+        a.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <!-- 查找不使用产品模板的企业列表，显示企业列表,根据创建时间倒序,根据企业名称搜索 -->
+    <select id="countEnterprisesButNotUsedProdTemplate" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+        enterprises a
+        left join customer_type ct on a.customer_type_id = ct.id
+        left join business_type bt on a.business_type_id = bt.id
+        left join pay_type pt on a.pay_type_id = pt.id
+        left join ent_manager em on em.enter_id = a.id
+        where
+        em.delete_flag = 0 and a.delete_flag IN (0,2,3)<!-- 查询未删除的数据 -->
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and a.delete_flag in (${deleteFlag})
+        </if>
+        <if test="status != null and status != ''">
+            and a.status = #{status,jdbcType = TINYINT}
+        </if>
+        <if test="code != null and code != ''">
+            and a.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and a.create_time &lt;= #{endTime}
+        </if>
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+        and a.id NOT IN (
+            SELECT
+            t1.id
+            FROM
+            enterprises t1
+            LEFT JOIN
+            product_template_enterprise_map t2 ON t2.enterprise_id = t1.id
+            WHERE
+            t1.delete_flag = 0 AND t2.delete_flag = 0
+        )
+        <!--and a.create_time &lt;= now()  -->
+    </select>
+
+    <!-- 查找不使用产品模板的企业列表，显示企业列表,根据创建时间倒序,根据企业名称搜索 -->
+    <select id="showEnterprisesButNotUsedProdTemplate" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        select
+        a.id,
+        a.name,
+        a.code,
+        a.phone,
+        a.app_secret,
+        a.create_time,
+        a.update_time,
+        a.delete_flag,
+        a.creator_id,
+        a.ent_name,
+        a.discount,
+        a.status,
+        a.start_time,
+        a.end_time,
+        a.interface,
+        a.interface_approval_status,
+        d.name as discountName,
+        m2.name as cmManagerName
+        from
+        enterprises a
+        left join customer_type ct on a.customer_type_id = ct.id
+        left join ent_manager em on em.enter_id = a.id
+        left join manager m on m.id = em.manager_id
+        left join manager m2 on m.parent_id = m2.id
+        left join discount d on d.id = a.discount
+        where
+        a.delete_flag IN (0,2,3) and em.delete_flag = 0 <!-- 查询未删除的数据 -->
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and a.delete_flag in (${deleteFlag})
+        </if>
+        <if test="code != null and code != ''">
+            and a.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="status != null and status != ''">
+            and a.status = #{status,jdbcType = TINYINT}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and a.create_time &lt;= #{endTime}
+        </if>
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+        and a.id NOT IN (
+          SELECT
+            t1.id
+          FROM
+            enterprises t1
+          LEFT JOIN
+            product_template_enterprise_map t2 ON t2.enterprise_id = t1.id
+          WHERE
+            t1.delete_flag = 0 AND t2.delete_flag = 0
+        )
+        <!-- and a.create_time &lt;= now() -->
+        order by
+        a.create_time DESC,
+        a.update_time desc,
+        a.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+
+    <!-- 潜在客户列表-->
+    <select id="queryPotentialEnt" parameterType="java.util.Map" resultMap="PotentialEnterResultMap">
+        select
+        t1.*,
+        a.mobile_phone as enterpriseManagerPhone,
+        a.user_name as enterpriseManagerName
+        from
+        enterprises t1
+        Left join
+        ent_manager em on t1.id = em.enter_id
+        Left join
+        admin_manager am on am.manager_id=em.manager_id
+        Left join
+        administer a on a.id = am.admin_id
+        where
+        t1.status = 1 and em.delete_flag = 0 and am.delete_flag = 0
+        <if test="name != null and name != ''">
+            and t1.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+        <if test="deleteFlags != null and deleteFlags != ''">
+            and t1.delete_flag in
+            <foreach collection="deleteFlags" item="deleteFlag" open="(" close=")" index="index" separator=",">
+                #{deleteFlag}
+            </foreach>
+        </if>
+        order by
+        t1.create_time DESC,
+        t1.update_time desc,
+        t1.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+
+    <!-- 潜在客户数量 -->
+    <select id="countPotentialEnt" parameterType="java.util.Map"
+            resultType="java.lang.Long">
+        select
+        count(*)
+        from
+        enterprises t1
+        Left join
+        ent_manager em on t1.id = em.enter_id
+        where
+        t1.status = 1 and em.delete_flag = 0
+        <if test="name != null and name != ''">
+            and t1.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+        <if test="deleteFlags != null and deleteFlags != ''">
+            and t1.delete_flag in
+            <foreach collection="deleteFlags" item="deleteFlag" open="(" close=")" index="index" separator=",">
+                #{deleteFlag}
+            </foreach>
+        </if>
+    </select>
+
+
+    <!-- 显示企业列表,根据创建时间倒序,根据企业名称搜索 -->
+    <select id="showEnterprisesForPageResultCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+        enterprises a
+        left join customer_type ct on a.customer_type_id = ct.id
+        left join business_type bt on a.business_type_id = bt.id
+        left join pay_type pt on a.pay_type_id = pt.id
+        left join ent_manager em on em.enter_id = a.id
+        <if test="productTemplateName != null and productTemplateName != ''">
+            LEFT JOIN  product_template_enterprise_map ptem ON ptem.enterprise_id = a.id
+            LEFT JOIN product_template pt1 ON ptem.product_template_id = pt1.id
+        </if>
+        where
+        em.delete_flag = 0 and a.delete_flag IN (0,2,3)<!-- 查询未删除的数据 -->
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and a.delete_flag in (${deleteFlag})
+        </if>
+        <if test="status != null and status != ''">
+            and a.status = #{status,jdbcType = TINYINT}
+        </if>
+        <if test="code != null and code != ''">
+            and a.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and a.create_time &lt;= #{endTime}
+        </if>
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+        <if test="productTemplateName != null and productTemplateName != ''">
+            and pt1.name like CONCAT('%',CONCAT(#{productTemplateName},'%'))
+            and pt1.delete_flag = 0
+            and ptem.delete_flag = 0
+        </if>
+        <!--and a.create_time &lt;= now()  -->
+    </select>
+
+    <select id="getCodeCount" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select
+        COUNT(0)
+        from
+        enterprises
+        where
+        delete_flag != 1<!-- 查询未删除的数据 -->
+        and
+        code = #{code}
+    </select>
+
+    <select id="getEnterpriseByCreatorId" parameterType="java.lang.Long"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        enterprises
+        where
+        creator_id = #{creatorId,
+        jdbcType=BIGINT} and
+        delete_flag != 1 <!-- 没有被删除 -->
+    </select>
+
+    <select id="queryEnterpriseByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from enterprises
+        where delete_flag != 1 and code = #{code}
+    </select>
+
+    <select id="countExists" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        enterprises
+        WHERE
+        <trim prefix="(" suffix=")" suffixOverrides="OR">
+            <if test="name != null and name != ''">
+                `NAME` = #{name} OR
+            </if>
+            <if test="code != null and code != ''">
+                `CODE` = #{code} OR
+            </if>
+        </trim>
+        <if test="exceptId != null and exceptId != ''">
+            AND `ID` != #{exceptId}
+        </if>
+        AND delete_flag !=1
+    </select>
+
+
+    <!-- 显示企业列表,根据创建时间倒序,根据企业名称搜索 -->
+    <select id="selectEnterpriseByMap" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        select
+        a.id,
+        a.name,
+        a.code,
+        a.phone,
+        a.app_secret,
+        a.create_time,
+        a.update_time,
+        a.delete_flag,
+        a.creator_id,
+        a.ent_name,
+        a.discount,
+        a.start_time,
+        a.end_time,
+        a.interface,
+        a.customer_type_id,
+        ct.name as customerTypeName,
+        bt.name as busniessTypeName,
+        pt.name as payTypeName,
+        d.name as discountName,
+        gm.name as giveMoneyName,
+        a.email
+        from
+        enterprises a
+        left join customer_type ct on a.customer_type_id = ct.id
+        left join business_type bt on a.business_type_id = bt.id
+        left join pay_type pt on a.pay_type_id = pt.id
+        left join admin_enter ae on ae.enter_id=a.id
+        left join discount d on d.id = a.discount
+        left join give_money_enter gme on a.id = gme.enter_id
+        left join give_money gm on gm.id = gme.give_money_id
+        left join ent_manager em on em.enter_id = a.id
+        where
+        a.delete_flag != 1<!-- 查询未删除的数据 -->
+
+        <if test="code != null and code != ''">
+            and a.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+
+        <if test="uniqueCode != null and uniqueCode != ''">
+            and a.code = #{uniqueCode, jdbcType = VARCHAR}
+        </if>
+
+        <if test="deleteFlags != null and deleteFlags != ''">
+            and a.delete_flag in (${deleteFlags})
+        </if>
+
+        <if test="name != null and name != ''">
+            and a.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and a.create_time &lt;= #{endTime}
+        </if>
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+        <!-- and a.create_time &lt;= now() -->
+
+        order by
+        a.create_time DESC,
+        a.update_time desc
+
+    </select>
+
+    <!-- 新版-企业统计方法-->
+    <select id="statistictEnterpriseByDistrict" resultMap="EnterpriseStatisticMap" parameterType="java.util.Map">
+        select count(*) as number,
+        d.`name` as districtName
+
+        from enterprises e
+        LEFT JOIN district d ON e.district_id=d.id
+
+        where d.id IN
+        <foreach collection="districtIds" item="districtIdRange" index="index"
+                 open="(" close=")" separator=",">
+            #{districtIdRange}
+        </foreach>
+
+        <if test="startTime != null and startTime != ''">
+            and e.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and e.create_time &lt;= #{endTime}
+        </if>
+
+        <if test="level != null and level ==2">
+            GROUP BY d.id
+        </if>
+        Order by number desc
+        <if test="pageNum != null and pageSize!=null and pageSize!=0">
+            LIMIT
+            #{pageNum},
+            #{pageSize}
+        </if>
+
+    </select>
+
+    <select id="statistictEnterpriseByDistrictProvince" resultMap="EnterpriseStatisticMap"
+            parameterType="java.util.Map">
+        select dis.name as districtName, t.count as number from (
+        select d.parent_id,count(*) as count
+        from enterprises e left join district d on d.id = e.district_id
+
+        where 1=1
+        <if test="startTime != null and startTime != ''">
+            and e.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and e.create_time &lt;= #{endTime}
+        </if>
+
+        group by d.parent_id)
+
+        as t left join district dis on dis.id = t.parent_id
+
+        Order by number desc
+
+        <if test="pageNum != null and pageSize!=null and pageSize!=0">
+            LIMIT
+            #{pageNum},
+            #{pageSize}
+        </if>
+
+    </select>
+
+
+    <!-- 新版-企业统计方法-->
+    <select id="statistictEnterpriseByDistrictCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(0) from
+        (
+        select count(*) as number, d.`name` as districtName
+
+        from enterprises e
+        LEFT JOIN district d ON e.district_id=d.id
+
+        where d.id IN
+        <foreach collection="districtIds" item="districtIdRange" index="index"
+                 open="(" close=")" separator=",">
+            #{districtIdRange}
+        </foreach>
+        <if test="startTime != null and startTime != ''">
+            and e.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and e.create_time &lt;= #{endTime}
+        </if>
+        <if test="level != null and level ==1">
+            GROUP BY d.parent_id
+
+        </if>
+        <if test="level != null and level ==2">
+            GROUP BY d.id
+        </if>
+        )a
+
+    </select>
+
+    <select id="selectEnterpriseCountByManagerTree" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(0) from(
+        select count(*) as number,
+        <if test="level != null and level == 4">
+            m1.`name` as districtName
+        </if>
+        <if test="level != null and level == 3">
+            m2.`name` as districtName
+        </if>
+        <if test="level != null and level == 2">
+            m3.`name` as districtName
+        </if>
+        <if test="level != null and level == 1">
+            m4.`name` as districtName
+        </if>
+        from enterprises e
+        LEFT JOIN ent_manager entm ON entm.enter_id = e.id
+        LEFT JOIN manager m1 ON entm.manager_id = m1.id
+        <if test="level != null and level == 4">
+            where m1.id IN
+        </if>
+        <if test="level != null and level == 3">
+            INNER JOIN manager m2 ON m1.parent_id= m2.id
+            where m2.id IN
+        </if>
+        <if test="level != null and level == 2">
+            INNER JOIN manager m2 ON m1.parent_id= m2.id
+            INNER JOIN manager m3 ON m2.parent_id = m3.id
+            where m3.id IN
+        </if>
+        <if test="level != null and level == 1">
+            INNER JOIN manager m2 ON m1.parent_id= m2.id
+            INNER JOIN manager m3 ON m2.parent_id = m3.id
+            INNER JOIN manager m4 ON m3.parent_id = m4.id
+            where m4.id IN
+        </if>
+        <foreach collection="sonIds" item="item" index="index"
+                 open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+
+        <if test="startTime != null and startTime != ''">
+            and e.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and e.create_time &lt;= #{endTime}
+        </if>
+        )a
+    </select>
+
+    <select id="selectEnterpriseByManagerTree" resultMap="EnterpriseStatisticMap" parameterType="java.util.Map">
+        select count(*) as number,
+        <if test="level != null and level == 4">
+            m1.`name` as districtName
+        </if>
+        <if test="level != null and level == 3">
+            m2.`name` as districtName
+        </if>
+        <if test="level != null and level == 2">
+            m3.`name` as districtName
+        </if>
+        <if test="level != null and level == 1">
+            m4.`name` as districtName
+        </if>
+        from enterprises e
+        LEFT JOIN ent_manager entm ON entm.enter_id = e.id
+        LEFT JOIN manager m1 ON entm.manager_id = m1.id
+        <if test="level != null and level == 4">
+            where m1.id IN
+        </if>
+        <if test="level != null and level == 3">
+            INNER JOIN manager m2 ON m1.parent_id= m2.id
+            where m2.id IN
+        </if>
+        <if test="level != null and level == 2">
+            INNER JOIN manager m2 ON m1.parent_id= m2.id
+            INNER JOIN manager m3 ON m2.parent_id = m3.id
+            where m3.id IN
+        </if>
+        <if test="level != null and level == 1">
+            INNER JOIN manager m2 ON m1.parent_id= m2.id
+            INNER JOIN manager m3 ON m2.parent_id = m3.id
+            INNER JOIN manager m4 ON m3.parent_id = m4.id
+            where m4.id IN
+        </if>
+        <foreach collection="sonIds" item="item" index="index"
+                 open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+
+        <if test="startTime != null and startTime != ''">
+            and e.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and e.create_time &lt;= #{endTime}
+        </if>
+        <if test="level != null and level ==4">
+            GROUP BY m1.id
+        </if>
+        <if test="level != null and level ==3">
+            GROUP BY m2.id
+        </if>
+        <if test="level != null and level ==2">
+            GROUP BY m3.id
+        </if>
+        <if test="level != null and level ==1">
+            GROUP BY m4.id
+        </if>
+        Order by number desc
+        <if test="pageNum != null and pageSize!=null and pageSize!=0">
+            LIMIT
+            #{pageNum},
+            #{pageSize}
+        </if>
+    </select>
+
+    <!-- 新版-企业统计方法-->
+    <select id="statistictEnterpriseByCreateDay" resultMap="EnterpriseStatisticMap" parameterType="java.util.Map">
+
+        select count(*) as number, DATE(e.create_time) as date
+        from enterprises e
+        LEFT JOIN ent_manager entm ON e.id=entm.enter_id
+        LEFT JOIN manager m ON entm.manager_id =m.id
+        where m.id IN
+
+        <foreach collection="managerIds" item="item" index="index"
+                 open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+
+        <if test="startTime != null and startTime != ''">
+            and e.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and e.create_time &lt;= #{endTime}
+        </if>
+        GROUP BY DATE(e.create_time)
+        order by e.create_time asc
+    </select>
+
+
+    <!-- 统计各企业的效益值 -->
+    <select id="statistictBenefitForEnterprise" resultMap="EnterpriseBenefitMap" parameterType="java.util.Map">
+        select IFNULL(sum(p.price*d.discount),0) as benefit ,e.id as enterId
+        from enterprises e
+        LEFT JOIN
+        charge_record cr ON cr.enter_id = e.id
+        LEFT JOIN
+        discount d ON d.id = e.discount
+        LEFT JOIN
+        product p ON p.id = cr.prd_id
+        LEFT JOIN
+        ent_manager entm ON entm.enter_id = e.id
+        LEFT JOIN manager m ON m.id =entm.manager_id
+        where cr.status = 3
+        <if test="startTime != null  and  startTime !='' ">
+            and cr.charge_time &gt;= #{startTime}
+            and e.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and  endTime !=''">
+            and cr.charge_time &lt;= #{endTime}
+            and e.create_time &lt;= #{endTime}
+        </if>
+        <if test="managerIds != null">
+            and m.id in
+            <foreach collection="managerIds" item="item" index="index"
+                     open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        GROUP BY e.id
+    </select>
+
+    <update id="updateKeyAndSecretAndCreatorId">
+        UPDATE
+        enterprises
+        SET
+        app_key = #{key, jdbcType = VARCHAR},
+        app_secret = #{secret, jdbcType = VARCHAR},
+        creator_id = #{creatorId, jdbcType = BIGINT}
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+
+    <update id="deleteEnterpriseVerifyInfo" parameterType="java.lang.Long">
+        update
+        enterprises
+        set customer_type_id = null,
+        discount = 1,
+        business_type_id = null,
+        pay_type_id = null,
+        interface = 0,
+        start_time = null,
+        end_time = null,
+        update_time = now()
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="getEnterByManagerId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        e.id, e.name, e.code, e.phone, e.create_time, e.update_time,
+        e.delete_flag,e.creator_id,e.app_secret,e.ent_name,e.discount,e.district_id,
+        e.customer_type_id,e.business_type_id,e.pay_type_id,
+        e.start_time,e.end_time,e.interface, e.app_key,e.email,e.status,e.licence_end_time,e.licence_start_time
+        from
+        enterprises e
+        left join ent_manager em on em.enter_id = e.id
+        where
+        em.delete_flag = 0
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+    </select>
+    
+    <select id="getEnterByManagerIdEnterName"  resultMap="BaseResultMap">
+        select
+        e.id, e.name, e.code, e.phone, e.create_time, e.update_time,
+        e.delete_flag,e.creator_id,e.app_secret,e.ent_name,e.discount,e.district_id,
+        e.customer_type_id,e.business_type_id,e.pay_type_id,
+        e.start_time,e.end_time,e.interface, e.app_key,e.email,e.status,e.licence_end_time,e.licence_start_time
+        from
+        enterprises e
+        left join ent_manager em on em.enter_id = e.id
+        where
+        em.delete_flag = 0
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+        <if test="entName != null and entName != ''">
+            and e.name like CONCAT('%',CONCAT(#{entName},'%'))
+        </if>
+    </select>
+
+    <select id="getNomalEnterByManagerId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        e.id, e.name, e.code, e.phone, e.create_time, e.update_time,
+        e.delete_flag,e.creator_id,e.app_secret,e.ent_name,e.discount,e.district_id,
+        e.customer_type_id,e.business_type_id,e.pay_type_id,
+        e.start_time,e.end_time,e.interface, e.app_key,e.email,e.status,e.licence_end_time,e.licence_start_time
+        from
+        enterprises e
+        left join ent_manager em on em.enter_id = e.id
+        where
+        em.delete_flag = 0 and e.delete_flag = 0
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+    </select>
+
+    <select id="getPotentialEnterByManagerId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        e.id, e.name, e.code, e.phone, e.create_time, e.update_time,
+        e.delete_flag,e.creator_id,e.app_secret,e.ent_name,e.discount,e.district_id,
+        e.customer_type_id,e.business_type_id,e.pay_type_id,
+        e.start_time,e.end_time,e.interface, e.app_key,e.email,e.status,e.licence_end_time,e.licence_start_time
+        from
+        enterprises e
+        left join ent_manager em on em.enter_id = e.id
+        where
+        em.delete_flag = 0 AND
+        e.status = 1 AND
+        e.delete_flag = 6
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+    </select>
+
+    <select id="getNormalEnterByManagerId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        e.id, e.name, e.code, e.phone, e.create_time, e.update_time,
+        e.delete_flag,e.creator_id,e.app_secret,e.ent_name,e.discount,e.district_id,
+        e.customer_type_id,e.business_type_id,e.pay_type_id,
+        e.start_time,e.end_time,e.interface, e.app_key,e.email,e.status,e.licence_end_time,e.licence_start_time
+        from
+        enterprises e
+        left join ent_manager em on em.enter_id = e.id
+        where
+        em.delete_flag = 0 and e.status = 3 and e.delete_flag = 0
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+    </select>
+
+    <select id="getAllEnterByManagerId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        e.id, e.name, e.code, e.phone, e.create_time, e.update_time,
+        e.delete_flag,e.creator_id,e.app_secret,e.ent_name,e.discount,e.district_id,
+        e.customer_type_id,e.business_type_id,e.pay_type_id,
+        e.start_time,e.end_time,e.interface, e.app_key,e.email,e.status,e.licence_end_time,e.licence_start_time
+        from
+        enterprises e
+        left join ent_manager em on em.enter_id = e.id
+        where
+        em.delete_flag = 0
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+    </select>
+
+    <select id="getNormalEnter" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        e.id, e.name, e.code, e.phone, e.create_time, e.update_time,
+        e.delete_flag,e.creator_id,e.app_secret,e.ent_name,e.discount,e.district_id,
+        e.customer_type_id,e.business_type_id,e.pay_type_id,
+        e.start_time,e.end_time,e.interface, e.app_key,e.email,e.status,e.licence_end_time,e.licence_start_time
+        from
+        enterprises e
+        where
+        e.status = 3 and e.delete_flag = 0
+    </select>
+    
+    <!-- 产品模板相关 -->
+    <!-- 根据产品模板Id查找企业列表 -->
+    <select id="selectRelatedEnterprises" parameterType="java.util.Map" 
+    resultMap="RelatedProductTemplateResultMap">
+        SELECT 
+            t1.*,
+            t2.create_time AS mapCreateTime
+        FROM
+            enterprises t1
+        LEFT JOIN
+            product_template_enterprise_map t2 ON t2.enterprise_id = t1.id
+        WHERE
+            t1.delete_flag!=1 AND t2.delete_flag=0
+            <if test="templateId != null and templateId != ''">
+                AND t2.product_template_id = #{templateId}
+            </if>
+        ORDER BY
+            t1.create_time DESC,
+            t1.update_time DESC,
+            t1.id
+        LIMIT
+            #{pageNum},
+            #{pageSize}
+    </select>
+    
+    <!-- 产品模板相关 -->
+    <!-- 根据产品模板Id查找企业列表 -->
+    <select id="countRelatedEnterprises" parameterType="java.util.Map" 
+    resultType="java.lang.Integer">
+        SELECT 
+            COUNT(*)
+        FROM
+            enterprises t1
+        LEFT JOIN
+            product_template_enterprise_map t2 ON t2.enterprise_id = t1.id
+        WHERE
+            t1.delete_flag!=1 AND t2.delete_flag=0
+            <if test="templateId != null and templateId != ''">
+                AND t2.product_template_id = #{templateId}
+            </if>
+    </select>
+
+
+    <!-- 审核相关 -->
+    <!-- 获取潜在客户企业列表-->
+    <select id="getPotentialEntList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        t1.*
+        from
+        enterprises t1
+        Left join
+        ent_manager em on t1.id = em.enter_id
+        Left join
+        admin_manager am on am.manager_id=em.manager_id
+        Left join
+        administer a on a.id = am.admin_id
+        where
+        t1.status = 1 and em.delete_flag = 0 and am.delete_flag = 0
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+        order by
+        t1.create_time DESC,
+        t1.update_time desc,
+        t1.id
+    </select>
+
+    <select id="list" resultMap="BaseResultMap">
+        select *
+        from enterprises
+        where delete_flag != 1
+    </select>
+
+    <!--用于迁移：获取未审核或者正在审核的企业-->
+    <select id="getEnterprisesByStatus" resultMap="BaseResultMap">
+        select *
+        from enterprises
+        where status = 1
+    </select>
+
+    <!-- 根据企业名称模糊查询 -->
+    <select id="queryByEntName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+          <include refid="Base_Column_List"/>
+        FROM
+          enterprises
+        WHERE
+          `name` LIKE CONCAT('%',CONCAT(#{entName},'%'))
+    </select>
+    
+    
+    
+    
+    <!-- 显示广东企业列表,根据创建时间倒序,根据企业名称搜索 -->
+    <select id="showGdEnterprisesForPageResultCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+        enterprises a
+        left join customer_type ct on a.customer_type_id = ct.id
+        left join business_type bt on a.business_type_id = bt.id
+        left join pay_type pt on a.pay_type_id = pt.id
+        left join ent_manager em on em.enter_id = a.id
+        <if test="productTemplateName != null and productTemplateName != ''">
+            LEFT JOIN  product_template_enterprise_map ptem ON ptem.enterprise_id = a.id
+            LEFT JOIN product_template pt1 ON ptem.product_template_id = pt1.id
+        </if>
+        <if test="extEntInfoFlag != null and extEntInfoFlag != ''">
+            LEFT JOIN  enterprises_ext_info eei ON eei.enter_id = a.id
+        </if>
+        where
+        em.delete_flag = 0 
+        
+        <choose>
+            <when test="deleteFlag != null and deleteFlag != ''">
+                and a.delete_flag in (${deleteFlag})
+            </when>
+            <otherwise>
+                and a.delete_flag IN (0,2,3)
+            </otherwise>
+        </choose>
+        
+        <if test="status != null and status != ''">
+            and a.status = #{status,jdbcType = TINYINT}
+        </if>
+        <if test="code != null and code != ''">
+            and a.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and a.create_time &lt;= #{endTime}
+        </if>
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+        <if test="productTemplateName != null and productTemplateName != ''">
+            and pt1.name like CONCAT('%',CONCAT(#{productTemplateName},'%'))
+            and pt1.delete_flag = 0
+            and ptem.delete_flag = 0
+        </if>
+        <!--and a.create_time &lt;= now()  -->
+    </select>
+    
+    <!-- 显示广东企业列表,根据创建时间倒序,根据企业名称搜索 -->
+    <select id="showGdEnterprisesForPageResult" parameterType="java.util.Map"
+            resultMap="GDExtendsResultMap">
+        select
+        a.id,
+        a.name,
+        a.code,
+        a.phone,
+        a.app_secret,
+        a.create_time,
+        a.update_time,
+        a.delete_flag,
+        a.creator_id,
+        a.ent_name,
+        a.discount,
+        a.status,
+        a.start_time,
+        a.end_time,
+        a.interface,
+        a.interface_approval_status,
+        d.name as discountName,
+        m2.name as cmManagerName,
+        eei.ec_prd_code as ecPrdCode
+        from
+        enterprises a
+        left join customer_type ct on a.customer_type_id = ct.id
+        left join ent_manager em on em.enter_id = a.id
+        left join manager m on m.id = em.manager_id
+        left join manager m2 on m.parent_id = m2.id
+        left join discount d on d.id = a.discount
+        <if test="productTemplateName != null and productTemplateName != ''">
+            LEFT JOIN  product_template_enterprise_map ptem ON ptem.enterprise_id = a.id
+            LEFT JOIN product_template pt1 ON ptem.product_template_id = pt1.id
+        </if>
+        <if test="extEntInfoFlag != null and extEntInfoFlag != ''">
+            LEFT JOIN  enterprises_ext_info eei ON eei.enter_id = a.id
+        </if>
+        where 
+            em.delete_flag = 0
+        <choose>
+            <when test="deleteFlag != null and deleteFlag != ''">
+                and a.delete_flag in (${deleteFlag})
+            </when>
+            <otherwise>
+                and a.delete_flag IN (0,2,3)
+            </otherwise>
+        </choose>
+        <if test="code != null and code != ''">
+            and a.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            and a.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="status != null and status != ''">
+            and a.status = #{status,jdbcType = TINYINT}
+        </if>
+        <if test="beginTime != null and beginTime != ''">
+            and a.create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and a.create_time &lt;= #{endTime}
+        </if>
+        <if test="managerIds != null and managerIds != ''">
+            and em.manager_id in (${managerIds})
+        </if>
+        <if test="productTemplateName != null and productTemplateName != ''">
+            and pt1.name like CONCAT('%',CONCAT(#{productTemplateName},'%'))
+            and pt1.delete_flag = 0
+            and ptem.delete_flag = 0
+        </if>
+        <!-- and a.create_time &lt;= now() -->
+        order by
+        a.create_time DESC,
+        a.update_time desc,
+        a.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+    
+    <!-- 根据企业名称模糊查询 -->
+    <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+          <include refid="Base_Column_List"/>
+        FROM
+          enterprises
+        WHERE
+          phone = #{phone, jdbcType=VARCHAR}
+        AND
+           delete_flag = 0  
+    </select>
+    
+</mapper>

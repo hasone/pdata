@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.WxExchangeRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.wx.model.WxExchangeRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="admin_id" property="adminId" jdbcType="BIGINT" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="individual_product_id" property="individualProductId" jdbcType="BIGINT" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="system_num" property="systemNum" jdbcType="VARCHAR" />
+    <result column="boss_req_serial_num" property="bossReqSerialNum" jdbcType="VARCHAR" />
+    <result column="boss_resp_serial_num" property="bossRespSerialNum" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, admin_id, mobile, individual_product_id, count, system_num, boss_req_serial_num, boss_resp_serial_num, 
+    status, message, create_time, update_time, delete_flag
+  </sql>
+  
+  <resultMap id="ExtendResultMap" extends="BaseResultMap" type="com.cmcc.vrp.wx.model.WxExchangeRecord" >
+    <result column="ownerMobile" property="ownerMobile" jdbcType="VARCHAR" />
+    <result column="productName" property="productName" jdbcType="VARCHAR" />
+    <result column="productSize" property="productSize" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_exchange_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from wx_exchange_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.wx.model.WxExchangeRecord" >
+    insert into wx_exchange_record (id, admin_id, mobile, 
+      individual_product_id, count, system_num, boss_req_serial_num, 
+      boss_resp_serial_num, status, message, create_time, 
+      update_time, delete_flag)
+    values (#{id,jdbcType=BIGINT}, #{adminId,jdbcType=BIGINT}, #{mobile,jdbcType=VARCHAR}, 
+      #{individualProductId,jdbcType=BIGINT}, #{count,jdbcType=INTEGER}, 
+      #{systemNum,jdbcType=VARCHAR}, #{bossReqSerialNum,jdbcType=VARCHAR}, 
+      #{bossRespSerialNum,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{message,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.wx.model.WxExchangeRecord" >
+    insert into wx_exchange_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="adminId != null" >
+        admin_id,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="individualProductId != null" >
+        individual_product_id,
+      </if>
+      <if test="count != null" >
+        count,
+      </if>
+      <if test="systemNum != null" >
+        system_num,
+      </if>
+      <if test="bossReqSerialNum != null" >
+        boss_req_serial_num,
+      </if>
+      <if test="bossRespSerialNum != null" >
+        boss_resp_serial_num,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="individualProductId != null" >
+        #{individualProductId,jdbcType=BIGINT},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="systemNum != null" >
+        #{systemNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bossReqSerialNum != null" >
+        #{bossReqSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bossRespSerialNum != null" >
+        #{bossRespSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.wx.model.WxExchangeRecord" >
+    update wx_exchange_record
+    <set >
+      <if test="adminId != null" >
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="individualProductId != null" >
+        individual_product_id = #{individualProductId,jdbcType=BIGINT},
+      </if>
+      <if test="count != null" >
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="systemNum != null" >
+        system_num = #{systemNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bossReqSerialNum != null" >
+        boss_req_serial_num = #{bossReqSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bossRespSerialNum != null" >
+        boss_resp_serial_num = #{bossRespSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.wx.model.WxExchangeRecord" >
+    update wx_exchange_record
+    set admin_id = #{adminId,jdbcType=BIGINT},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      individual_product_id = #{individualProductId,jdbcType=BIGINT},
+      count = #{count,jdbcType=INTEGER},
+      system_num = #{systemNum,jdbcType=VARCHAR},
+      boss_req_serial_num = #{bossReqSerialNum,jdbcType=VARCHAR},
+      boss_resp_serial_num = #{bossRespSerialNum,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      message = #{message,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectBySystemNum" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_exchange_record
+    where system_num = #{systemNum, jdbcType=VARCHAR}
+  </select>
+  
+  <select id="sumProductSize" resultType="java.lang.Integer">
+    select 
+        IFNULL(sum(p.product_size), 0)
+    from wx_exchange_record record
+    left join individual_product p on p.id = record.individual_product_id
+    where record.admin_id = #{adminId} 
+    and MONTH(record.create_time) = #{month}
+    and record.delete_flag = 0
+  </select>
+  
+  <select id="sumProductNum" resultType="java.lang.Integer">
+    select 
+        count(*)
+    from wx_exchange_record
+    where individual_product_id = #{productId} 
+    and MONTH(create_time) = #{month}
+    and delete_flag = 0
+  </select>
+  
+  <select id="selectByMap" resultMap="ExtendResultMap">
+     select 
+     wer.id, wer.admin_id, wer.mobile, wer.individual_product_id, wer.count, wer.system_num, wer.boss_req_serial_num, 
+     wer.boss_resp_serial_num, wer.status, wer.message, wer.create_time, wer.update_time, wer.delete_flag, 
+     a.mobile_phone as ownerMobile, p.name as productName, p.product_size/1024 as productSize     
+     from wx_exchange_record wer 
+     left join administer a on a.id=wer.admin_id
+     left join individual_product p on p.id = wer.individual_product_id
+     where wer.delete_flag = 0
+     <if test="mobile != null and mobile != ''">
+         and (a.mobile_phone like CONCAT('%',CONCAT(#{mobile},'%')) or wer.mobile like CONCAT('%',CONCAT(#{mobile},'%')) )
+     </if>
+     <if test="startTime != null and startTime != ''">
+         and wer.create_time &gt;= #{startTime}
+     </if>
+     <if test="endTime != null and endTime != ''">
+         and wer.create_time &lt;= #{endTime}
+     </if>
+     ORDER BY wer.create_time desc
+     <if test="pageNum != null and pageSize != null">
+         LIMIT
+         #{pageNum},#{pageSize}  
+     </if>        
+   </select>
+   
+   <select id="countByMap" resultType="java.lang.Integer">
+     select 
+       count(*)
+     from wx_exchange_record wer
+     left join administer a on a.id=wer.admin_id
+     where wer.delete_flag = 0
+     <if test="mobile != null and mobile != ''">
+         and (a.mobile_phone like CONCAT('%',CONCAT(#{mobile},'%')) or wer.mobile like CONCAT('%',CONCAT(#{mobile},'%')) )
+     </if>
+     <if test="startTime != null and startTime != ''">
+         and wer.create_time &gt;= #{startTime}
+     </if>
+     <if test="endTime != null and endTime != ''">
+         and wer.create_time &lt;= #{endTime}
+     </if>
+   </select>
+   <select id="sumAllProductSize" resultType="java.lang.Integer">
+    select 
+        IFNULL(sum(p.product_size), 0)
+    from wx_exchange_record record
+    left join individual_product p on p.id = record.individual_product_id
+    where record.delete_flag = 0
+    and MONTH(record.create_time) = #{month}
+  </select>
+  <select id="sumDayProductSize" resultType="java.lang.Integer">
+    select 
+        IFNULL(sum(p.product_size), 0)
+    from wx_exchange_record record
+    left join individual_product p on p.id = record.individual_product_id
+    where record.admin_id = #{adminId} 
+    and record.create_time &gt;= #{begin, jdbcType = TIMESTAMP}
+    and record.create_time &lt;= #{end, jdbcType = TIMESTAMP}
+    and record.delete_flag = 0
+  </select>
+</mapper>

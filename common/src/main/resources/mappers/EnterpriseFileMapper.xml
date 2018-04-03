@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.EnterpriseFileMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.EnterpriseFile">
+        <result column="ent_id" property="entId" jdbcType="BIGINT"/>
+        <result column="customerfile_name" property="customerfileName" jdbcType="VARCHAR"/>
+        <result column="image_name" property="imageName" jdbcType="VARCHAR"/>
+        <result column="contract_name" property="contractName" jdbcType="VARCHAR"/>
+        <result column="business_licence" property="businessLicence" jdbcType="VARCHAR"/>
+        <result column="authorization_certificate" property="authorizationCertificate" jdbcType="VARCHAR"/>
+        <result column="identification_card" property="identificationCard" jdbcType="VARCHAR"/>
+        <result column="identification_back" property="identificationBack" jdbcType="VARCHAR"/>
+        <result column="customerfile_key" property="customerfileKey" jdbcType="VARCHAR"/>
+        <result column="image_key" property="imageKey" jdbcType="VARCHAR"/>
+        <result column="contract_key" property="contractKey" jdbcType="VARCHAR"/>
+        <result column="licence_key" property="licenceKey" jdbcType="VARCHAR"/>
+        <result column="authorization_key" property="authorizationKey" jdbcType="VARCHAR"/>
+        <result column="identification_key" property="identificationKey" jdbcType="VARCHAR"/>
+        <result column="identification_back_key" property="identificationBackKey" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ent_id,
+        customerfile_name,
+        image_name,
+        contract_name,
+        business_licence,
+        authorization_certificate,
+        identification_card,
+        identification_back,
+        customerfile_key,
+        image_key,
+        contract_key,
+        licence_key,
+        authorization_key,
+        identification_key,
+        identification_back_key,
+        create_time,
+        update_time
+    </sql>
+
+    <select id="selectByEntId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        enterprise_file
+        where
+        ent_id = #{entId,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.EnterpriseFile">
+        insert into
+        enterprise_file
+        (
+        ent_id,
+        customerfile_name,
+        image_name,
+        contract_name,
+        business_licence,
+        authorization_certificate,
+        identification_card,
+        identification_back,
+        customerfile_key,
+        image_key,
+        contract_key,
+        licence_key,
+        authorization_key,
+        identification_key,
+        identification_back_key,
+        create_time,
+        update_time
+        )
+        values
+        (
+        #{entId,jdbcType=BIGINT},
+        #{customerfileName,jdbcType=VARCHAR},
+        #{imageName,jdbcType=VARCHAR},
+        #{contractName,jdbcType=VARCHAR},
+        #{businessLicence,jdbcType=VARCHAR},
+        #{authorizationCertificate,jdbcType=VARCHAR},
+        #{identificationCard,jdbcType=VARCHAR},
+        #{identificationBack,jdbcType=VARCHAR},
+        #{customerfileKey,jdbcType=VARCHAR},
+        #{imageKey,jdbcType=VARCHAR},
+        #{contractKey,jdbcType=VARCHAR},
+        #{licenceKey,jdbcType=VARCHAR},
+        #{authorizationKey,jdbcType=VARCHAR},
+        #{identificationKey,jdbcType=VARCHAR},
+        #{identificationBackKey,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <!--  <delete id="deleteByAdminId" parameterType="java.lang.Long" >
+       delete from admin_district
+       where admin_id = #{adminId,jdbcType=BIGINT}
+     </delete>
+     -->
+
+    <update id="update" parameterType="com.cmcc.vrp.province.model.EnterpriseFile">
+        update enterprise_file
+        <set>
+            <if test="customerfileName != null and customerfileName != ''">
+                customerfile_name = #{customerfileName,jdbcType=VARCHAR},
+            </if>
+            <if test="imageName != null and imageName != ''">
+                image_name = #{imageName,jdbcType=VARCHAR},
+            </if>
+            <if test="contractName != null and contractName != ''">
+                contract_name = #{contractName,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLicence != null and businessLicence != ''">
+                business_licence = #{businessLicence,jdbcType=VARCHAR},
+            </if>
+            <if test="authorizationCertificate != null and authorizationCertificate != ''">
+                authorization_certificate = #{authorizationCertificate,jdbcType=VARCHAR},
+            </if>
+            <if test="identificationCard != null and identificationCard != ''">
+                identification_card = #{identificationCard,jdbcType=VARCHAR},
+            </if>
+            <if test="identificationBack != null and identificationBack != ''">
+                identification_back = #{identificationBack,jdbcType=VARCHAR},
+            </if>
+            <if test="customerfileKey != null and customerfileKey != ''">
+                customerfile_key = #{customerfileKey,jdbcType=VARCHAR},
+            </if>
+            <if test="imageKey != null and imageKey != ''">
+                image_key = #{imageKey,jdbcType=VARCHAR},
+            </if>
+            <if test="contractKey != null and contractKey != ''">
+                contract_key = #{contractKey,jdbcType=VARCHAR},
+            </if>
+            <if test="licenceKey != null and licenceKey != ''">
+                licence_key = #{licenceKey,jdbcType=VARCHAR},
+            </if>
+            <if test="authorizationKey != null and authorizationKey != ''">
+                authorization_key = #{authorizationKey,jdbcType=VARCHAR},
+            </if>
+            <if test="identificationKey != null and identificationKey != ''">
+                identification_key = #{identificationKey,jdbcType=VARCHAR},
+            </if>
+            <if test="identificationBackKey != null and identificationBackKey != ''">
+                identification_back_key = #{identificationBackKey,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            ent_id = #{entId,jdbcType=BIGINT}
+        </set>
+        where ent_id = #{entId,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteEnterpriseVerifyFiles" parameterType="java.lang.Long">
+        update enterprise_file
+        set customerfile_name = null,
+        image_name = null,
+        contract_name = null,
+        customerfile_key = null,
+        image_key = null,
+        contract_key = null,
+        update_time = now()
+        where ent_id = #{entId,jdbcType=BIGINT}
+    </delete>
+
+</mapper>

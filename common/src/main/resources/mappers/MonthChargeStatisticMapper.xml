@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.MonthChargeStatisticMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ChargeStatistic">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="number" property="number" jdbcType="BIGINT"/>
+        <result column="capacity" property="capacity" jdbcType="BIGINT"/>
+        <result column="money" property="money" jdbcType="DECIMAL"/>
+        <result column="date" property="date" jdbcType="DATE"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, enter_id, number, capacity, money, date
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from month_charge_statistic
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from month_charge_statistic
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ChargeStatistic">
+        insert into month_charge_statistic (id, enter_id, number,
+        capacity, money, date)
+        values (#{id,jdbcType=BIGINT}, #{enterId,jdbcType=BIGINT}, #{number,jdbcType=BIGINT},
+        #{capacity,jdbcType=BIGINT}, #{money,jdbcType=DECIMAL}, #{date,jdbcType=DATE})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.ChargeStatistic">
+        insert into month_charge_statistic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="enterId != null">
+                enter_id,
+            </if>
+            <if test="number != null">
+                number,
+            </if>
+            <if test="capacity != null">
+                capacity,
+            </if>
+            <if test="money != null">
+                money,
+            </if>
+            <if test="date != null">
+                date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="enterId != null">
+                #{enterId,jdbcType=BIGINT},
+            </if>
+            <if test="number != null">
+                #{number,jdbcType=BIGINT},
+            </if>
+            <if test="capacity != null">
+                #{capacity,jdbcType=BIGINT},
+            </if>
+            <if test="money != null">
+                #{money,jdbcType=DECIMAL},
+            </if>
+            <if test="date != null">
+                #{date,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.ChargeStatistic">
+        update month_charge_statistic
+        <set>
+            <if test="enterId != null">
+                enter_id = #{enterId,jdbcType=BIGINT},
+            </if>
+            <if test="number != null">
+                number = #{number,jdbcType=BIGINT},
+            </if>
+            <if test="capacity != null">
+                capacity = #{capacity,jdbcType=BIGINT},
+            </if>
+            <if test="money != null">
+                money = #{money,jdbcType=DECIMAL},
+            </if>
+            <if test="date != null">
+                date = #{date,jdbcType=DATE},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ChargeStatistic">
+        update month_charge_statistic
+        set enter_id = #{enterId,jdbcType=BIGINT},
+        number = #{number,jdbcType=BIGINT},
+        capacity = #{capacity,jdbcType=BIGINT},
+        money = #{money,jdbcType=DECIMAL},
+        date = #{date,jdbcType=DATE}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into month_charge_statistic (enter_id, number, capacity, money, date)
+        values
+        <foreach collection="records" item="record" separator="," index="index">
+            (#{record.enterId,jdbcType=BIGINT},
+            #{record.number,jdbcType=BIGINT},
+            #{record.capacity,jdbcType=BIGINT},
+            #{record.money, jdbcType = DECIMAL},
+            #{record.date, jdbcType = DATE})
+        </foreach>
+    </insert>
+
+    <select id="getMonthChargeStatistic" parameterType="java.util.Date" resultMap="BaseResultMap">
+        select enter_id as enterId, count(*) as number, sum(capacity) as capacity , sum(money) as money, #{date} as date
+        from day_charge_statistic
+        where MONTH(#{date}) = MONTH(date)
+        group by enter_id
+    </select>
+
+</mapper>

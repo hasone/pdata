@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.RoleAuthorityMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.RoleAuthority">
+        <result column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="authority_id" property="authorityId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="authorityIds" type="java.lang.Long">
+        <result column="authority_id" property="authorityId" jdbcType="BIGINT"/>
+    </resultMap>
+
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.RoleAuthority">
+        insert into role_authority (role_id, authority_id)
+        values (#{roleId,jdbcType=BIGINT}, #{authorityId,jdbcType=BIGINT})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.RoleAuthority">
+        insert into role_authority
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">
+                role_id,
+            </if>
+            <if test="authorityId != null">
+                authority_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">
+                #{roleId,jdbcType=BIGINT},
+            </if>
+            <if test="authorityId != null">
+                #{authorityId,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteByRoleId" parameterType="java.lang.Long">
+        delete from role_authority
+        where role_id = #{roleId,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteRoleAuthority" parameterType="com.cmcc.vrp.province.model.RoleAuthority">
+        delete from role_authority
+        where role_id = #{roleId,jdbcType=BIGINT}
+        and authority_id = #{authorityId,jdbcType=BIGINT}
+    </delete>
+
+    <select id="select" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT role_id, authority_id FROM role_authority t
+        <where>
+            <if test="roleId != null">
+                AND t.role_id = #{roleId,jdbcType=BIGINT}
+            </if>
+            <if test="authorityId != null">
+                AND t.authority_id = #{authorityId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByRoleId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select * from role_authority
+        where role_id=#{roleId}
+    </select>
+
+    <select id="selectAuthsByRoleIds" parameterType="java.lang.Long" resultMap="authorityIds">
+        select authority_id from role_authority
+        where role_id=#{roleId}
+    </select>
+
+    <select id="selectExistingRoleAuthorityByAuthorityName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select ra.* from role_authority ra
+        left join authority a on ra.authority_id = a.AUTHORITY_ID
+        where a.AUTHORITY_NAME=#{AUTHORITY_NAME}
+    </select>
+
+
+</mapper>

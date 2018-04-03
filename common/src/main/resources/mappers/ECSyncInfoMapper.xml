@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ECSyncInfoMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ECSyncInfo">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="ec_code" property="ecCode" jdbcType="VARCHAR"/>
+        <result column="ec_name" property="ecName" jdbcType="VARCHAR"/>
+        <result column="region" property="region" jdbcType="VARCHAR"/>
+		<result column="legal_person" property="legalPerson" jdbcType="VARCHAR"/>
+        <result column="ent_permit" property="entPermit" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+		<result column="main_contact" property="mainContact" jdbcType="INTEGER"/>
+        <result column="ec_level" property="ecLevel" jdbcType="VARCHAR"/>
+        <result column="unit_kind" property="unitKind" jdbcType="VARCHAR"/>
+		<result column="district" property="district" jdbcType="VARCHAR"/>
+        <result column="innet_date" property="innetDate" jdbcType="TIMESTAMP"/>
+        <result column="vip_type" property="vipType" jdbcType="VARCHAR"/>
+        <result column="vip_type_state_date" property="vipTypeStateDate" jdbcType="TIMESTAMP"/>        
+		<result column="credit_level" property="creditLevel" jdbcType="VARCHAR"/>
+        <result column="dev_channel" property="devChannel" jdbcType="VARCHAR"/>
+        <result column="dev_user_id" property="devUserId" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, ec_code, ec_name, region, legal_person, ent_permit, user_name,
+        mobile, email, main_contact, ec_level, unit_kind, district, innet_date, vip_type, vip_type_state_date,credit_level,dev_channel,
+        dev_user_id, create_time, update_time, delete_flag
+    </sql>
+    
+    
+	<insert id="insert" parameterType="com.cmcc.vrp.province.model.ECSyncInfo"  useGeneratedKeys="true" keyProperty="id">
+        insert into ec_sync_info (ec_code, ec_name, region, user_name,
+        mobile, email, main_contact, ec_level, unit_kind, district, innet_date, vip_type, vip_type_state_date,credit_level,dev_channel,
+        dev_user_id, create_time, update_time, delete_flag,legal_person,ent_permit)
+        values (#{ecCode,jdbcType=VARCHAR}, #{ecName,jdbcType=VARCHAR},
+        #{region,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},
+        #{mainContact,jdbcType=INTEGER}, #{ecLevel,jdbcType=VARCHAR},#{unitKind,jdbcType=VARCHAR},
+        #{district,jdbcType=VARCHAR}, #{innetDate,jdbcType=TIMESTAMP}, #{vipType,jdbcType=VARCHAR},#{vipTypeStateDate,jdbcType=TIMESTAMP},#{creditLevel,jdbcType=VARCHAR},
+        #{devChannel,jdbcType=VARCHAR}, #{devUserId,jdbcType=VARCHAR}, NOW(),NOW(),#{deleteFlag,jdbcType=INTEGER}, #{legalPerson,jdbcType=VARCHAR},#{entPermit,jdbcType=VARCHAR})
+    </insert>
+	<select id="selectByECCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from ec_sync_info
+        where ec_code = #{ecCode,jdbcType=VARCHAR}
+    </select>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.ECSyncInfo">
+        UPDATE
+        ec_sync_info
+		<set>
+			<if test="ecName != null and ecName != ''">
+                ec_name = #{ecName,jdbcType=VARCHAR},
+            </if>
+            <if test="region != null and region != ''">
+                region = #{region,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null and mobile != ''">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="mainContact != null and mainContact != ''">
+                main_contact = #{mainContact,jdbcType=INTEGER},
+            </if>
+            <if test="ecLevel != null and ecLevel != ''">
+                ec_level = #{ecLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="unitKind != null and unitKind != ''">
+                unit_kind = #{unitKind,jdbcType=VARCHAR},
+            </if>
+            <if test="district != null and district != ''">
+                district = #{district,jdbcType=VARCHAR},
+            </if>
+            <if test="innetDate != null">
+                innet_date = #{innetDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="vipType != null and vipType != ''">
+                vip_type = #{vipType,jdbcType=VARCHAR},
+            </if>
+            <if test="vipTypeStateDate != null">
+                vip_type_state_date = #{vipTypeStateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creditLevel != null and creditLevel != ''">
+                credit_level = #{creditLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="devChannel != null and devChannel != ''">
+                dev_channel = #{devChannel,jdbcType=VARCHAR},
+            </if>
+            <if test="devUserId != null and devChannel != ''">
+                dev_user_id = #{devUserId,jdbcType=VARCHAR},
+            </if>
+           <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+			<if test="legalPerson != null and legalPerson != ''">
+                legal_person = #{legalPerson,jdbcType=VARCHAR},
+            </if>
+			<if test="entPermit != null and entPermit != ''">
+                ent_permit = #{entPermit,jdbcType=VARCHAR}
+            </if>
+        </set>
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+</mapper>

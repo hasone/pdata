@@ -1,0 +1,1034 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cmcc.vrp.province.dao.ActivityWinRecordMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ActivityWinRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="record_id" property="recordId" jdbcType="VARCHAR"/>
+        <result column="activity_id" property="activityId" jdbcType="VARCHAR"/>
+        <result column="own_mobile" property="ownMobile" jdbcType="VARCHAR"/>
+        <result column="charge_mobile" property="chargeMobile" jdbcType="VARCHAR"/>
+        <result column="prize_id" property="prizeId" jdbcType="BIGINT"/>
+        <result column="isp" property="isp" jdbcType="VARCHAR"/>
+        <result column="win_time" property="winTime" jdbcType="TIMESTAMP"/>
+        <result column="charge_time" property="chargeTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="reason" property="reason" jdbcType="VARCHAR"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="size" property="size" jdbcType="VARCHAR"/>
+        <result column="status_code" property="statusCode" jdbcType="VARCHAR"/>
+        <result column="pay_result" property="payResult" jdbcType="INTEGER"/>
+
+        <result column="wx_openid" property="wxOpenid" jdbcType="VARCHAR"/>
+        <result column="pay_serial_num" property="paySerialNum" jdbcType="VARCHAR"/>    
+
+    
+        <result column="channel" property="channel" jdbcType="VARCHAR"/>    
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, record_id, activity_id, own_mobile, charge_mobile, prize_id, isp, win_time, charge_time,
+    status, reason, delete_flag, create_time, update_time, size, status_code,pay_result, wx_openid,
+    pay_serial_num,
+    channel
+
+  </sql>
+
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ActivityWinRecord">
+        <result column="price" property="price" jdbcType="BIGINT"/>
+        <result column="productSize" property="productSize" jdbcType="BIGINT"/>
+        <result column="productName" property="productName" jdbcType="VARCHAR"/>
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="activityName" property="activityName" jdbcType="VARCHAR"/>
+        <result column="activityStartTime" property="activityStartTime" jdbcType="TIMESTAMP"/>
+        <result column="activityEndTime" property="activityEndTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <resultMap id="ExtendWinRecordResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ActivityWinRecord">
+    	<result column="price" property="price" jdbcType="BIGINT"/>
+    	<result column="productName" property="productName" jdbcType="VARCHAR"/>
+    	<result column="discount" property="discount" jdbcType="INTEGER"/>
+    	<result column="paymentTime" property="paymentTime" jdbcType="TIMESTAMP"/>
+    	<result column="entName" property="entName" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="IndividualWinRecordResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ActivityWinRecord">
+    	<result column="prizeName" property="prizeName" jdbcType="VARCHAR"/>
+    	<result column="logo" property="logo" jdbcType="VARCHAR"/>
+    	<result column="banner" property="banner" jdbcType="VARCHAR"/>
+    	<result column="entName" property="entName" jdbcType="VARCHAR"/>
+    	<result column="activityName" property="activityName" jdbcType="VARCHAR"/>
+    	<result column="orderMobile" property="orderMobile" jdbcType="VARCHAR"/>    	
+    </resultMap>
+
+    <resultMap id="IndividualResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ActivityWinRecord">
+        <result column="flowcoinSize" property="flowcoinSize" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from activity_win_record
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectByRecordId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from activity_win_record
+        where record_id = #{recordId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from activity_win_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ActivityWinRecord">
+    insert into activity_win_record (id, record_id, activity_id, own_mobile,
+      charge_mobile, prize_id, isp, 
+      win_time, charge_time, status, 
+      reason, delete_flag, create_time, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{recordId,jdbcType=VARCHAR}, #{activityId,jdbcType=VARCHAR}, #{ownMobile,jdbcType=VARCHAR},
+      #{chargeMobile,jdbcType=VARCHAR}, #{prizeId,jdbcType=BIGINT}, #{isp,jdbcType=VARCHAR}, 
+      #{winTime,jdbcType=TIMESTAMP}, #{chargeTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{reason,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO
+        activity_win_record
+        (
+        record_id,
+        activity_id,
+        own_mobile,
+        charge_mobile,
+        prize_id,
+        isp,
+        delete_flag,
+        create_time,
+        update_time,
+        status
+        )
+        values
+        <foreach collection="records" item="record" separator="," index="index">
+            (
+            #{record.recordId,jdbcType=VARCHAR},
+            #{record.activityId,jdbcType=VARCHAR},
+            #{record.ownMobile,jdbcType=VARCHAR},
+            #{record.chargeMobile,jdbcType=VARCHAR},
+            #{record.prizeId,jdbcType=BIGINT},
+            #{record.isp,jdbcType=VARCHAR},
+            #{record.deleteFlag,jdbcType=INTEGER},
+            #{record.createTime,jdbcType=TIMESTAMP},
+            #{record.updateTime,jdbcType=TIMESTAMP},
+            #{record.status,jdbcType=INTEGER}
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectByActivityId" parameterType="java.lang.String" resultMap="ExtendsResultMap">
+        SELECT
+        awr.id, awr.record_id, awr.activity_id, awr.own_mobile, awr.charge_mobile, awr.prize_id, awr.isp, awr.win_time,
+        awr.charge_time,
+        awr.status, awr.reason, awr.delete_flag, awr.create_time, awr.update_time
+        FROM
+        activity_win_record awr
+        WHERE
+        awr.activity_id = #{activityId,jdbcType=VARCHAR} AND
+        awr.delete_flag = 0
+    </select>
+
+    <select id="selectByActivityIdAndIsp" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        activity_win_record
+        WHERE
+        activity_id = #{activityId,jdbcType=VARCHAR} AND
+        isp = #{isp,jdbcType=VARCHAR} AND
+        delete_flag = 0
+    </select>
+    
+    <select id="selectByActivityIdAndMobile" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        activity_win_record
+        WHERE
+        activity_id = #{activityId,jdbcType=VARCHAR} AND
+        own_mobile = #{mobile,jdbcType=VARCHAR} AND
+        delete_flag = 0
+    </select>
+
+    <update id="deleteByActivityId" parameterType="java.lang.String">
+        UPDATE
+        activity_win_record
+        SET
+        delete_flag = 1
+        WHERE
+        activity_id = #{activityId,jdbcType=VARCHAR}
+    </update>
+
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.ActivityWinRecord"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into activity_win_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="recordId != null">
+                record_id,
+            </if>
+            <if test="activityId != null">
+                activity_id,
+            </if>
+            <if test="ownMobile != null">
+                own_mobile,
+            </if>
+            <if test="chargeMobile != null">
+                charge_mobile,
+            </if>
+            <if test="prizeId != null">
+                prize_id,
+            </if>
+            <if test="isp != null">
+                isp,
+            </if>
+            <if test="winTime != null">
+                win_time,
+            </if>
+            <if test="chargeTime != null">
+                charge_time,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="reason != null">
+                reason,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="size != null">
+                size,
+            </if>
+            <if test="payResult != null">
+                pay_result,
+            </if>
+            <if test="wxOpenid != null">
+                wx_openid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="recordId != null">
+                #{recordId,jdbcType=VARCHAR},
+            </if>
+            <if test="activityId != null">
+                #{activityId,jdbcType=VARCHAR},
+            </if>
+            <if test="ownMobile != null">
+                #{ownMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="chargeMobile != null">
+                #{chargeMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="prizeId != null">
+                #{prizeId,jdbcType=BIGINT},
+            </if>
+            <if test="isp != null">
+                #{isp,jdbcType=VARCHAR},
+            </if>
+            <if test="winTime != null">
+                #{winTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chargeTime != null">
+                #{chargeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="reason != null">
+                #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="size != null">
+                #{size,jdbcType=VARCHAR},
+            </if>
+            <if test="payResult != null">
+                #{payResult,jdbcType=INTEGER},
+            </if>
+            <if test="wxOpenid != null">
+                #{wxOpenid,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.ActivityWinRecord">
+        update activity_win_record
+        <set>
+            <if test="activityId != null">
+                activity_id = #{activityId,jdbcType=VARCHAR},
+            </if>
+            <if test="ownMobile != null">
+                own_mobile = #{ownMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="chargeMobile != null">
+                charge_mobile = #{chargeMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="prizeId != null">
+                prize_id = #{prizeId,jdbcType=BIGINT},
+            </if>
+            <if test="isp != null">
+                isp = #{isp,jdbcType=VARCHAR},
+            </if>
+            <if test="winTime != null">
+                win_time = #{winTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chargeTime != null">
+                charge_time = #{chargeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="reason != null">
+                reason = #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="statusCode != null">
+                status_code = #{statusCode,jdbcType=VARCHAR},
+            </if>
+            <if test="payResult != null">
+                pay_result = #{payResult,jdbcType=INTEGER},
+            </if>
+            <if  test="wxOpenid != null">
+            	wx_openid = #{wxOpenid,jdbcType=VARCHAR},
+            </if>
+            <if  test="paySerialNum != null">
+                pay_serial_num = #{paySerialNum,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where record_id = #{recordId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ActivityWinRecord">
+        update activity_win_record
+        set
+        record_id = #{recordId,jdbcType=VARCHAR},
+        activity_id = #{activityId,jdbcType=VARCHAR},
+        own_mobile = #{ownMobile,jdbcType=VARCHAR},
+        charge_mobile = #{chargeMobile,jdbcType=VARCHAR},
+        prize_id = #{prizeId,jdbcType=BIGINT},
+        isp = #{isp,jdbcType=VARCHAR},
+        win_time = #{winTime,jdbcType=TIMESTAMP},
+        charge_time = #{chargeTime,jdbcType=TIMESTAMP},
+        status = #{status,jdbcType=INTEGER},
+        reason = #{reason,jdbcType=VARCHAR},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="batchUpdateStatus" parameterType="java.util.Map">
+        update
+        activity_win_record
+        <set>
+            <if test="newStatus != null">
+                status = #{newStatus, jdbcType=INTEGER},
+            </if>
+            <if test="winTime != null">
+                win_time = #{winTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="winTime != null">
+                charge_time = #{winTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chargeMobile != null">
+                charge_mobile = #{chargeMobile,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where
+        record_id in
+        <foreach collection="recordIds" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+
+        and status = #{oldStatus, jdbcType=INTEGER}
+        and delete_flag=0
+    </update>
+    
+    <update id="batchUpdateForFlowcard" parameterType="java.util.Map">
+        update
+        activity_win_record
+        <set>
+            <if test="newStatus != null">
+                status = #{newStatus, jdbcType=INTEGER},
+            </if>
+            <if test="winTime != null">
+                win_time = #{winTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="winTime != null">
+                charge_time = #{winTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chargeMobile != null">
+                charge_mobile = #{chargeMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="channel != null">
+                channel = #{channel,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where
+        record_id in
+        <foreach collection="recordIds" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+
+        and status = #{oldStatus, jdbcType=INTEGER}
+        and delete_flag=0
+    </update>
+
+
+    <select id="getCurrentActivityInfo" resultMap="ExtendsResultMap" parameterType="java.lang.String">
+        select
+        awr.id, awr.activity_id, awr.own_mobile, awr.charge_mobile, awr.prize_id, awr.isp, awr.win_time,
+        awr.charge_time,
+        awr.status, awr.reason, awr.delete_flag, awr.create_time, awr.update_time, awr.record_id,
+        cr.price as price, p.product_size as productSize
+        from activity_win_record awr
+        left join activities a on a.activity_id = awr.activity_id
+        left join charge_record cr on cr.type_code = a.type and cr.record_id = awr.id
+        left join product p on p.id = cr.prd_id
+        where
+        awr.delete_flag = 0
+        and awr.activity_id = #{activityId, jdbcType=INTEGER}
+        and cr.id IS NOT NULL
+    </select>
+    
+    <!-- 用于广东众筹，prizeId是activity_prize的id，不是product的id -->
+    <select id="countWinRecords" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        count(*)
+        from activity_win_record awr
+        left join activity_prize ap on ap.id = awr.prize_id
+        left join activities a on a.activity_id = awr.activity_id
+        left join product p on ap.product_id = p.id
+        left join activity_payment_info api on api.sys_serial_num = awr.pay_serial_num
+        where
+        awr.delete_flag = 0 
+        <if test="activityId != null and activityId != ''">
+            and awr.activity_id = #{activityId}
+        </if>
+        <if test="activityType != null">
+            and a.type = #{activityType}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and (awr.own_mobile like CONCAT('%',CONCAT(#{mobile},'%')) or awr.charge_mobile like
+            CONCAT('%',CONCAT(#{mobile},'%')) )
+        </if>
+        <if test="productName != null and productName != ''">
+            and p.name like CONCAT('%',CONCAT(#{productName},'%'))
+        </if>
+        <if test="status != null">
+            and awr.status in 
+            <foreach item="item" index="index" collection="status" open="(" separator="," close=")">  
+                 #{item}  
+            </foreach>
+        </if>
+        <if test="payResult != null">
+            and awr.pay_result in 
+            <foreach item="item" index="index" collection="payResult" open="(" separator="," close=")">  
+                 #{item}  
+            </foreach>
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and awr.win_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and awr.win_time &lt;= #{endTime}
+        </if>
+        <if test="payStartTime != null and payStartTime != ''">
+            and api.charge_time &gt;= #{payStartTime}
+        </if>
+        <if test="payEndTime != null and payEndTime != ''">
+            and api.charge_time &lt;= #{payEndTime}
+        </if>
+        
+    </select>
+    
+    <!-- 根据mobile和活动类型获取中奖纪录，仅用于流量众筹 -->
+    <select id="getWinRecordsForCrowdFunding" parameterType="java.util.Map"
+            resultMap="IndividualWinRecordResultMap">
+            SELECT 
+				t1.*,
+				t2.name AS activityName,
+				t3.prize_name AS prizeName,
+				t4.logo AS logo,
+				t4.banner AS banner,
+				t5.`name` AS entName
+			FROM 
+				activity_win_record t1 
+			LEFT JOIN 
+				activities t2 ON t2.activity_id = t1.activity_id 
+			LEFT JOIN 
+				activity_prize t3 ON t3.id = t1.prize_id
+			LEFT JOIN 
+				crowdfunding_activity_detail t4 ON t4.activity_id = t1.activity_id
+			LEFT JOIN 
+				enterprises t5 ON t5.id = t2.ent_id
+			WHERE
+				t1.delete_flag = 0 and t4.result = 1
+            	and ((t1.own_mobile = #{mobile}) or (t1.charge_mobile = #{mobile}))
+        		and t2.type = #{activityType}
+        		and t4.join_type = #{joinType}
+        		
+       		order by
+       			t1.win_time DESC
+      		LIMIT
+        		#{pageNum},#{pageSize}
+	</select>
+	
+	<!-- 用于广东众筹，prizeId是activity_prize的id，不是product的id -->
+	<select id="selectAllWinRecords" parameterType="java.util.Map"
+            resultMap="ExtendWinRecordResultMap">
+        select
+        	awr.id, 
+        	awr.record_id, 
+        	awr.activity_id, 
+        	awr.own_mobile, 
+        	awr.charge_mobile, 
+        	awr.prize_id,
+        	awr.isp, 
+        	awr.win_time, 
+        	awr.charge_time, 
+        	awr.status, 
+        	awr.reason, 
+        	awr.delete_flag, 
+        	awr.record_id, 
+        	awr.create_time, 
+        	awr.update_time,
+        	awr.pay_result, 
+        	p.name as productName, 
+        	p.price as price,
+        	ap.discount as discount,
+        	api.charge_time as paymentTime,
+			e.name as entName
+        from activity_win_record awr
+				LEFT JOIN activities a on a.activity_id = awr.activity_id
+				LEFT JOIN enterprises e ON e.id = a.ent_id
+        left join activity_prize ap on ap.id = awr.prize_id
+        left join product p on ap.product_id = p.id
+        left join activity_payment_info api on api.sys_serial_num = awr.pay_serial_num
+        where
+        awr.delete_flag = 0 and awr.activity_id = #{activityId}
+        <if test="mobile != null and mobile != ''">
+            and (awr.own_mobile like CONCAT('%',CONCAT(#{mobile},'%')) or awr.charge_mobile like
+            CONCAT('%',CONCAT(#{mobile},'%')) )
+        </if>
+        <if test="productName != null and productName != ''">
+            and p.name like CONCAT('%',CONCAT(#{productName},'%'))
+        </if>
+        <if test="status != null">
+            and awr.status in
+            <foreach item="item" index="index" collection="status" open="(" separator="," close=")">  
+                 #{item}  
+            </foreach>
+        </if>
+        <if test="payResult != null">
+            and awr.pay_result in 
+            <foreach item="item" index="index" collection="payResult" open="(" separator="," close=")">  
+                 #{item}  
+            </foreach>
+        </if>
+        order by
+        awr.win_time DESC
+    </select>
+
+	<!-- 用于广东众筹，prizeId是activity_prize的id，不是product的id -->
+	<select id="showWinRecords" parameterType="java.util.Map"
+            resultMap="ExtendWinRecordResultMap">
+        select
+        	awr.id, 
+        	awr.record_id, 
+        	awr.activity_id, 
+        	awr.own_mobile, 
+        	awr.charge_mobile, 
+        	awr.prize_id,
+        	awr.isp, 
+        	awr.win_time, 
+        	awr.charge_time, 
+        	awr.status, 
+        	awr.reason, 
+        	awr.delete_flag, 
+        	awr.record_id, 
+        	awr.create_time, 
+        	awr.update_time,
+        	awr.pay_result, 
+        	p.name as productName, 
+        	p.price as price,
+        	ap.discount as discount,
+        	api.charge_time as paymentTime,
+        	a.name as activityName,
+        	e.name as entName
+        from activity_win_record awr
+        left join activities a on a.activity_id = awr.activity_id
+        left join enterprises e on e.id = a.ent_id
+        left join activity_prize ap on ap.id = awr.prize_id
+        left join product p on ap.product_id = p.id
+        left join activity_payment_info api on api.sys_serial_num = awr.pay_serial_num
+        where
+        awr.delete_flag = 0 
+        <if test="activityId != null and activityId != ''">
+            and awr.activity_id = #{activityId}
+        </if>
+        <if test="activityType != null">
+            and a.type = #{activityType}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and (awr.own_mobile like CONCAT('%',CONCAT(#{mobile},'%')) or awr.charge_mobile like
+            CONCAT('%',CONCAT(#{mobile},'%')) )
+        </if>
+        <if test="productName != null and productName != ''">
+            and p.name like CONCAT('%',CONCAT(#{productName},'%'))
+        </if>
+        <if test="status != null">
+            and awr.status in 
+            <foreach item="item" index="index" collection="status" open="(" separator="," close=")">  
+                 #{item}  
+            </foreach>
+        </if>
+         <if test="startTime != null and startTime != ''">
+            and awr.win_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and awr.win_time &lt;= #{endTime}
+        </if>
+        <if test="payStartTime != null and payStartTime != ''">
+            and api.charge_time &gt;= #{payStartTime}
+        </if>
+        <if test="payEndTime != null and payEndTime != ''">
+            and api.charge_time &lt;= #{payEndTime}
+        </if>
+        <if test="payResult != null">
+            and awr.pay_result in 
+            <foreach item="item" index="index" collection="payResult" open="(" separator="," close=")">  
+                 #{item}  
+            </foreach>
+        </if>
+        order by
+        awr.win_time DESC
+        <if test="pageNum != null and pageSize != null">
+        LIMIT
+        #{pageNum},#{pageSize}
+        </if>
+    </select>
+    
+    <select id="showForPageResult" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        select
+        awr.id, awr.record_id, awr.activity_id, awr.own_mobile, awr.charge_mobile, awr.prize_id,
+        awr.isp, awr.win_time, awr.charge_time, awr.status, awr.reason, awr.delete_flag, 
+        awr.record_id, awr.create_time, awr.update_time, p.name as productName, ai.prize_count as productSize
+        from activity_win_record awr
+        left join product p on p.id = awr.prize_id
+        left join activity_info ai on ai.activity_id= awr.activity_id
+        where
+        awr.delete_flag = 0 and awr.activity_id = #{activityId}
+        <if test="mobile != null and mobile != ''">
+            and (awr.own_mobile like CONCAT('%',CONCAT(#{mobile},'%')) or awr.charge_mobile like
+            CONCAT('%',CONCAT(#{mobile},'%')) )
+        </if>
+        <if test="productName != null and productName != ''">
+            and p.name like CONCAT('%',CONCAT(#{productName},'%'))
+        </if>
+        <if test="status != null">
+            and awr.status in 
+            <foreach item="item" index="index" collection="status" open="(" separator="," close=")">  
+                 #{item}  
+            </foreach>
+        </if>
+        <if test="isp != null and isp != ''">
+            and awr.isp = #{isp}
+        </if>
+        order by
+        awr.update_time DESC,
+        awr.charge_time DESC
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="showForPageResultCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        count(*)
+        from activity_win_record awr
+        left join product p on p.id = awr.prize_id
+        where
+        awr.delete_flag = 0 and awr.activity_id = #{activityId}
+        <if test="mobile != null and mobile != ''">
+            and (awr.own_mobile like CONCAT('%',CONCAT(#{mobile},'%')) or awr.charge_mobile like
+            CONCAT('%',CONCAT(#{mobile},'%')) )
+        </if>
+        <if test="productName != null and productName != ''">
+            and p.name like CONCAT('%',CONCAT(#{productName},'%'))
+        </if>
+        <if test="status != null">
+            and awr.status in 
+            <foreach item="item" index="index" collection="status" open="(" separator="," close=")">  
+                 #{item}  
+            </foreach>
+        </if>
+        <if test="isp != null and isp != ''">
+            and awr.isp = #{isp}
+        </if>
+    </select>
+
+    <select id="selectByMap" parameterType="java.util.Map" resultMap="ExtendsResultMap">
+        select
+        awr.id, awr.activity_id, awr.own_mobile, awr.charge_mobile, awr.prize_id, awr.isp, awr.win_time,
+        awr.charge_time, awr.status, awr.reason, awr.delete_flag, awr.create_time, awr.update_time, 
+        awr.record_id, awr.pay_result,
+        p.name as productName, p.product_size as productSize, e.name as entName, a.name as activityName,
+        a.start_time as activityStartTime, a.end_time as activityEndTime
+        from activity_win_record awr
+        left join activities a on a.activity_id = awr.activity_id
+        left join product p on p.id = awr.prize_id
+        left join enterprises e on e.id = a.ent_id
+        where
+        awr.delete_flag = 0
+        <if test="id != null and id != ''">
+            and awr.id = #{id, jdbcType = BIGINT}
+        </if>
+        <if test="recordId != null and recordId != ''">
+            and awr.record_id = #{recordId, jdbcType = VARCHAR}
+        </if>
+        <if test="ownMobile != null and ownMobile != ''">
+            and awr.own_mobile like CONCAT('%',CONCAT(#{ownMobile},'%'))
+        </if>
+        <if test="chargeMobile != null and chargeMobile != ''">
+            and awr.charge_mobile like CONCAT('%',CONCAT(#{chargeMobile},'%'))
+        </if>
+        <if test="status != null and status != ''">
+            and awr.status = #{status}
+        </if>
+        <if test="activityId != null and activityId != ''">
+            and awr.activity_id = #{activityId,jdbcType = VARCHAR}
+        </if>
+        <if test="activityStatus != null and activityStatus != ''">
+            and a.status = #{activityStatus,jdbcType = INTEGER}
+        </if>
+        <if test="now != null and now != ''">
+            and a.start_time &lt;= #{now}
+        </if>
+        <if test="now != null and now != ''">
+            and a.end_time &gt;= #{now}
+        </if>
+        order by awr.create_time desc
+    </select>
+    
+    <select id="countChargeMobileByActivityId" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select
+            count(awr.charge_mobile)
+        from activity_win_record awr
+        where
+            awr.delete_flag = 0
+            and awr.activity_id = #{activityId,jdbcType = VARCHAR}
+    </select>
+
+    <select id="countChargeMobileByMap" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        count(DISTINCT awr.charge_mobile)
+        from activity_win_record awr
+        where
+        awr.delete_flag = 0
+        <if test="recordId != null and recordId != ''">
+            and awr.record_id = #{recordId, jdbcType = VARCHAR}
+        </if>
+        <if test="ownMobile != null and ownMobile != ''">
+            and awr.own_mobile like CONCAT('%',CONCAT(#{ownMobile},'%'))
+        </if>
+        <if test="status != null">
+            and awr.status IN 
+            <foreach item="item" index="index" collection="status" open="(" separator="," close=")">  
+                 #{item}  
+            </foreach>
+        </if>
+        <if test="activityId != null and activityId != ''">
+            and awr.activity_id = #{activityId,jdbcType = VARCHAR}
+        </if>
+    </select>
+
+    <update id="updateStatus">
+        UPDATE
+        activity_win_record
+        SET
+        status = #{status, jdbcType = INTEGER},
+        reason = #{errorMsg, jdbcType = VARCHAR},
+        charge_mobile = #{chargeMobile,jdbcType=VARCHAR},
+        charge_time = NOW()
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+    
+    <update id="updateStatusAndStatusCode">
+        UPDATE
+        activity_win_record
+        SET
+        status = #{status, jdbcType = INTEGER},
+        status_code = #{statusCode, jdbcType = VARCHAR},
+        reason = #{errorMsg, jdbcType = VARCHAR},
+        charge_mobile = #{chargeMobile,jdbcType=VARCHAR},
+        charge_time = NOW()
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+
+    <select id="selectByMapForRedpacket" parameterType="java.util.Map" resultMap="IndividualResultMap">
+        SELECT
+        t1.*,
+        t2.size AS flowcoinSize
+        FROM
+        activity_win_record t1
+        LEFT JOIN
+        activity_prize t2 ON t1.activity_id = t2.activity_id
+        WHERE
+        t1.delete_flag = 0
+        <if test="activityId != null and activityId !=''">
+            AND t1.activity_id = #{activityId,jdbcType = VARCHAR}
+        </if>
+        <if test="mobile != null and mobile !=''">
+            AND t1.own_mobile = #{mobile, jdbcType = VARCHAR}
+        </if>
+        ORDER BY
+        t1.create_time DESC,
+        t1.update_time DESC,
+        t1.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="countByMapForRedpacket" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM
+        activity_win_record
+        WHERE
+        delete_flag = 0
+        <if test="activityId != null and activityId !=''">
+            AND activity_id = #{activityId,jdbcType = VARCHAR}
+        </if>
+        <if test="mobile != null and mobile !=''">
+            AND own_mobile = #{mobile, jdbcType = VARCHAR}
+        </if>
+        ORDER BY
+        create_time DESC,
+        update_time DESC,
+        id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="showForPageResultIndividualPresent" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        select
+        awr.id, awr.record_id, awr.activity_id, awr.own_mobile, awr.charge_mobile, awr.prize_id,
+        awr.isp, awr.win_time, awr.charge_time, awr.status, awr.reason, awr.delete_flag,
+        awr.record_id, awr.create_time, awr.update_time, ap.size as productSize
+        from activity_win_record awr
+        left join activity_prize ap on ap.activity_id= awr.activity_id
+        where
+        awr.delete_flag = 0 and awr.activity_id = #{activityId}
+        <if test="chargeMobile != null and chargeMobile != ''">
+            and awr.charge_mobile like CONCAT('%',CONCAT(#{chargeMobile},'%'))
+        </if>
+        order by
+        awr.update_time DESC,
+        awr.charge_time DESC
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <select id="showForPageResultCountIndividualPresent" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        count(*)
+        from activity_win_record awr
+        where
+        awr.delete_flag = 0 and awr.activity_id = #{activityId}
+        <if test="mobile != null and mobile != ''">
+            and awr.charge_mobile like CONCAT('%',CONCAT(#{mobile},'%'))
+        </if>
+    </select>
+
+    <update id="batchUpdate">
+        UPDATE
+        activity_win_record
+        SET
+        status = CASE
+        <foreach collection="records" item="record" close="ELSE `status` END,">
+            WHEN id=#{record.id} THEN #{record.status}
+        </foreach>
+        reason = CASE
+        <foreach collection="records" item="record" close="ELSE `reason` END,">
+            WHEN id =#{record.id} THEN #{record.reason}
+        </foreach>
+        charge_mobile =CASE
+        <foreach collection="records" item="record" close="ELSE `charge_mobile` END,">
+            WHEN id =#{record.id} THEN #{record.chargeMobile}
+        </foreach>
+        charge_time =CASE
+        <foreach collection="records" item="record" close="ELSE `charge_time` END,">
+            WHEN id =#{record.id} THEN NOW()
+        </foreach>
+        status_code =CASE
+        <foreach collection="records" item="record" close="ELSE `status_code` END">
+            WHEN id =#{record.id} THEN #{record.statusCode}
+        </foreach>
+        WHERE
+        id
+        IN
+        <foreach collection="records" item="record" open="(" close=")" separator=",">
+            #{record.id, jdbcType = BIGINT}
+        </foreach>
+    </update>
+
+    <update id="updateStatusCodeByRecordId">
+        UPDATE
+        activity_win_record
+        SET
+        status_code = #{statusCode, jdbcType = VARCHAR}
+        WHERE
+        cast(IFNULL(status_code, '0') as SIGNED) &lt; cast(#{statusCode, jdbcType = VARCHAR} as SIGNED)
+        and
+        record_id = #{recordId, jdbcType = BIGINT}
+    </update>
+
+    <update id="batchUpdateStatusCodeByRecordId">
+        UPDATE
+        activity_win_record
+        SET
+        status_code = #{statusCode, jdbcType = VARCHAR}
+        WHERE
+        cast(IFNULL(status_code, '0') as SIGNED) &lt; cast(#{statusCode, jdbcType = VARCHAR} as SIGNED)
+        and
+        record_id in
+        <foreach collection="sns" item="sn" open="(" close=")" separator=",">
+            #{sn, jdbcType = VARCHAR}
+        </foreach>
+    </update>
+    
+    <select id="selectIndividualFlowRedpacketList" parameterType="java.util.Map" resultMap="ExtendsResultMap">
+        select
+        awr.id, awr.record_id, awr.activity_id, awr.own_mobile, awr.charge_mobile, awr.prize_id,
+        awr.isp, awr.win_time, awr.charge_time, awr.status, awr.reason, awr.delete_flag,
+        awr.record_id, awr.create_time, awr.update_time, awr.size, ifo.mobile as orderMobile
+        from activity_win_record awr
+        left join individual_activity_order iao on iao.activity_id = awr.activity_id
+        left join individual_flow_order ifo on ifo.id = iao.order_id
+        where
+        awr.delete_flag = 0 
+        <if test="orderSystemNum != null and orderSystemNum !=''">
+        and ifo.system_num = #{orderSystemNum}
+        </if>
+        <if test="mobile != null and mobile !=''">
+        and ifo.mobile like CONCAT('%',CONCAT(#{mobile},'%'))
+        </if>
+        <if test="chargeMobile != null and chargeMobile !=''">
+        and awr.charge_mobile like CONCAT('%',CONCAT(#{chargeMobile},'%'))
+        </if>
+        <if test="startTime != null and startTime !=''">
+        and awr.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+        and awr.create_time &lt;= #{endTime}
+        </if>
+        order by
+        awr.update_time DESC,
+        awr.charge_time DESC
+        <if test="pageNum != null and pageSize != null">
+            LIMIT
+            #{pageNum},#{pageSize}  
+        </if>    
+    </select>
+    
+    <select id="countIndividualFlowRedpacketList" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+            count(*)
+        from activity_win_record awr
+        left join individual_activity_order iao on iao.activity_id = awr.activity_id
+        left join individual_flow_order ifo on ifo.id = iao.order_id
+        where
+        awr.delete_flag = 0 
+        <if test="orderSystemNum != null and orderSystemNum !=''">
+        and ifo.system_num = #{orderSystemNum}
+        </if>
+        <if test="mobile != null and mobile !=''">
+        and ifo.mobile like CONCAT('%',CONCAT(#{mobile},'%'))
+        </if>
+        <if test="chargeMobile != null and chargeMobile !=''">
+        and awr.charge_mobile like CONCAT('%',CONCAT(#{chargeMobile},'%'))
+        </if>
+        <if test="startTime != null and startTime !=''">
+        and awr.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime !=''">
+        and awr.create_time &lt;= #{endTime}
+        </if>  
+    </select>
+    
+    <!-- 获取众筹活动的中奖记录根据手机号及活动类型，支付状态为可选 -->
+    <select id="getWinRecordsForCrowdFundingByMap" parameterType="java.util.Map"
+        resultMap="BaseResultMap">
+        SELECT 
+            t1.*
+        FROM 
+            activity_win_record t1 
+        LEFT JOIN 
+            activities t2 ON t2.activity_id = t1.activity_id 
+        LEFT JOIN
+            crowdfunding_activity_detail t3 ON t3.activity_id = t1.activity_id
+        WHERE
+            t1.delete_flag = 0
+            and ((t1.own_mobile = #{mobile}) or (t1.charge_mobile = #{mobile}))
+            and t2.type = #{activityType}
+            <if test="payResult != null">
+            and t1.pay_result = #{payResult}
+            </if> 
+            <if test="joinType != null">
+            and t3.join_type = #{joinType}
+            </if>
+            <if test="activityId != null and activityId!= ''">
+            and t1.activity_id = #{activityId}
+            </if> 
+    </select>
+    
+    <select id="selectActivityIdByMobile" parameterType="java.lang.String" resultType="java.lang.String">
+        select 
+            activity_id 
+            from 
+        activity_win_record where own_mobile=#{mobile} or charge_mobile=#{mobile}
+    </select>
+    
+</mapper>

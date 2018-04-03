@@ -1,0 +1,18 @@
+@charset "utf-8";
+*{padding:0;margin:0;}
+
+.ui-stepBar-wrap{position:relative;width:100%;overflow:hidden;display:none;z-index:100;margin-bottom: 15px;}
+.ui-stepBar-wrap .ui-stepBar{position:relative;width:76%;height:3px;background:#cccccc;top:49px;left:12%;z-index:101;}
+.ui-stepBar-wrap .ui-stepBar .ui-stepProcess{float: left;width:0;height:3px;background:#46c37b;z-index:102;}
+.ui-stepBar-wrap .ui-stepBar .ui-stepProcess-failure{position:relative;width:0;height:3px;background:#e83d54;z-index:102;}
+.ui-stepBar-wrap .ui-stepInfo-wrap{margin:0 auto;height:100%;}
+.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo{position:relative;float:left;text-align:center;}
+.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .ui-stepSequence{position:relative;padding:0px 9px;border-radius:50%;z-index:103;}
+.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .ui-stepName{position:relative;line-height:37px;z-index:103;font-size:16px;}
+.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .ui-stepStatus{position:relative;line-height:30px;z-index:103;font-size:13px;}
+.ui-stepBar-wrap .ui-stepInfo-wrap .ui-stepInfo .ui-stepTime{position:relative;z-index:103;font-size:13px;}
+.judge-stepSequence-pre{background:#46c37b;}
+.judge-stepSequence-pre-failure{background:#e83d54;}
+.judge-stepSequence-hind{background:#cccccc;}
+
+.author{position:absolute;bottom:0;width:100%;text-align:center;margin:40px auto;color:#1569ec;text-shadow:1px 1px 0 #e7e7e7, 0 1px 7px #fff;}

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.EntFlowControlRecordMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.EntFlowControlRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="count" property="count" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <insert id="insertEntFlowControlRecord" parameterType="com.cmcc.vrp.province.model.EntFlowControl">
+        insert into
+        ent_flowcontrol_record (enter_id, type, count, create_time)
+        values (#{enterId,jdbcType=BIGINT},
+        #{type,jdbcType=INTEGER},
+        #{count,jdbcType=BIGINT},
+        now())
+    </insert>
+
+    <!-- 显示企业流控变更历史记录,根据创建时间倒序 -->
+    <select id="showHistoryForPageResultCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+        ent_flowcontrol_record
+        where
+        enter_id = #{enterId,jdbcType=BIGINT}
+        and type in (0,1)
+    </select>
+
+    <select id="showHistoryForPageResultList" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+        enter_id, type, count, create_time
+        from
+        ent_flowcontrol_record
+        where
+        enter_id = #{enterId,jdbcType=BIGINT}
+        and type in (0,1)
+        order by
+        create_time DESC
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+
+    <!-- 这个是为了捞出追加额度记录中type=1 并且是在当天遇到type=0之后的记录  by wgp on20170712 -->
+     <select id="selectEntFlowControlRecordByMap" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+        id, enter_id, type, count, create_time
+        from
+        ent_flowcontrol_record
+        where
+        1=1
+        <if test="entId != null and entId != ''">
+            and id &gt; (select max(id) from ent_flowcontrol_record efr1
+        			where efr1.type = 0 and efr1.enter_id =  #{entId,jdbcType=BIGINT})
+        </if>
+
+        <if test="type != null and type != ''">
+            and type = #{type, jdbcType = INTEGER}
+        </if>
+        <if test="createTime != null and createTime != ''">
+          
+           and DATE_FORMAT(create_time,'%Y-%m-%d') = DATE_FORMAT(#{createTime, jdbcType = VARCHAR},'%Y-%m-%d')
+        </if>
+        order by create_time desc
+    </select>
+  <!--    <select id="selectEntFlowControlRecordByMap" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+        id, enter_id, type, count, create_time
+        from
+        ent_flowcontrol_record
+        where
+        1=1
+        <if test="entId != null and entId != ''">
+            and enter_id = #{entId,jdbcType=BIGINT}
+        </if>
+
+        <if test="type != null and type != ''">
+            and type = #{type, jdbcType = INTEGER}
+        </if>
+        <if test="createTime != null and createTime != ''">
+          and DATE_FORMAT(create_time,'%Y-%m-%d') = DATE_FORMAT(#{createTime, jdbcType = TIMESTAMP},'%Y-%m-%d')
+           and DATE_FORMAT(create_time,'%Y-%m-%d') = DATE_FORMAT(#{createTime, jdbcType = VARCHAR},'%Y-%m-%d')
+        </if>
+        order by create_time desc
+    </select> 
+    -->
+    
+    <!-- 更新记录  日追加值 -->
+	<update id="updateEntFlowControlRecord">
+        UPDATE
+        enterprises
+        SET
+        update_time = NOW(),
+        fcsms_flag = #{fcSmsFlag, jdbcType = INTEGER}
+        WHERE
+        id = #{entId, jdbcType = BIGINT}
+    </update>
+</mapper>

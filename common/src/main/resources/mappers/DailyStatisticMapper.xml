@@ -1,0 +1,1120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.DailyStatisticMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.DailyStatistic" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="enter_id" property="enterId" jdbcType="BIGINT" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="prd_id" property="prdId" jdbcType="BIGINT" />
+    <result column="charge_type" property="chargeType" jdbcType="VARCHAR" />
+    <result column="success_count" property="successCount" jdbcType="BIGINT" />
+    <result column="total_count" property="totalCount" jdbcType="BIGINT" />
+    <result column="capacity" property="capacity" jdbcType="BIGINT" />
+    <result column="money" property="money" jdbcType="BIGINT" />
+    <result column="date" property="date" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultBaseResultMap" type="com.cmcc.vrp.province.model.DailyStatisticResult" >
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="value" property="value" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.DailyStatistic">
+		<result column="productName" property="productName" jdbcType="VARCHAR" />
+		<result column="productCode" property="productCode" jdbcType="VARCHAR" />
+		<result column="productType" property="productType" jdbcType="INTEGER" />
+		<result column="productPrice" property="productPrice" jdbcType="BIGINT" />
+		<result column="productSize" property="productSize" jdbcType="BIGINT" />
+		<result column="totalSuccessCapacity" property="totalSuccessCapacity" jdbcType="BIGINT" />
+		<result column="totalSuccessCount" property="totalSuccessCount" jdbcType="BIGINT" />
+		<result column="totalSuccessMoney" property="totalSuccessMoney" jdbcType="BIGINT" />		
+		<result column="successRate" property="successRate" jdbcType="REAL" />
+		<result column="charge_type" property="chargeType" jdbcType="VARCHAR" />
+ </resultMap>
+ 
+  <sql id="Base_Column_List" >
+    id, enter_id,city, prd_id, charge_type, success_count, total_count, capacity, money, date, 
+    create_time, update_time, delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from daily_statistic
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from daily_statistic
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.DailyStatistic" >
+    insert into daily_statistic (id, enter_id, city, prd_id, 
+      charge_type, success_count, total_count, 
+      capacity, money, date, 
+      create_time, update_time, delete_flag
+      )
+    values (#{id,jdbcType=BIGINT}, #{enterId,jdbcType=BIGINT}, #{city,jdbcType=VARCHAR}, #{prdId,jdbcType=BIGINT}, 
+      #{chargeType,jdbcType=VARCHAR}, #{successCount,jdbcType=BIGINT}, #{totalCount,jdbcType=BIGINT}, 
+      #{capacity,jdbcType=BIGINT}, #{money,jdbcType=BIGINT}, #{date,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.DailyStatistic" >
+    insert into daily_statistic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="enterId != null" >
+        enter_id,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="prdId != null" >
+        prd_id,
+      </if>
+      <if test="chargeType != null" >
+        charge_type,
+      </if>
+      <if test="successCount != null" >
+        success_count,
+      </if>
+      <if test="totalCount != null" >
+        total_count,
+      </if>
+      <if test="capacity != null" >
+        capacity,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="date != null" >
+        date,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="enterId != null" >
+        #{enterId,jdbcType=BIGINT},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="prdId != null" >
+        #{prdId,jdbcType=BIGINT},
+      </if>
+      <if test="chargeType != null" >
+        #{chargeType,jdbcType=VARCHAR},
+      </if>
+      <if test="successCount != null" >
+        #{successCount,jdbcType=BIGINT},
+      </if>
+      <if test="totalCount != null" >
+        #{totalCount,jdbcType=BIGINT},
+      </if>
+      <if test="capacity != null" >
+        #{capacity,jdbcType=BIGINT},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=BIGINT},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.DailyStatistic" >
+    update daily_statistic
+    <set >
+      <if test="enterId != null" >
+        enter_id = #{enterId,jdbcType=BIGINT},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="prdId != null" >
+        prd_id = #{prdId,jdbcType=BIGINT},
+      </if>
+      <if test="chargeType != null" >
+        charge_type = #{chargeType,jdbcType=VARCHAR},
+      </if>
+      <if test="successCount != null" >
+        success_count = #{successCount,jdbcType=BIGINT},
+      </if>
+      <if test="totalCount != null" >
+        total_count = #{totalCount,jdbcType=BIGINT},
+      </if>
+      <if test="capacity != null" >
+        capacity = #{capacity,jdbcType=BIGINT},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=BIGINT},
+      </if>
+      <if test="date != null" >
+        date = #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.DailyStatistic" >
+    update daily_statistic
+    set enter_id = #{enterId,jdbcType=BIGINT},
+      city = #{city,jdbcType=VARCHAR},
+      prd_id = #{prdId,jdbcType=BIGINT},
+      charge_type = #{chargeType,jdbcType=VARCHAR},
+      success_count = #{successCount,jdbcType=BIGINT},
+      total_count = #{totalCount,jdbcType=BIGINT},
+      capacity = #{capacity,jdbcType=BIGINT},
+      money = #{money,jdbcType=BIGINT},
+      date = #{date,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+
+    <select id="getEntSumDailyResult" parameterType="java.util.Map"
+            resultMap="ResultBaseResultMap">
+        SELECT DATE_FORMAT(date,'%Y-%m-%d') as name,sum(success_count) as value 
+        from daily_statistic 
+        where
+        enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if> 
+        GROUP BY date order by date
+    </select>
+    
+     <select id="getEntSumSortResult" parameterType="java.util.Map"
+            resultMap="ResultBaseResultMap">        
+        SELECT e.name as name,sum(d.success_count) as value
+        from daily_statistic d 
+        INNER JOIN enterprises e on e.id = d.enter_id
+        where 
+            d.enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>
+        <if test="startTime != null and startTime != ''">
+            and d.date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and d.date &lt;= #{endTime}
+        </if>    
+        GROUP BY d.enter_id ORDER BY sum(d.success_count) desc
+    </select>
+
+    <select id="getEntSumSoldeResult" parameterType="java.util.Map"
+            resultMap="ResultBaseResultMap">
+        SELECT DATE_FORMAT(date,'%Y-%m-%d') as name,sum(money) as value 
+        from daily_statistic 
+        where enter_id in 
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+        <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if> 
+        GROUP BY date
+    </select>
+    
+    <select id="getEntPrdSizeDistribution" parameterType="java.util.Map"
+            resultMap="ResultBaseResultMap">
+        SELECT p.product_size as name,sum(success_count) as value
+        from daily_statistic d INNER JOIN product p on p.id = d.prd_id 
+        where 
+        d.enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>
+        <if test="prdType != null and prdType != ''">
+            and p.type = #{prdType} 
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if>
+         group by p.product_size order by sum(success_count) desc
+    </select>
+    
+    <select id="getEntChargeTypeResult" parameterType="java.util.Map"
+            resultMap="ResultBaseResultMap">
+        SELECT charge_type as name,SUM(success_count) as value
+        from daily_statistic 
+        where enter_id in 
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+        <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if> 
+        GROUP BY charge_type
+        order by SUM(success_count) desc
+    </select>
+    
+    <select id="countSuccessCountByCity" resultMap="ExtendsResultMap"
+		parameterType="java.util.Map">
+		select
+		d.city,sum(d.success_count) as totalSuccessCount
+		from
+		daily_statistic as d
+		left join
+		product as p on d.prd_id = p.id
+		<where>
+			<if test="city != null and city !=''">
+				and d.city = #{city,jdbcType=VARCHAR}
+			</if>
+			<if test="chargeType != null and chargeType !=''">
+				and d.chargeType = #{chargeType,jdbcType=VARCHAR}
+			</if>
+			<if test="listEnters != null">
+				and d.enter_id IN
+        		<foreach collection="listEnters" item="enter" open="(" close=")" separator=",">
+            		#{enter.id}
+        		</foreach>
+			</if>
+			<if test="prdId != null">
+				and d.prd_id = #{prdId,jdbcType=BIGINT}
+			</if>
+			<if test="productTypeList != null">
+				and p.type in
+				<foreach collection="productTypeList" item="productType"
+					open="(" close=")" separator=",">
+					#{productType}
+				</foreach>
+			</if>
+			<if test="startTime != null">
+				and d.date &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and d.date &lt;= #{endTime}
+			</if>
+			and d.delete_flag = 0
+		</where>
+		group by city
+		order by totalSuccessCount desc;
+	</select>
+
+	<select id="countSuccessMoneyByCity" resultMap="ExtendsResultMap"
+		parameterType="java.util.Map">
+		select
+		d.city,sum(d.success_count * p.price) as totalSuccessMoney
+		from
+		daily_statistic as d
+		left join
+		product as p on d.prd_id = p.id
+		<where>
+			<if test="city != null and city !=''">
+				and d.city = #{city,jdbcType=VARCHAR}
+			</if>
+			<if test="chargeType != null and chargeType !=''">
+				and d.chargeType = #{chargeType,jdbcType=VARCHAR}
+			</if>
+			<if test="listEnters != null">
+				and d.enter_id IN
+        		<foreach collection="listEnters" item="enter" open="(" close=")" separator=",">
+            		#{enter.id}
+        		</foreach>
+			</if>
+			<if test="prdId != null">
+				and d.prd_id = #{prdId,jdbcType=BIGINT}
+			</if>
+			<if test="productTypeList != null">
+				and p.type in
+				<foreach collection="productTypeList" item="productType"
+					open="(" close=")" separator=",">
+					#{productType}
+				</foreach>
+			</if>
+			<if test="startTime != null">
+				and d.date &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and d.date &lt;= #{endTime}
+			</if>
+			and d.delete_flag = 0
+		</where>
+		group by city
+		order by totalSuccessMoney desc;
+	</select>
+
+	<select id="countSuccessCapacityByCity" resultMap="ExtendsResultMap"
+		parameterType="java.util.Map">
+		select
+		d.city,sum(d.success_count * p.product_size) as totalSuccessCapacity
+		from
+		daily_statistic as d
+		left join
+		product as p on d.prd_id = p.id
+		<where>
+			<if test="city != null and city !=''">
+				and d.city = #{city,jdbcType=VARCHAR}
+			</if>
+			<if test="chargeType != null and chargeType !=''">
+				and d.chargeType = #{chargeType,jdbcType=VARCHAR}
+			</if>
+			<if test="listEnters != null">
+				and d.enter_id IN
+        		<foreach collection="listEnters" item="enter" open="(" close=")" separator=",">
+            		#{enter.id}
+        		</foreach>
+			</if>
+			<if test="prdId != null">
+				and d.prd_id = #{prdId,jdbcType=BIGINT}
+			</if>
+			<if test="productTypeList != null">
+				and p.type in
+				<foreach collection="productTypeList" item="productType"
+					open="(" close=")" separator=",">
+					#{productType}
+				</foreach>
+			</if>
+			<if test="startTime != null">
+				and d.date &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and d.date &lt;= #{endTime}
+			</if>
+			and d.delete_flag = 0
+		</where>
+		group by city
+		order by totalSuccessCapacity desc;
+	</select>
+	
+	
+	<select id="countSuccessCountByDate" resultMap="ExtendsResultMap"
+		parameterType="java.util.Map">
+		select
+		d.date,sum(d.success_count) as totalSuccessCount
+		from
+		daily_statistic as d
+		left join
+		product as p on d.prd_id = p.id
+		<where>
+			<if test="city != null and city !=''">
+				and d.city = #{city,jdbcType=VARCHAR}
+			</if>
+			<if test="chargeType != null and chargeType !=''">
+				and d.chargeType = #{chargeType,jdbcType=VARCHAR}
+			</if>
+			<if test="listEnters != null">
+				and d.enter_id IN
+        		<foreach collection="listEnters" item="enter" open="(" close=")" separator=",">
+            		#{enter.id}
+        		</foreach>
+			</if>
+			<if test="prdId != null">
+				and d.prd_id = #{prdId,jdbcType=BIGINT}
+			</if>
+			<if test="productTypeList != null">
+				and p.type in
+				<foreach collection="productTypeList" item="productType"
+					open="(" close=")" separator=",">
+					#{productType}
+				</foreach>
+			</if>
+			<if test="startTime != null">
+				and d.date &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and d.date &lt;= #{endTime}
+			</if>
+			and d.delete_flag = 0
+		</where>
+		group by d.date
+		order by d.date asc;
+	</select>
+	
+	<select id="countSuccessCapacityByDate" resultMap="ExtendsResultMap"
+		parameterType="java.util.Map">
+		select
+		d.date,sum(d.success_count * p.product_size) as totalSuccessCapacity
+		from
+		daily_statistic as d
+		left join
+		product as p on d.prd_id = p.id
+		<where>
+			<if test="city != null and city !=''">
+				and d.city = #{city,jdbcType=VARCHAR}
+			</if>
+			<if test="chargeType != null and chargeType !=''">
+				and d.chargeType = #{chargeType,jdbcType=VARCHAR}
+			</if>
+			<if test="listEnters != null">
+				and d.enter_id IN
+        		<foreach collection="listEnters" item="enter" open="(" close=")" separator=",">
+            		#{enter.id}
+        		</foreach>
+			</if>
+			<if test="productTypeList != null">
+				and p.type in
+				<foreach collection="productTypeList" item="productType"
+					open="(" close=")" separator=",">
+					#{productType}
+				</foreach>
+			</if>
+			<if test="startTime != null">
+				and d.date &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and d.date &lt;= #{endTime}
+			</if>
+			and d.delete_flag = 0
+		</where>
+		group by d.date
+		order by d.date asc;
+	</select>
+	
+	<select id="getDailyStatisticByCityAndSize" resultMap="ExtendsResultMap" parameterType="java.util.Map">
+		select
+			d.city,
+			p.product_size as productSize,
+			sum(d.success_count) as totalSuccessCount			
+		from
+		daily_statistic as d
+		left join
+		product as p on d.prd_id = p.id
+		<where>
+			<if test="city != null and city !=''">
+				and d.city = #{city,jdbcType=VARCHAR}
+			</if>
+			<if test="chargeType != null and chargeType !=''">
+				and d.chargeType = #{chargeType,jdbcType=VARCHAR}
+			</if>
+			<if test="listEnters != null">
+				and d.enter_id IN
+        		<foreach collection="listEnters" item="enter" open="(" close=")" separator=",">
+            		#{enter.id}
+        		</foreach>
+			</if>
+			<if test="productTypeList != null">
+				and p.type in
+				<foreach collection="productTypeList" item="productType"
+					open="(" close=")" separator=",">
+					#{productType}
+				</foreach>
+			</if>
+			<if test="startTime != null">
+				and d.date &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and d.date &lt;= #{endTime}
+			</if>
+			and d.delete_flag = 0
+		</where>
+		group by d.city, productSize
+		order by totalSuccessCount desc;
+	</select>
+	
+	<select id="getDailyStatisticBySize" resultMap="ExtendsResultMap" parameterType="java.util.Map">
+		select
+			p.product_size as productSize,
+			sum(d.success_count) as totalSuccessCount			
+		from
+		daily_statistic as d
+		left join
+		product as p on d.prd_id = p.id
+		<where>
+			<if test="city != null and city !=''">
+				and d.city = #{city,jdbcType=VARCHAR}
+			</if>
+			<if test="chargeType != null and chargeType !=''">
+				and d.chargeType = #{chargeType,jdbcType=VARCHAR}
+			</if>
+			<if test="listEnters != null">
+				and d.enter_id IN
+        		<foreach collection="listEnters" item="enter" open="(" close=")" separator=",">
+            		#{enter.id}
+        		</foreach>
+			</if>
+			<if test="prdId != null">
+				and d.prd_id = #{prdId,jdbcType=BIGINT}
+			</if>
+			<if test="productTypeList != null">
+				and p.type in
+				<foreach collection="productTypeList" item="productType"
+					open="(" close=")" separator=",">
+					#{productType}
+				</foreach>
+			</if>
+			<if test="startTime != null">
+				and d.date &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and d.date &lt;= #{endTime}
+			</if>
+			and d.delete_flag = 0
+		</where>
+		group by p.product_size
+		order by totalSuccessCount desc;
+	</select>
+	
+	<select id="getPlatformChargeCountDate" parameterType="java.util.Map"
+            resultMap="ResultBaseResultMap">
+        SELECT DATE_FORMAT(date,'%Y-%m-%d') as name,sum(success_count) as value 
+        from daily_statistic 
+        where
+        enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if> 
+        GROUP BY date order by date
+    </select>
+    <select id="getPlatformChargeCapacityDate" parameterType="java.util.Map"
+            resultMap="ResultBaseResultMap">
+        SELECT DATE_FORMAT(date,'%Y-%m-%d') as name,sum(capacity)/1024.0 as value 
+        from daily_statistic 
+        where
+        enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if> 
+        GROUP BY date order by date
+    </select>
+    <select id="getPlatformChargeTypeDate" parameterType="java.util.Map"
+            resultMap="ResultBaseResultMap">
+        SELECT charge_type as name,SUM(success_count) as value
+        from daily_statistic 
+        where enter_id in 
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+        <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if> 
+        GROUP BY charge_type order by value desc
+        limit 5
+    </select>
+    <select id="getPlatformChargeSuccessDate" parameterType="java.util.Map"
+            resultMap="ResultBaseResultMap">
+        SELECT DATE_FORMAT(date,'%Y-%m-%d') as name, 10000.0 * sum(success_count)/sum(total_count) as value 
+        from daily_statistic 
+        where
+        enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if> 
+        GROUP BY date order by date
+    </select>
+    <select id="getPlatformChargeMoneyDate" parameterType="java.util.Map"
+            resultMap="ResultBaseResultMap">
+        SELECT DATE_FORMAT(date,'%Y-%m-%d') as name,sum(money)/100.0 as value 
+        from daily_statistic 
+        where
+        enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if> 
+        GROUP BY date order by date
+    </select>
+    <select id="getPlatformKeyDate" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        SELECT sum(d.money)/100.0 as totalSuccessMoney,  sum(d.success_count) as totalSuccessCount, 
+        sum(d.capacity)/1024.0 as totalSuccessCapacity, round(100.0 * sum(d.success_count)/sum(d.total_count),2) as successRate
+        from daily_statistic d
+        left join
+        product as p on d.prd_id = p.id  
+        where
+        d.enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and d.date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and d.date &lt;= #{endTime}
+        </if>
+        <if test="productTypeList != null">
+			and p.type in
+			<foreach collection="productTypeList" item="productType" open="(" close=")" separator=",">
+				#{productType}
+			</foreach>
+		</if>         
+    </select>
+    <select id="getPlatformData" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        SELECT DATE_FORMAT(date,'%Y-%m-%d') as date, sum(money)/100.0 as totalSuccessMoney,  sum(success_count) as totalSuccessCount, 
+        sum(capacity)/1024.0 as totalSuccessCapacity
+        from daily_statistic 
+        where
+        enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if> 
+        GROUP BY date order by date
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+    <select id="countGetPlatformData" parameterType="java.util.Map"  resultType="java.lang.Integer">
+        select count(*) from(SELECT count(*)
+        from daily_statistic 
+        where
+        enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if> 
+        GROUP BY date order by date
+        LIMIT
+        #{pageNum},#{pageSize}) a
+    </select>
+    <select id="getSumPlatformData" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        SELECT DATE_FORMAT(date,'%Y-%m-%d') as date, sum(money)/100.0 as totalSuccessMoney,  sum(success_count) as totalSuccessCount, 
+        sum(capacity)/1024.0 as totalSuccessCapacity
+        from daily_statistic 
+        where
+        enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if> 
+    </select>
+
+    <select id="getEnterformData" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        SELECT sum(d.money)/100.0 as totalSuccessMoney,  sum(d.success_count) as totalSuccessCount, 
+        sum(d.capacity)/1024.0 as totalSuccessCapacity,e.code as enterCode,e.name as enterName
+        from daily_statistic d 
+        left join enterprises e on e.id = d.enter_id
+        where
+        d.enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and d.date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and d.date &lt;= #{endTime}
+        </if> 
+            GROUP BY e.id
+         <if test="pageSize != null and pageSize != ''">    
+            LIMIT
+                #{pageNum},#{pageSize}
+         </if>        
+    </select>
+    <select id="countGetEnterformData" parameterType="java.util.Map"  resultType="java.lang.Integer">
+        select count(*) from(SELECT count(*)
+        from daily_statistic d
+        left join enterprises e on e.id = d.enter_id
+        where
+        d.enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and d.date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and d.date &lt;= #{endTime}
+        </if> 
+        GROUP BY e.id
+        LIMIT
+        #{pageNum},#{pageSize}) a
+    </select>
+    <select id="getPlatformDataByMap" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        SELECT DATE_FORMAT(date,'%Y-%m-%d') as date, sum(money)/100.0 as totalSuccessMoney,  sum(success_count) as totalSuccessCount, 
+        sum(capacity)/1024.0 as totalSuccessCapacity
+        from daily_statistic 
+        where
+        enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if> 
+        GROUP BY date order by date
+    </select>
+    <select id="getSumPlatformDataByMap" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        SELECT DATE_FORMAT(date,'%Y-%m-%d') as date, sum(money)/100.0 as totalSuccessMoney,  sum(success_count) as totalSuccessCount, 
+        sum(capacity)/1024.0 as totalSuccessCapacity
+        from daily_statistic 
+        where
+        enter_id IN
+        <foreach collection="enters" item="enter" open="(" close=")" separator=",">
+            #{enter.id}
+        </foreach>   
+         <if test="startTime != null and startTime != ''">
+            and date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and date &lt;= #{endTime}
+        </if>
+    </select>
+    
+    <insert id="insertDailyStatistic" parameterType="java.lang.String" >
+		INSERT INTO daily_statistic (
+		    `enter_id`,
+		    `city`,
+		    `prd_id`,
+		    `charge_type`,
+		    `success_count`,
+		    `total_count`,
+		    `capacity`,
+		    `money`,
+		    `date`,
+		    `create_time`,
+		    `update_time`,
+		    `delete_flag`
+		) SELECT
+		    a.enter_id,
+		    (
+		        CASE
+		        WHEN (
+		            SELECT
+		                role_id
+		            FROM
+		                manager
+		            WHERE
+		                id = g.parent_id
+		        ) = 7 THEN
+		            (
+		                SELECT
+		                    NAME
+		                FROM
+		                    manager
+		                WHERE
+		                    id = g.parent_id
+		            )
+		        WHEN (
+		            SELECT
+		                role_id
+		            FROM
+		                manager
+		            WHERE
+		                id = g.parent_id
+		        ) &lt;&gt; 7 THEN
+		            (
+		                SELECT
+		                    t2. NAME
+		                FROM
+		                    manager t1
+		                LEFT JOIN manager t2 ON t1.parent_id = t2.id 
+		
+		                WHERE
+		                    t1.id 
+		
+		 = g.parent_id
+		            )
+		        END
+		    ) AS city,
+		    a.prd_id,
+		    a.type,
+		    count(*) AS success_count,
+		    (
+		        SELECT
+		            count(*)
+		        FROM
+		            charge_record
+		        WHERE
+		            charge_time &gt;= #{beginTime}
+		        AND charge_time &lt; #{endTime}
+		        AND enter_id = a.enter_id
+		        AND prd_id = a.prd_id
+		    ) AS total_count,
+		    sum(b.product_size) AS capacity,
+		    ifnull(sum(a.price),0) AS money,
+		    #{beginTime} as date,
+		    now() AS create_time,
+		    now() AS update_time,
+		    0 AS delete_flag
+		FROM
+		    charge_record a
+		LEFT JOIN product b ON a.prd_id = b.id
+		LEFT JOIN ent_manager f ON a.enter_id = f.enter_id
+		LEFT JOIN manager g ON f.manager_id = g.id
+		WHERE
+		    a.charge_time &gt;= #{beginTime}
+		AND a.charge_time &lt; #{endTime}
+		AND a.STATUS = 3 group by a.enter_id,a.prd_id;
+  </insert>
+    
+    <select id="getDailyStatisticGroupByCity" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+		select
+			d.city,
+			sum(d.success_count) as totalSuccessCount,
+			sum(d.capacity) as totalSuccessCapacity,
+			sum(d.money) as totalSuccessMoney			
+		from
+			daily_statistic as d
+		left join
+			product as p on d.prd_id = p.id
+		<where>
+			<if test="city != null and city !=''">
+				and d.city = #{city,jdbcType=VARCHAR}
+			</if>
+			<if test="chargeType != null and chargeType !=''">
+				and d.chargeType = #{chargeType,jdbcType=VARCHAR}
+			</if>
+			<if test="listEnters != null">
+				and d.enter_id IN
+        		<foreach collection="listEnters" item="enter" open="(" close=")" separator=",">
+            		#{enter.id}
+        		</foreach>
+			</if>
+			<if test="prdId != null">
+				and d.prd_id = #{prdId,jdbcType=BIGINT}
+			</if>
+			<if test="productTypeList != null">
+				and p.type in
+				<foreach collection="productTypeList" item="productType"
+					open="(" close=")" separator=",">
+					#{productType}
+				</foreach>
+			</if>
+			<if test="startTime != null">
+				and d.date &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and d.date &lt;= #{endTime}
+			</if>
+			and d.delete_flag = 0
+		</where>
+		group by d.city
+		<if test="pageNum != null and pageSize!=null and pageSize!=0">
+            LIMIT
+            #{pageNum},
+            #{pageSize}
+        </if>
+   </select>
+   
+      <select id="countDailyStatisticGroupByCity" parameterType="java.util.Map"
+            resultType="java.lang.Long">
+        	select count(t.city) from (
+				select
+					d.city		
+				from
+					daily_statistic as d
+				left join
+					product as p on d.prd_id = p.id	
+				<where>
+					<if test="city != null and city !=''">
+						and d.city = #{city,jdbcType=VARCHAR}
+					</if>
+					<if test="chargeType != null and chargeType !=''">
+						and d.chargeType = #{chargeType,jdbcType=VARCHAR}
+					</if>
+					<if test="listEnters != null">
+						and d.enter_id IN
+		        		<foreach collection="listEnters" item="enter" open="(" close=")" separator=",">
+		            		#{enter.id}
+		        		</foreach>
+					</if>
+					<if test="prdId != null">
+						and d.prd_id = #{prdId,jdbcType=BIGINT}
+					</if>
+					<if test="productTypeList != null">
+						and p.type in
+						<foreach collection="productTypeList" item="productType"
+							open="(" close=")" separator=",">
+							#{productType}
+						</foreach>
+					</if>
+					<if test="startTime != null">
+						and d.date &gt;= #{startTime}
+					</if>
+					<if test="endTime != null">
+						and d.date &lt;= #{endTime}
+					</if>
+					and d.delete_flag = 0
+				</where>
+				group by d.city
+			) as t;		
+   </select>
+   
+    <select id="getDailyStatisticGroupProCode" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+		select
+			p.name as productName,
+			p.product_code as productCode,
+			p.type as productType,
+			p.price as productPrice,
+			p.product_size as productSize,
+			sum(d.success_count) as totalSuccessCount,
+			sum(d.capacity) as totalSuccessCapacity,
+			sum(d.money) as totalSuccessMoney			
+		from
+			daily_statistic as d
+		left join
+			product as p on d.prd_id = p.id	
+		<where>
+			<if test="city != null and city !=''">
+				and d.city = #{city,jdbcType=VARCHAR}
+			</if>
+			<if test="chargeType != null and chargeType !=''">
+				and d.chargeType = #{chargeType,jdbcType=VARCHAR}
+			</if>
+			<if test="listEnters != null">
+				and d.enter_id IN
+        		<foreach collection="listEnters" item="enter" open="(" close=")" separator=",">
+            		#{enter.id}
+        		</foreach>
+			</if>
+			<if test="prdId != null">
+				and d.prd_id = #{prdId,jdbcType=BIGINT}
+			</if>
+			<if test="productTypeList != null">
+				and p.type in
+				<foreach collection="productTypeList" item="productType"
+					open="(" close=")" separator=",">
+					#{productType}
+				</foreach>
+			</if>
+			<if test="startTime != null">
+				and d.date &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				and d.date &lt;= #{endTime}
+			</if>
+			and d.delete_flag = 0
+		</where>
+		group by p.product_code
+		<if test="pageNum != null and pageSize!=null and pageSize!=0">
+            LIMIT
+            #{pageNum},
+            #{pageSize}
+        </if>
+   </select>
+   
+   <select id="countDailyStatisticGroupProCode" parameterType="java.util.Map"
+            resultType="java.lang.Long">
+		select count(t.productCode) from (
+			select
+				p.product_code as productCode		
+			from
+				daily_statistic as d
+			left join
+				product as p on d.prd_id = p.id	
+			<where>
+				<if test="city != null and city !=''">
+					and d.city = #{city,jdbcType=VARCHAR}
+				</if>
+				<if test="chargeType != null and chargeType !=''">
+					and d.chargeType = #{chargeType,jdbcType=VARCHAR}
+				</if>
+				<if test="listEnters != null">
+					and d.enter_id IN
+	        		<foreach collection="listEnters" item="enter" open="(" close=")" separator=",">
+	            		#{enter.id}
+	        		</foreach>
+				</if>
+				<if test="prdId != null">
+					and d.prd_id = #{prdId,jdbcType=BIGINT}
+				</if>
+				<if test="productTypeList != null">
+					and p.type in
+					<foreach collection="productTypeList" item="productType"
+						open="(" close=")" separator=",">
+						#{productType}
+					</foreach>
+				</if>
+				<if test="startTime != null">
+					and d.date &gt;= #{startTime}
+				</if>
+				<if test="endTime != null">
+					and d.date &lt;= #{endTime}
+				</if>
+				and d.delete_flag = 0
+			</where>
+			group by p.product_code
+		) as t;	
+	 </select>
+</mapper>

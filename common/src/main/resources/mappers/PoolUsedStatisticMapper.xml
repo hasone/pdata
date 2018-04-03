@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.PoolUsedStatisticMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.PoolUsedStatistic" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="enter_code" property="enterCode" jdbcType="VARCHAR" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="used_amount" property="usedAmount" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, date, mobile, enter_code, product_code, used_amount
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from pool_used_statistic
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from pool_used_statistic
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.PoolUsedStatistic" >
+    insert into pool_used_statistic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="date != null" >
+        date,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="enterCode != null" >
+        enter_code,
+      </if>
+      <if test="productCode != null" >
+        product_code,
+      </if>
+      <if test="usedAmount != null" >
+        used_amount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="enterCode != null" >
+        #{enterCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="usedAmount != null" >
+        #{usedAmount,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.PoolUsedStatistic" >
+    update pool_used_statistic
+    <set >
+      <if test="date != null" >
+        date = #{date,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="enterCode != null" >
+        enter_code = #{enterCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        product_code = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="usedAmount != null" >
+        used_amount = #{usedAmount,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="getStatisticByTime" resultMap="BaseResultMap">
+    select 
+    id, date, mobile, enter_code, product_code, SUM(used_amount) as used_amount
+    from pool_used_statistic 
+    where date &gt;= #{startTime} and date &lt;= #{endTime}
+    GROUP BY mobile, enter_code, product_code
+  </select>
+  <delete id="deleteByDate" parameterType="java.lang.String" >
+    delete from pool_used_statistic
+    where date = #{date,jdbcType=VARCHAR}
+  </delete>
+</mapper>

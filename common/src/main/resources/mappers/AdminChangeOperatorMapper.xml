@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AdminChangeOperatorMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.AdminChangeOperator" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="enter_id" property="enterId" jdbcType="BIGINT" />
+    <result column="admin_id" property="adminId" jdbcType="BIGINT" />
+    <result column="dest_name" property="destName" jdbcType="VARCHAR" />
+    <result column="dest_phone" property="destPhone" jdbcType="VARCHAR" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, enter_id, admin_id, dest_name, dest_phone, comment, delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from admin_change_operator
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from admin_change_operator
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.AdminChangeOperator" >
+    insert into admin_change_operator (id, enter_id, admin_id, 
+      dest_name, dest_phone, comment, 
+      delete_flag)
+    values (#{id,jdbcType=BIGINT}, #{enterId,jdbcType=BIGINT}, #{adminId,jdbcType=BIGINT}, 
+      #{destName,jdbcType=VARCHAR}, #{destPhone,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}, 
+      #{deleteFlag,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.AdminChangeOperator" >
+    insert into admin_change_operator
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="enterId != null" >
+        enter_id,
+      </if>
+      <if test="adminId != null" >
+        admin_id,
+      </if>
+      <if test="destName != null" >
+        dest_name,
+      </if>
+      <if test="destPhone != null" >
+        dest_phone,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="enterId != null" >
+        #{enterId,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="destName != null" >
+        #{destName,jdbcType=VARCHAR},
+      </if>
+      <if test="destPhone != null" >
+        #{destPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.AdminChangeOperator" >
+    update admin_change_operator
+    <set >
+      <if test="enterId != null" >
+        enter_id = #{enterId,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null" >
+        admin_id = #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="destName != null" >
+        dest_name = #{destName,jdbcType=VARCHAR},
+      </if>
+      <if test="destPhone != null" >
+        dest_phone = #{destPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.AdminChangeOperator" >
+    update admin_change_operator
+    set enter_id = #{enterId,jdbcType=BIGINT},
+      admin_id = #{adminId,jdbcType=BIGINT},
+      dest_name = #{destName,jdbcType=VARCHAR},
+      dest_phone = #{destPhone,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="getAdminChangeRecordByAdminId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        *
+        from
+        admin_change_operator
+        where
+        admin_id = #{adminId,jdbcType=BIGINT} and
+        delete_flag = 0
+    </select>
+    
+    <update id="deleteAdminChangeRecordByAdminId" parameterType="java.lang.Long">
+        update admin_change_operator
+        set delete_flag = 1
+        where admin_id = #{adminId,jdbcType=BIGINT}
+    </update>
+</mapper>

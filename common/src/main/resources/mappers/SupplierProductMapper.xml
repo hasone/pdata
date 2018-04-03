@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.SupplierProductMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.SupplierProduct">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="supplier_id" property="supplierId" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="isp" property="isp" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="size" property="size" jdbcType="BIGINT"/>
+        <result column="ownership_region" property="ownershipRegion" jdbcType="VARCHAR"/>
+        <result column="roaming_region" property="roamingRegion" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="feature" property="feature" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="illustration" property="illustration" jdbcType="VARCHAR"/>
+        
+        <result column="limit_money" property="limitMoney" jdbcType="REAL"/>
+        <result column="limit_money_flag" property="limitMoneyFlag" jdbcType="INTEGER"/>
+        
+        <result column="op_type" property="opType" jdbcType="VARCHAR"/>
+        <result column="op_status" property="opStatus" jdbcType="INTEGER"/>
+        
+        <result column="type" property="type" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.SupplierProduct">
+        <result column="supplierName" property="supplierName" jdbcType="VARCHAR"/>
+        <result column="supplier_product_price" property="supplierProductPrice" jdbcType="INTEGER"/>
+        <result column="supplier_product_size" property="supplierProductSize" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="ExtendsResultMap2" extends="BaseResultMap" type="com.cmcc.vrp.province.model.SupplierProduct">
+        <result column="supplier_product_price" property="supplierProductPrice" jdbcType="INTEGER"/>
+        <result column="supplier_product_size" property="supplierProductSize" jdbcType="BIGINT"/>
+    </resultMap>
+    
+
+    <resultMap id="ShandongUserorderMap" type="com.cmcc.vrp.boss.shangdong.boss.model.UserOrder" >
+        <result column="customerID" property="customerID" jdbcType="VARCHAR" />
+        <result column="userID" property="userID" jdbcType="VARCHAR" />
+        <result column="bizId" property="bizId" jdbcType="VARCHAR" />
+        <result column="discount" property="discount" jdbcType="VARCHAR" />    
+    </resultMap>
+    
+    <resultMap id="ExtendsResultMap3" extends="BaseResultMap" type="com.cmcc.vrp.province.model.SupplierProduct" >
+    	<result column="supplierName" property="supplierName" jdbcType="VARCHAR"/>
+    	<result column="supplierStatus" property="supplierStatus" jdbcType="INTEGER"/>
+    	
+    	<result column="supplierLimitMoney" property="supplierLimitMoney" jdbcType="REAL"/>
+        <result column="supplierLimitMoneyFlag" property="supplierLimitMoneyFlag" jdbcType="INTEGER"/>
+        
+        <result column="productType" property="productType" jdbcType="INTEGER"/>
+    </resultMap>
+    
+    <resultMap id="ExtendsResultMap4" extends="BaseResultMap" type="com.cmcc.vrp.province.model.SupplierProduct" >
+    	<result column="platProductName" property="supplierName" jdbcType="VARCHAR"/>
+    	<result column="supplierStatus" property="supplierStatus" jdbcType="INTEGER"/>
+    	
+    	<result column="supplierLimitMoney" property="supplierLimitMoney" jdbcType="REAL"/>
+        <result column="supplierLimitMoneyFlag" property="supplierLimitMoneyFlag" jdbcType="INTEGER"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id, supplier_id, name, isp, code, size, ownership_region, roaming_region, price, feature, status, create_time,
+        update_time, delete_flag, illustration, limit_money, limit_money_flag, op_type, op_status, type
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        sp.id, 
+        sp.supplier_id, 
+        sp.name, 
+        sp.isp, 
+        sp.code, 
+        sp.size, 
+        sp.ownership_region, 
+        sp.roaming_region,
+        sp.price, 
+        sp.feature, 
+        sp.status, 
+        sp.create_time, 
+        sp.update_time,
+        sp.delete_flag,
+        sp.illustration,
+        sp.limit_money,
+        sp.limit_money_flag,
+        sp.type,
+        s.name as supplierName,
+        s.status as supplierStatus
+        from supplier_product sp
+        left join supplier s on sp.supplier_id = s.id
+        where sp.id = #{id,jdbcType=BIGINT} AND  sp.delete_flag = 0 AND s.delete_flag = 0
+    </select>
+
+    <!--查找上架状态的供应商产品-->
+    <select id="selectOnshelfByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+      select
+        sp.id,
+        sp.supplier_id,
+        sp.name,
+        sp.isp,
+        sp.code,
+        sp.size,
+        sp.ownership_region,
+        sp.roaming_region,
+        sp.price,
+        sp.feature,
+        sp.status,
+        sp.create_time,
+        sp.update_time,
+        sp.delete_flag,
+        sp.illustration,
+        sp.limit_money,
+        sp.limit_money_flag
+        from
+          supplier_product sp
+        left join
+          supplier s on sp.supplier_id = s.id
+        where
+          sp.id = #{id,jdbcType=BIGINT} AND
+          sp.delete_flag = 0 AND
+          s.delete_flag = 0 AND
+          sp.status = 1 AND
+          s.status = 1
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from supplier_product
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.SupplierProduct">
+        <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into supplier_product (supplier_id, name, isp, code, size,
+        ownership_region, roaming_region, price,
+        feature, status, create_time, update_time,
+        delete_flag, illustration, limit_money, limit_money_flag)
+        values (#{supplierId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{isp,jdbcType=VARCHAR},
+        #{code,jdbcType=VARCHAR}, #{size,jdbcType=BIGINT},
+        #{ownershipRegion,jdbcType=VARCHAR}, #{roamingRegion,jdbcType=VARCHAR}, #{price,jdbcType=INTEGER},
+        #{feature,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=INTEGER}, #{illustration,jdbcType=VARCHAR},
+        #{limitMoney,jdbcType=REAL}, #{limitMoneyFlag,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.SupplierProduct">
+        <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into supplier_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="supplierId != null">
+                supplier_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="isp != null">
+                isp,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="size != null">
+                size,
+            </if>
+            <if test="ownershipRegion != null">
+                ownership_region,
+            </if>
+            <if test="roamingRegion != null">
+                roaming_region,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="feature != null">
+                feature,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="illustration != null">
+                illustration,
+            </if>
+            
+            <if test="limitMoney != null">
+                limit_money,
+            </if>
+            <if test="limitMoneyFlag != null">
+                limit_money_flag,
+            </if>
+            
+            <if test="opType != null">
+                op_type,
+            </if>
+            <if test="opStatus != null">
+                op_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="supplierId != null">
+                #{supplierId,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="isp != null">
+                #{isp,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="size != null">
+                #{size,jdbcType=BIGINT},
+            </if>
+            <if test="ownershipRegion != null">
+                #{ownershipRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="roamingRegion != null">
+                #{roamingRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=INTEGER},
+            </if>
+            <if test="feature != null">
+                #{feature,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="illustration != null">
+                #{illustration,jdbcType=VARCHAR},
+            </if>
+            
+            <if test="limitMoney != null">
+                #{limitMoney,jdbcType=REAL},
+            </if>
+            <if test="limitMoneyFlag != null">
+                #{limitMoneyFlag,jdbcType=INTEGER},
+            </if>
+            
+            <if test="opType != null">
+               	#{op_type,jdbcType=VARCHAR},
+            </if>
+            <if test="opStatus != null">
+                #{op_status,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.SupplierProduct">
+        update supplier_product
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="size != null">
+                size = #{size,jdbcType=BIGINT},
+            </if>
+            <if test="ownershipRegion != null">
+                ownership_region = #{ownershipRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="roamingRegion != null">
+                roaming_region = #{roamingRegion,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=INTEGER},
+            </if>
+            <if test="feature != null">
+                feature = #{feature,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="illustration != null">
+            	illustration = #{illustration,jdbcType=VARCHAR},
+            </if>
+            <if test="limitMoney != null">
+                limit_money = #{limitMoney,jdbcType=REAL},
+            </if>
+            <if test="limitMoneyFlag != null">
+                limit_money_flag = #{limitMoneyFlag,jdbcType=INTEGER},
+            </if>
+            <if test="opType != null">
+               op_type = #{opType,jdbcType=VARCHAR},
+            </if>
+            <if test="opStatus != null">
+               op_status = #{opStatus,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.SupplierProduct">
+        update supplier_product
+        set supplier_id = #{supplierId,jdbcType=BIGINT},
+        name = #{name,jdbcType=VARCHAR},
+        isp = #{isp,jdbcType=VARCHAR},
+        code = #{code,jdbcType=VARCHAR},
+        size = #{size,jdbcType=BIGINT},
+        ownership_region = #{ownershipRegion,jdbcType=VARCHAR},
+        roaming_region = #{roamingRegion,jdbcType=VARCHAR},
+        price = #{price,jdbcType=INTEGER},
+        feature = #{feature,jdbcType=VARCHAR},
+        status = #{status,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectBySupplierId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from supplier_product
+        where supplier_id = #{supplierId,jdbcType=BIGINT} and delete_flag = 0
+    </select>
+
+    <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from supplier_product
+        where BINARY name = #{name,jdbcType=VARCHAR} and delete_flag = 0
+    </select>
+
+    <select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from supplier_product
+        where BINARY code = #{code,jdbcType=VARCHAR} and delete_flag = 0
+    </select>
+
+    <select id="selectByCodeAndSupplierId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from supplier_product
+        where BINARY code = #{code,jdbcType=VARCHAR} and delete_flag = 0
+        AND supplier_id = #{supplierId,jdbcType=BIGINT}
+    </select>
+    
+    <select id="queryPaginationSupplierProduct" resultMap="ExtendsResultMap3" parameterType="java.util.Map">
+        select
+        sp.id, sp.supplier_id, sp.name, sp.isp, sp.code, sp.size, sp.ownership_region, sp.roaming_region,
+        sp.price, sp.feature, sp.status, sp.create_time, sp.update_time,sp.delete_flag, sp.illustration ,
+        sp.limit_money, sp.limit_money_flag, sp.type,
+        s.name as supplierName, s.status as supplierStatus
+        FROM supplier_product sp
+        LEFT JOIN supplier s ON sp.supplier_id = s.id
+        WHERE
+        sp.delete_flag = 0 and s.delete_flag = 0
+        <if test="code != null and code != ''">
+            AND sp.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            AND sp.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="size != null">
+            AND sp.size = #{size,jdbcType=BIGINT}
+        </if>
+        <if test="supplierName != null and supplierName != ''">
+            AND s.name like CONCAT('%',CONCAT(#{supplierName},'%'))
+        </if>
+        <if test="ownershipRegion != null and ownershipRegion != ''">
+            AND sp.ownership_region = #{ownershipRegion,jdbcType=VARCHAR}
+        </if>
+        <if test="roamingRegion != null and roamingRegion != ''">
+            AND sp.roaming_region = #{roamingRegion,jdbcType=VARCHAR}
+        </if>
+        <if test="isp != null and isp != ''">
+            AND sp.isp = #{isp,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status != '' and status == 'ON' ">
+            AND sp.status = 1 AND s.status = 1
+        </if>
+        <if test="status != null and status != '' and status == 'OFF' ">
+            AND (s.status = 0 || s.status=1 and sp.status=0)
+        </if>
+        ORDER BY
+        sp.update_time DESC,sp.create_time DESC
+        <if test="pageSize != null and pageSize != '' and pageSize != -1">
+            LIMIT
+            #{pageNum},
+            #{pageSize}
+        </if>
+    </select>
+
+    <select id="queryPaginationSupplierProductCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        count(0)
+        FROM supplier_product sp
+        LEFT JOIN supplier s ON sp.supplier_id = s.id
+        WHERE
+        sp.delete_flag = 0 and s.delete_flag = 0
+        <if test="code != null and code != ''">
+            AND sp.code like CONCAT('%',CONCAT(#{code},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            AND sp.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="size != null">
+            AND sp.size = #{size,jdbcType=BIGINT}
+        </if>
+        <if test="supplierName != null and supplierName != ''">
+            AND s.name like CONCAT('%',CONCAT(#{supplierName},'%'))
+        </if>
+        <if test="ownershipRegion != null and ownershipRegion != ''">
+            AND sp.ownership_region = #{ownershipRegion,jdbcType=VARCHAR}
+        </if>
+        <if test="roamingRegion != null and roamingRegion != ''">
+            AND sp.roaming_region = #{roamingRegion,jdbcType=VARCHAR}
+        </if>
+        <if test="isp != null and isp != ''">
+            AND sp.isp = #{isp,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status != '' and status == 'ON' ">
+            AND sp.status = 1 AND s.status = 1
+        </if>
+        <if test="status != null and status != '' and status == 'OFF' ">
+            AND (s.status = 0 || s.status=1 and sp.status=0)
+        </if>
+    </select>
+
+    <select id="queryPaginationSupplierProduct2PltProductCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        SELECT
+        count(0)
+        FROM
+        supplier_product sp
+        LEFT JOIN supplier_product_map spm ON spm.supplier_product_id = sp.id
+        LEFT JOIN product p ON spm.platform_product_id = p.id
+        LEFT JOIN supplier s ON sp.supplier_id = s.id
+        WHERE
+        s.delete_flag=0 and sp.delete_flag = 0 and spm.delete_flag=0 and p.delete_flag = 0 and
+        p.id = #{platformProductId, jdbcType = BIGINT}
+    </select>
+
+    <select id="querySupplierProductAvailableCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        SELECT
+        count(0)
+        from supplier_product sp1
+        LEFT JOIN supplier s1 ON sp1.supplier_id = s1.id
+        where s1.delete_flag=0 and sp1.delete_flag=0
+        <if test="supplierName != null and supplierName != ''">
+            and s1.name like CONCAT('%',CONCAT(#{supplierName},'%'))
+        </if>
+        <if test="size != null">
+            and sp1.size = #{size, jdbcType = BIGINT}
+        </if>
+        <if test="isp != null">
+            and sp1.isp = #{isp, jdbcType = VARCHAR}
+        </if>
+        <if test="productCode != null and productCode != ''">
+            AND sp1.code like CONCAT('%',CONCAT(#{productCode},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            AND sp1.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="ownershipRegion != null and ownershipRegion != ''">
+            AND sp1.ownership_region = #{ownershipRegion,jdbcType=VARCHAR}
+        </if>
+        <if test="roamingRegion != null and roamingRegion != ''">
+            AND sp1.roaming_region = #{roamingRegion,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status != '' and status == 'ON' ">
+            AND sp1.status = 1 AND s1.status = 1
+        </if>
+        <if test="status != null and status != '' and status == 'OFF' ">
+            AND (s1.status = 0 || s1.status=1 and sp1.status=0)
+        </if>
+
+        and
+        sp1.id NOT IN(
+        SELECT
+        sp.id
+        FROM
+        supplier_product sp
+        LEFT JOIN supplier_product_map spm ON spm.supplier_product_id = sp.id
+        LEFT JOIN product p ON spm.platform_product_id = p.id
+        LEFT JOIN supplier s ON sp.supplier_id = s.id
+        WHERE
+        s.delete_flag=0 and sp.delete_flag = 0 and spm.delete_flag=0 and p.delete_flag = 0
+        <if test="platformProductId != null and platformProductId != ''">
+            and p.id = #{platformProductId, jdbcType = BIGINT}
+        </if>
+        <if test="size != null">
+            and sp.size = #{size, jdbcType = BIGINT}
+        </if>
+        )
+    </select>
+
+    <select id="queryPaginationSupplierProduct2PltProduct" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap3">
+        SELECT
+        sp.id, sp.supplier_id, sp.name, sp.isp, sp.code, sp.size, sp.ownership_region, sp.roaming_region,
+        sp.price, sp.feature, sp.status, sp.create_time, sp.update_time,sp.delete_flag, sp.illustration, 
+        sp.limit_money, sp.limit_money_flag, 
+        s.name as supplierName, s.status as supplierStatus,
+        p.type as productType
+        FROM
+        supplier_product sp
+        LEFT JOIN supplier_product_map spm ON spm.supplier_product_id = sp.id
+        LEFT JOIN product p ON spm.platform_product_id = p.id
+        LEFT JOIN supplier s ON sp.supplier_id = s.id
+        WHERE
+        s.delete_flag=0 and sp.delete_flag = 0 and spm.delete_flag=0 and p.delete_flag = 0
+        and p.id = #{platformProductId, jdbcType = BIGINT}
+
+        ORDER BY
+        sp.update_time DESC,sp.create_time DESC
+        LIMIT
+        #{pageNum},
+        #{pageSize}
+    </select>
+
+    <select id="querySupplierProductAvailable" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap3">
+
+        SELECT
+        sp1.id, sp1.supplier_id, sp1.name, sp1.isp, sp1.code, sp1.size, sp1.ownership_region, sp1.roaming_region,
+        sp1.price, sp1.feature, sp1.status, sp1.create_time, sp1.update_time,sp1.delete_flag, sp1.illustration,
+        sp1.limit_money, sp1.limit_money_flag, 
+        s1.name as supplierName, s1.status as supplierStatus
+        from supplier_product sp1
+        LEFT JOIN supplier s1 ON sp1.supplier_id = s1.id
+        where s1.delete_flag=0 and sp1.delete_flag=0
+        <if test="size != null">
+            and sp1.size = #{size, jdbcType = BIGINT}
+        </if>
+        <if test="isp != null">
+            and sp1.isp = #{isp, jdbcType = VARCHAR}
+        </if>
+        <if test="productCode != null and productCode != ''">
+            AND sp1.code like CONCAT('%',CONCAT(#{productCode},'%'))
+        </if>
+        <if test="name != null and name != ''">
+            AND sp1.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="supplierName != null and supplierName != ''">
+            AND s1.name like CONCAT('%',CONCAT(#{supplierName},'%'))
+        </if>
+        <if test="ownershipRegion != null and ownershipRegion != ''">
+            AND sp1.ownership_region = #{ownershipRegion,jdbcType=VARCHAR}
+        </if>
+        <if test="roamingRegion != null and roamingRegion != ''">
+            AND sp1.roaming_region = #{roamingRegion,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null and status != '' and status == 'ON' ">
+            AND sp1.status = 1 AND s1.status = 1
+        </if>
+        <if test="status != null and status != '' and status == 'OFF' ">
+            AND (s1.status = 0 || s1.status=1 and sp1.status=0)
+        </if>
+        and
+        sp1.id NOT IN(
+        SELECT
+        sp.id
+        FROM
+        supplier_product sp
+        LEFT JOIN supplier_product_map spm ON spm.supplier_product_id = sp.id
+        LEFT JOIN product p ON spm.platform_product_id = p.id
+        LEFT JOIN supplier s ON sp.supplier_id = s.id
+        WHERE
+        s.delete_flag=0 and sp.delete_flag = 0 and spm.delete_flag=0 and p.delete_flag = 0
+        <if test="platformProductId != null and platformProductId != ''">
+            and p.id = #{platformProductId, jdbcType = BIGINT}
+        </if>
+        <if test="size != null">
+            and sp.size = #{size, jdbcType = BIGINT}
+        </if>
+        )
+
+        ORDER BY
+        sp1.update_time DESC,sp1.create_time DESC
+        LIMIT
+        #{pageNum},
+        #{pageSize}
+    </select>
+
+	<!-- 根据供应商ID删除供应商产品 -->
+    <update id="deleteBySupplierId" parameterType="com.cmcc.vrp.province.model.SupplierProduct">
+        update supplier_product
+        set
+        delete_flag = 1,
+        update_time = now()
+        where supplier_id = #{id,jdbcType=BIGINT} and delete_flag = 0
+    </update>
+
+    <select id="selectByFeature" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        sp.id, 
+        sp.supplier_id, 
+        sp.name, 
+        sp.isp, 
+        sp.code, 
+        sp.size, 
+        sp.ownership_region, 
+        sp.roaming_region,
+        sp.price, 
+        sp.feature, 
+        sp.status, 
+        sp.create_time, 
+        sp.update_time,
+        sp.delete_flag, 
+        sp.illustration,
+        sp.limit_money,
+        sp.limit_money_flag,
+        
+        s.name as supplierName
+        FROM supplier_product sp
+        LEFT JOIN supplier s ON sp.supplier_id = s.id
+        WHERE
+        sp.feature = #{feature,jdbcType=VARCHAR} and
+        sp.delete_flag = 0 and 
+        sp.status = 1 and
+        s.delete_flag = 0 and
+        s.status = 1
+    </select>
+
+    <insert id="batchInsertSupplierProduct" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into supplier_product (supplier_id, name, isp, code, size, ownership_region, roaming_region, price,
+        feature, status, create_time,
+        update_time, delete_flag, illustration, limit_money,
+        limit_money_flag)
+        values
+        <foreach collection="list" item="record" separator=",">
+            (#{record.supplierId,jdbcType=BIGINT},
+            #{record.name,jdbcType=VARCHAR},
+            #{record.isp,jdbcType=VARCHAR},
+            #{record.code,jdbcType=VARCHAR},
+            #{record.size,jdbcType=BIGINT},
+            #{record.ownershipRegion,jdbcType=VARCHAR},
+            #{record.roamingRegion,jdbcType=VARCHAR},
+            #{record.price,jdbcType=INTEGER},
+            #{record.feature,jdbcType=VARCHAR},
+            #{record.status,jdbcType=INTEGER},
+            #{record.createTime,jdbcType=TIMESTAMP},
+            #{record.updateTime,jdbcType=TIMESTAMP},
+            #{record.deleteFlag,jdbcType=INTEGER},
+            #{record.illustration,jdbcType=VARCHAR},
+            
+            #{record.limitMoney,jdbcType=REAL},
+            #{record.limitMoneyFlag,jdbcType=INTEGER}
+            
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectSupplierByCreateTime" resultMap="ExtendsResultMap2">
+        select
+        sp.id, sp.supplier_id, sp.name, sp.isp, sp.code, sp.size, sp.ownership_region, sp.roaming_region,
+        sp.price, sp.feature, sp.status, sp.create_time,sp.illustration, sp.status
+        sp.update_time,sp.delete_flag,sp.illustration,
+        sp.limit_money, sp.limit_money_flag,
+        sbp.supplier_product_size,sbp.supplier_product_price
+        FROM supplier_product sp
+        LEFT JOIN sh_boss_product sbp
+        on sp.code = sbp.supplier_product_id
+        WHERE
+        sp.create_time = #{createTime,jdbcType=VARCHAR}
+    </select>
+    
+    <!-- 山东专用，得到所有的企业订单 -->
+    <select id="sdGetAllUserOrders" resultMap="ShandongUserorderMap">
+        select e.phone as customerID,sp.name as userID,sp.code as bizId,ep.discount as discount   
+        from supplier_product sp 
+		INNER JOIN supplier_product_map spm on sp.id = spm.supplier_product_id
+		INNER JOIN product p on p.id = spm.platform_product_id
+		INNER JOIN ent_product ep on ep.product_id = p.id
+		INNER JOIN enterprises e on e.id = ep.enterprize_id 
+      	where sp.delete_flag=0 and spm.delete_flag=0 and p.delete_flag=0 and ep.delete_flag=0
+    </select>
+    
+    <update id="batchUpdate" parameterType="java.util.List">
+        UPDATE
+          supplier_product
+        SET
+          supplier_id = CASE
+          <foreach collection="list" item="item" close="ELSE `supplier_id` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.supplierId, jdbcType = BIGINT}
+          </foreach>
+          ,name = CASE
+          <foreach collection="list" item="item" close="ELSE `name` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.name, jdbcType = VARCHAR}
+          </foreach>
+          ,isp = CASE
+          <foreach collection="list" item="item" close="ELSE `isp` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.isp, jdbcType = VARCHAR}
+          </foreach>
+          ,code = CASE
+          <foreach collection="list" item="item" close="ELSE `code` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.code, jdbcType = VARCHAR}
+          </foreach>
+          ,size = CASE
+          <foreach collection="list" item="item" close="ELSE `size` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.size, jdbcType = BIGINT}
+          </foreach>
+          ,ownership_region = CASE
+          <foreach collection="list" item="item" close="ELSE `ownership_region` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.ownershipRegion, jdbcType = VARCHAR}
+          </foreach>
+           ,roaming_region = CASE
+          <foreach collection="list" item="item" close="ELSE `roaming_region` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.roamingRegion, jdbcType = VARCHAR}
+          </foreach>
+           ,price = CASE
+          <foreach collection="list" item="item" close="ELSE `price` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.price, jdbcType = INTEGER}
+          </foreach>
+           ,feature = CASE
+          <foreach collection="list" item="item" close="ELSE `feature` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.feature, jdbcType = VARCHAR}
+          </foreach>
+           ,status = CASE
+          <foreach collection="list" item="item" close="ELSE `status` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.status, jdbcType = INTEGER}
+          </foreach>
+            ,create_time = CASE
+          <foreach collection="list" item="item" close="ELSE `create_time` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.createTime, jdbcType = TIMESTAMP}
+          </foreach>
+           ,update_time = CASE
+          <foreach collection="list" item="item" close="ELSE `update_time` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.updateTime, jdbcType = TIMESTAMP}
+          </foreach>
+           ,delete_flag = CASE
+          <foreach collection="list" item="item" close="ELSE `delete_flag` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.deleteFlag, jdbcType = INTEGER}
+          </foreach>
+                    
+           ,op_type = CASE
+          <foreach collection="list" item="item" close="ELSE `delete_flag` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.opType, jdbcType = VARCHAR}
+          </foreach>
+           ,op_status = CASE
+          <foreach collection="list" item="item" close="ELSE `delete_flag` END">
+              WHEN id = #{item.id, jdbcType = BIGINT} THEN #{item.opStatus, jdbcType = INTEGER}
+          </foreach>
+                
+        WHERE
+          id in
+            <foreach collection="list" item="item" open="(" close=")" separator=",">
+                #{item.id, jdbcType = BIGINT}
+            </foreach>
+   </update>
+   
+   <select id="selectByNameAndCodeOrStatusOrDeleteFlag" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from supplier_product
+        where 
+        	BINARY name = #{name,jdbcType=VARCHAR} 
+        and 
+        	BINARY code = #{code,jdbcType=VARCHAR}
+        <if test="status != null">
+            AND status = #{status,jdbcType=INTEGER}
+        </if>		
+        <if test="deleteFlag != null">
+            AND delete_flag = #{deleteFlag,jdbcType=INTEGER}
+        </if>		
+    </select>
+    
+    <select id="selectByNameWithoutDeleteFlag" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from supplier_product
+        where BINARY name = #{name,jdbcType=VARCHAR}
+    </select>
+    
+	<select id="selectById" resultMap="ExtendsResultMap3">
+    	SELECT
+        	t1.*,
+        	t2.name as supplierName,
+        	t2.status as supplierStatus
+        FROM
+        	supplier_product t1
+        left join 
+        	supplier t2 on t2.id = t1.supplier_id
+        WHERE
+        	t1.id = #{id, jdbcType = BIGINT} 
+    </select>
+    
+    <!-- 获取所有未删除的供应商产品 -->
+    <select id="selectAllSupplierProducts" resultMap="ExtendsResultMap3">
+    	SELECT
+        	t1.*,
+        	t2.name as supplierName,
+        	t2.status as supplierStatus
+        FROM
+        	supplier_product t1
+        left join 
+        	supplier t2 on t2.id = t1.supplier_id
+        WHERE
+        	t1.delete_flag = 0 and t2.delete_flag = 0
+        order by
+        	t1.supplier_id,
+        	t1.update_time,
+        	t1.create_time
+    </select>
+    
+    <select id="selectByMap" resultMap="ExtendsResultMap" parameterType="java.util.Map">
+    	select
+    		t1.*,
+    		t2.name as supplierName
+    	from
+    		supplier_product t1
+    	left join 
+    		supplier t2 on t2.id = t1.supplier_id
+    	where
+    		t1.delete_flag = 0 
+    		<if test="supplierId != null and supplierId != ''"> 
+    			and t1.supplier_id = #{supplierId}
+    		</if>
+    		<if test="limitMoneyFlag != null and limitMoneyFlag != ''">
+    			and t1.limit_money_flag = #{limitMoneyFlag}
+    		</if>
+    		<if test="status != null and status != '' and status == 'on'">
+    			and t1.status = 1 and t2.status =1
+    		</if>
+    		<if test="status != null and status != '' and status == 'off'">
+    			and (t1.status = 0 or t2.status = 0)
+    		</if>
+    </select>
+    
+    <select id="getByNameOrCodeOrOpStatus" resultMap="BaseResultMap" parameterType="java.util.Map">
+    	select
+			*
+		from 
+			supplier_product
+		<where>
+			
+    		<if test="name != null and name != ''"> 
+    			and name = #{name}
+    		</if>
+    		<if test="code != null and code != ''"> 
+    			and code = #{code}
+    		</if>
+    		<if test="opStatus != null">
+    			and op_status = #{opStatus}
+    		</if>
+    	</where>	
+    </select>
+    
+</mapper>

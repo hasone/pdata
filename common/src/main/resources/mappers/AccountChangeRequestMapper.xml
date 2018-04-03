@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AccountChangeRequestMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.AccountChangeRequest">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="count" property="count" jdbcType="REAL"/>
+        <result column="account_id" property="accountId" jdbcType="BIGINT"/>
+        <result column="ent_id" property="entId" jdbcType="BIGINT"/>
+        <result column="entCode" property="entCode" jdbcType="VARCHAR"/>
+        <result column="entName" property="entName" jdbcType="VARCHAR"/>
+        <result column="prd_id" property="prdId" jdbcType="BIGINT"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+        <result column="desc" property="desc" jdbcType="VARCHAR"/>
+        <result column="serial_num" property="serialNum" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="TINYINT"/>
+        <result column="districtName" property="districtName" jdbcType="VARCHAR"/>
+        <result column="last_operator_id" property="lastOperatorId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, `count`, account_id, ent_id, prd_id, creator_id, `desc`, serial_num, status, create_time,
+        update_time, delete_flag
+    </sql>
+
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        account_change_request
+        where
+        id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <update id="delete" parameterType="java.lang.Long">
+        update
+        account_change_request
+        SET
+        delete_flag = 1,
+        update_time = NOW()
+        where
+        id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.AccountChangeRequest"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into account_change_request (
+        `count`, account_id, ent_id,
+        prd_id, creator_id, `desc`,
+        serial_num, status, create_time,
+        update_time, delete_flag,last_operator_id)
+        values (
+        #{count,jdbcType=REAL},
+        #{accountId,jdbcType=BIGINT},
+        #{entId,jdbcType=BIGINT},
+        #{prdId,jdbcType=BIGINT},
+        #{creatorId,jdbcType=BIGINT},
+        #{desc,jdbcType=VARCHAR},
+        #{serialNum,jdbcType=VARCHAR},
+        #{status,jdbcType=INTEGER},
+        NOW(),
+        NOW(),
+        #{deleteFlag,jdbcType=TINYINT},
+        #{lastOperatorId,jdbcType=BIGINT})
+    </insert>
+
+    <update id="updateStatus">
+        UPDATE
+        account_change_request
+        SET
+        status = #{newStatus, jdbcType = INTEGER},
+        last_operator_id = #{lastOperatorId, jdbcType = BIGINT},
+        `desc` = #{desc, jdbcType = VARCHAR},
+        update_time = NOW()
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+
+    <update id="updateCount">
+        UPDATE
+        account_change_request
+        SET
+        `count` = #{delta,jdbcType=REAL},
+        status = #{newStatus, jdbcType = INTEGER},
+        last_operator_id = #{lastOperatorId, jdbcType = BIGINT},
+        `desc` = #{desc, jdbcType = VARCHAR},
+        update_time = NOW()
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+
+    <select id="query" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        acr.id,
+        acr.`count`,
+        acr.account_id,
+        acr.ent_id,
+        enter.code as entCode,
+        enter.name as entName,
+        acr.prd_id,
+        acr.creator_id,
+        acr.`desc`,
+        acr.serial_num,
+        acr.status,
+        acr.create_time,
+        acr.update_time,
+        acr.delete_flag,
+
+        CONCAT(IFNULL(d1.name,""),IFNULL(d2.name,""),IFNULL(d3.name,"")) as districtName
+
+        FROM
+        account_change_request acr
+        left JOIN enterprises enter ON enter.id = acr.ent_id
+        left join admin_enter ae on ae.enter_id = enter.id
+        left join administer admin on admin.id = ae.admin_id
+        left join district d3 on d3.id = enter.district_id
+        left join district d2 on d3.parent_id=d2.id
+        left join district d1 on d1.id = d2.parent_id
+
+        <where>
+            1=1
+            <if test="adminId != null and adminId != ''">
+                and admin.id = #{adminId, jdbcType = BIGINT}
+            </if>
+            <if test="lastOperatorId != null and lastOperatorId!=''">
+                and (acr.last_operator_id is null or acr.last_operator_id != #{lastOperatorId} )
+            </if>
+            <if test="code != null and code != ''">
+                and enter.code like CONCAT('%',CONCAT(#{code},'%'))
+            </if>
+            <if test="name != null and name != ''">
+                and enter.name like CONCAT('%',CONCAT(#{name},'%'))
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and acr.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and acr.create_time &lt;= #{endTime}
+            </if>
+            <if test="districtIds != null">
+                and enter.district_id in
+                <foreach collection="districtIds" item="districtId" open="(" close=")" separator=",">
+                    #{districtId}
+                </foreach>
+            </if>
+            <if test="status != null">
+                and acr.status IN 
+                <foreach collection="status" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+
+        </where>
+        order by acr.update_time desc
+
+        LIMIT
+        #{pageNum},#{pageSize}
+
+    </select>
+
+    <select id="queryCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT
+        count(0) value
+        FROM
+        account_change_request acr
+        left JOIN enterprises enter ON enter.id = acr.ent_id
+        left join admin_enter ae on ae.enter_id = enter.id
+        left join administer admin on admin.id = ae.admin_id
+        <where>
+            1=1
+            <if test="adminId != null and adminId != ''">
+                and admin.id = #{adminId, jdbcType = BIGINT}
+            </if>
+            <if test="lastOperatorId != null and lastOperatorId!=''">
+                and (acr.last_operator_id is null or acr.last_operator_id != #{lastOperatorId} )
+            </if>
+            <if test="code != null and code != ''">
+                and enter.code like CONCAT('%',CONCAT(#{code},'%'))
+            </if>
+            <if test="name != null and name != ''">
+                and enter.name like CONCAT('%',CONCAT(#{name},'%'))
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and acr.create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and acr.create_time &lt;= #{endTime}
+            </if>
+            <if test="status != null">
+                and acr.status IN
+                <foreach collection="status" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="districtIds != null">
+                and enter.district_id in
+                <foreach collection="districtIds" item="districtId" open="(" close=")" separator=",">
+                    #{districtId}
+                </foreach>
+            </if>
+
+        </where>
+    </select>
+</mapper>

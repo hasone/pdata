@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.MonthlyPresentRecordCopyMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.MonthlyPresentRecordCopy" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="rule_id" property="ruleId" jdbcType="BIGINT" />
+    <result column="prd_id" property="prdId" jdbcType="BIGINT" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="effect_type" property="effectType" jdbcType="INTEGER" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+    <result column="error_message" property="errorMessage" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+    <result column="sys_serial_num" property="sysSerialNum" jdbcType="VARCHAR" />
+    <result column="boss_serial_num" property="bossSerialNum" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, rule_id, prd_id, mobile, status, effect_type, status_code, error_message, create_time, 
+    operate_time, sys_serial_num, boss_serial_num
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from monthly_present_record_copy
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from monthly_present_record_copy
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.MonthlyPresentRecordCopy" >
+    insert into monthly_present_record_copy (id, rule_id, prd_id, 
+      mobile, status, effect_type, 
+      status_code, error_message, create_time, 
+      operate_time, sys_serial_num, boss_serial_num
+      )
+    values (#{id,jdbcType=BIGINT}, #{ruleId,jdbcType=BIGINT}, #{prdId,jdbcType=BIGINT}, 
+      #{mobile,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{effectType,jdbcType=INTEGER}, 
+      #{statusCode,jdbcType=VARCHAR}, #{errorMessage,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{operateTime,jdbcType=TIMESTAMP}, #{sysSerialNum,jdbcType=VARCHAR}, #{bossSerialNum,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.MonthlyPresentRecordCopy" >
+    insert into monthly_present_record_copy
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ruleId != null" >
+        rule_id,
+      </if>
+      <if test="prdId != null" >
+        prd_id,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="effectType != null" >
+        effect_type,
+      </if>
+      <if test="statusCode != null" >
+        status_code,
+      </if>
+      <if test="errorMessage != null" >
+        error_message,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="operateTime != null" >
+        operate_time,
+      </if>
+      <if test="sysSerialNum != null" >
+        sys_serial_num,
+      </if>
+      <if test="bossSerialNum != null" >
+        boss_serial_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="ruleId != null" >
+        #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="prdId != null" >
+        #{prdId,jdbcType=BIGINT},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="effectType != null" >
+        #{effectType,jdbcType=INTEGER},
+      </if>
+      <if test="statusCode != null" >
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="errorMessage != null" >
+        #{errorMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateTime != null" >
+        #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysSerialNum != null" >
+        #{sysSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bossSerialNum != null" >
+        #{bossSerialNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.MonthlyPresentRecordCopy" >
+    update monthly_present_record_copy
+    <set >
+      <if test="ruleId != null" >
+        rule_id = #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="prdId != null" >
+        prd_id = #{prdId,jdbcType=BIGINT},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="effectType != null" >
+        effect_type = #{effectType,jdbcType=INTEGER},
+      </if>
+      <if test="statusCode != null" >
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="errorMessage != null" >
+        error_message = #{errorMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateTime != null" >
+        operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sysSerialNum != null" >
+        sys_serial_num = #{sysSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bossSerialNum != null" >
+        boss_serial_num = #{bossSerialNum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.MonthlyPresentRecordCopy" >
+    update monthly_present_record_copy
+    set rule_id = #{ruleId,jdbcType=BIGINT},
+      prd_id = #{prdId,jdbcType=BIGINT},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      effect_type = #{effectType,jdbcType=INTEGER},
+      status_code = #{statusCode,jdbcType=VARCHAR},
+      error_message = #{errorMessage,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      sys_serial_num = #{sysSerialNum,jdbcType=VARCHAR},
+      boss_serial_num = #{bossSerialNum,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="batchInsert" parameterType="java.util.List"
+        useGeneratedKeys="true" keyProperty="id">
+        insert into monthly_present_record_copy (rule_id, prd_id,
+        mobile, status, effect_type,
+        status_code, error_message, create_time,
+        operate_time, sys_serial_num, boss_serial_num
+        )
+        values
+        <foreach collection="list" item="record" separator=",">
+            (
+            #{record.ruleId,jdbcType=BIGINT},
+            #{record.prdId,jdbcType=BIGINT},
+            #{record.mobile,jdbcType=VARCHAR},
+            #{record.status,jdbcType=INTEGER},
+            #{record.effectType,jdbcType=INTEGER},
+            #{record.statusCode,jdbcType=VARCHAR},
+            #{record.errorMessage,jdbcType=VARCHAR},
+            #{record.createTime,jdbcType=TIMESTAMP},
+            #{record.operateTime,jdbcType=TIMESTAMP},
+            #{record.sysSerialNum,jdbcType=VARCHAR},
+            #{record.bossSerialNum,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+    <select id="getByRuleId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select 
+        <include refid="Base_Column_List" />
+        from monthly_present_record_copy
+        where rule_id = #{ruleId,jdbcType=BIGINT}
+  </select>
+</mapper>

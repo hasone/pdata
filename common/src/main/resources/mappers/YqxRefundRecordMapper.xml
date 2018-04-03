@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.YqxRefundRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.YqxRefundRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="done_code" property="doneCode" jdbcType="VARCHAR" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="refund_amount" property="refundAmount" jdbcType="DOUBLE" />
+    <result column="refund_type" property="refundType" jdbcType="INTEGER" />
+    <result column="refund_serial_num" property="refundSerialNum" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="msg" property="msg" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="result_return_time" property="resultReturnTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="operator_id" property="operatorId" jdbcType="BIGINT" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="operator_mobile" property="operatorMobile" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, done_code, reason, refund_amount, refund_type, refund_serial_num, status, msg, 
+    create_time, result_return_time, update_time, operator_id, operator_name, operator_mobile
+  </sql>
+  <resultMap id="ExtendResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.YqxRefundRecord" >
+    <result column="serialNum" property="orderSerialNum" jdbcType="VARCHAR" />
+    <result column="create_time" property="orderCreateTime" jdbcType="TIMESTAMP" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from yqx_refund_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.YqxRefundRecord" 
+    useGeneratedKeys="true" keyProperty="id">
+    insert into yqx_refund_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="doneCode != null" >
+        done_code,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="refundAmount != null" >
+        refund_amount,
+      </if>
+      <if test="refundType != null" >
+        refund_type,
+      </if>
+      <if test="refundSerialNum != null" >
+        refund_serial_num,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="msg != null" >
+        msg,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="resultReturnTime != null" >
+        result_return_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="operatorId != null" >
+        operator_id,
+      </if>
+      <if test="operatorName != null" >
+        operator_name,
+      </if>
+      <if test="operatorMobile != null" >
+        operator_mobile,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="doneCode != null" >
+        #{doneCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="refundAmount != null" >
+        #{refundAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="refundType != null" >
+        #{refundType,jdbcType=INTEGER},
+      </if>
+      <if test="refundSerialNum != null" >
+        #{refundSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="msg != null" >
+        #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="resultReturnTime != null" >
+        #{resultReturnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operatorId != null" >
+        #{operatorId,jdbcType=BIGINT},
+      </if>
+      <if test="operatorName != null" >
+        #{operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorMobile != null" >
+        #{operatorMobile,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.YqxRefundRecord" >
+    update yqx_refund_record
+    <set >
+      <if test="doneCode != null" >
+        done_code = #{doneCode,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="refundAmount != null" >
+        refund_amount = #{refundAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="refundType != null" >
+        refund_type = #{refundType,jdbcType=INTEGER},
+      </if>
+      <if test="refundSerialNum != null" >
+        refund_serial_num = #{refundSerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="msg != null" >
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="resultReturnTime != null" >
+        result_return_time = #{resultReturnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operatorId != null" >
+        operator_id = #{operatorId,jdbcType=BIGINT},
+      </if>
+      <if test="operatorName != null" >
+        operator_name = #{operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorMobile != null" >
+        operator_mobile = #{operatorMobile,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByDoneCodeAcceptedRecord">
+    update yqx_refund_record
+    <set >
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="msg != null" >
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+        result_return_time = NOW(),
+        update_time = NOW()
+    </set>
+    where done_code = #{doneCode,jdbcType=VARCHAR} and status =1
+  </update>
+  
+  <select id="queryPaginationRefundList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+        r.id, r.done_code, r.reason, r.refund_amount, r.refund_type, r.refund_serial_num, r.status, r.msg, 
+        r.create_time, r.result_return_time, r.update_time, operator_id, operator_name, operator_mobile,
+        o.serial_num as orderSerialNum, o.create_time as orderCreateTime, o.mobile as mobile
+    from yqx_refund_record r
+    left join yqx_pay_record p on p.done_code=r.done_code
+    left join yqx_order_record o on o.serial_num=p.order_serial_num
+    where 1 = 1 
+    <if test="doneCode != null and doneCode != ''">
+            AND r.done_code like CONCAT('%',CONCAT(#{doneCode},'%'))
+    </if>
+    <if test="startTime != null and startTime != ''">
+      and o.create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and o.create_time &lt;= #{endTime}
+    </if>
+    <if test="mobile != null and mobile != ''">
+      and o.mobile = #{mobile}
+    </if>
+    <if test="orderSerialNum != null and orderSerialNum != ''">
+      and o.serial_num = #{orderSerialNum}
+    </if>
+    ORDER BY
+        r.update_time DESC,r.create_time DESC
+        LIMIT
+        #{pageNum},
+        #{pageSize}
+  </select>
+  
+   <!-- 用户管理使用分页类 -->
+  <select id="queryPaginationRefundCount" parameterType="java.util.Map"
+	        resultType="java.lang.Integer">
+	select 
+		count(*)
+		from yqx_refund_record r
+		left join yqx_pay_record p on p.done_code=r.done_code
+		left join yqx_order_record o on o.serial_num=p.order_serial_num
+	where 1 = 1 
+	<if test="doneCode != null and doneCode != ''">
+	  AND r.done_code like CONCAT('%',CONCAT(#{doneCode},'%'))
+	</if>
+	<if test="startTime != null and startTime != ''">
+	  and o.create_time &gt;= #{startTime}
+	</if>
+	<if test="endTime != null and endTime != ''">
+	  and o.create_time &lt;= #{endTime}
+	</if>
+	<if test="mobile != null and mobile != ''">
+	  and o.mobile = #{mobile}
+	</if>
+	<if test="orderSerialNum != null and orderSerialNum != ''">
+	  and o.serial_num = #{orderSerialNum}
+	</if>
+	</select>
+
+	<select id="selectByRefundSerialNum" resultMap="ExtendResultMap" parameterType="java.lang.String" >
+	 select 
+        r.id, r.done_code, r.reason, r.refund_amount, r.refund_type, r.refund_serial_num, r.status, r.msg, 
+        r.create_time, r.result_return_time, r.update_time, operator_id, operator_name, operator_mobile,
+        o.serial_num as orderSerialNum, o.create_time as orderCreateTime, o.mobile as mobile
+    from yqx_refund_record r
+    left join yqx_pay_record p on p.done_code=r.done_code
+    left join yqx_order_record o on o.serial_num=p.order_serial_num	 
+	where 
+	   r.refund_serial_num = #{refundSerialNum, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectByDoneCodeAndStatus" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from yqx_refund_record
+    where done_code = #{doneCode,jdbcType=VARCHAR}
+    and status in (${statusStr})
+  </select>
+</mapper>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ShOrderListMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ShOrderList">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="main_bill_id" property="mainBillId" jdbcType="VARCHAR"/>
+        <result column="order_name" property="orderName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="offer_id" property="offerId" jdbcType="VARCHAR"/>
+		<result column="role_id" property="roleId" jdbcType="VARCHAR"/>
+        <result column="order_type" property="orderType" jdbcType="VARCHAR"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+		<result column="count" property="count" jdbcType="REAL"/>
+        <result column="alert_count" property="alertCount" jdbcType="REAL"/>
+        <result column="stop_count" property="stopCount" jdbcType="REAL"/>
+        <result column="acc_id" property="accId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, enter_id, main_bill_id, order_name, create_time,
+        update_time, offer_id, role_id, order_type, acc_id, delete_flag, count, alert_count, stop_count
+    </sql>
+    
+    
+	<insert id="insert" parameterType="com.cmcc.vrp.province.model.ShOrderList"  useGeneratedKeys="true" keyProperty="id">
+        insert into sh_order_list (enter_id, main_bill_id,
+        order_name, create_time, update_time, offer_id, role_id, order_type, delete_flag, acc_id, alert_count, stop_count, count)
+        values (#{enterId,jdbcType=BIGINT}, #{mainBillId,jdbcType=VARCHAR},
+        #{orderName,jdbcType=BIGINT}, NOW(), NOW(), 
+        #{offerId,jdbcType=VARCHAR}, #{roleId,jdbcType=BIGINT},#{orderType,jdbcType=BIGINT},
+        #{deleteFlag,jdbcType=INTEGER}, #{accId,jdbcType=VARCHAR}, #{alertCount,jdbcType=REAL},#{stopCount,jdbcType=REAL},#{count,jdbcType=REAL})
+    </insert>
+    
+	<select id="getByMainBillId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from sh_order_list
+        where main_bill_id = #{mainBillId,jdbcType=VARCHAR}
+        AND
+        delete_flag = 0
+    </select>
+    
+    
+	<select id="getByEnterId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from sh_order_list
+        where enter_id = #{enterId,jdbcType=BIGINT}
+        AND
+        delete_flag = 0
+    </select>
+    
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from sh_order_list
+        where id = #{id,jdbcType=BIGINT}
+        AND
+        delete_flag = 0
+    </select>
+	<update id="updateAlertSelective" parameterType="com.cmcc.vrp.province.model.ShOrderList">
+        UPDATE
+        sh_order_list
+        SET
+        `alert_count` = #{alertCount, jdbcType = REAL},
+		`stop_count` = #{stopCount, jdbcType = REAL}
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+    
+	<select id="showForPageResultCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+		sh_order_list
+        where delete_flag = 0
+		<if test="entId != null">
+            and enter_id = #{entId}
+        </if>
+		<if test="orderName != null and orderName != ''">
+            and order_name like CONCAT('%',CONCAT(#{orderName},'%'))
+        </if>
+ 		<if test="beginTime != null and beginTime != ''">
+            and create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and create_time &lt;= #{endTime}
+        </if>
+    </select>
+	<select id="showForPageResultList" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+		<include refid="Base_Column_List"/>
+        from
+		sh_order_list
+        where delete_flag = 0
+		<if test="entId != null">
+            and enter_id = #{entId}
+        </if>
+		<if test="orderName != null and orderName != ''">
+            and order_name like CONCAT('%',CONCAT(#{orderName},'%'))
+        </if>
+		<if test="beginTime != null and beginTime != ''">
+            and create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and create_time &lt;= #{endTime}
+        </if>
+		order by
+        create_time DESC
+    </select>
+	<update id="updateCount" parameterType="com.cmcc.vrp.province.model.ShOrderList">
+        UPDATE
+        sh_order_list
+        SET
+        `count` = #{count, jdbcType = REAL}
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+	<select id="getOrderListByMap" parameterType="java.util.Map"
+            resultMap="BaseResultMap">
+        select
+		<include refid="Base_Column_List"/>
+        from
+		sh_order_list
+        where delete_flag = 0
+		<if test="entId != null">
+            and enter_id = #{entId}
+        </if>
+		<if test="orderName != null and orderName != ''">
+            and order_name like CONCAT('%',CONCAT(#{orderName},'%'))
+        </if>
+		<if test="beginTime != null and beginTime != ''">
+            and create_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and create_time &lt;= #{endTime}
+        </if>
+		order by
+        create_time DESC
+    </select>
+</mapper>

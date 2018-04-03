@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.SensitiveWordsMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.SensitiveWords">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.SensitiveWords">
+        <result column="creatorName" property="creatorName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, creator_id, create_time, update_time
+    </sql>
+    
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.SensitiveWords"
+                useGeneratedKeys="true" keyProperty="id">
+        insert into
+        sensitive_words (name, creator_id, create_time, update_time)
+        values
+        (#{name, jdbcType = VARCHAR},       
+        #{creatorId,jdbcType=BIGINT},
+        NOW(),
+        NOW())
+    </insert>
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into sensitive_words (name, creator_id, create_time, update_time)
+        values
+        <foreach collection="sensitiveWordsList" item="sensitiveWords" separator="," index="index">
+            (#{sensitiveWords.name, jdbcType = VARCHAR},       
+            #{sensitiveWords.creatorId,jdbcType=BIGINT},
+            NOW(),
+            NOW())
+        </foreach>
+    </insert>
+    
+    <delete id="deleteByName" parameterType="java.lang.String">  
+        delete from sensitive_words where name = #{name, jdbcType = VARCHAR}  
+    </delete>  
+    
+    <delete id="deleteById" parameterType="java.lang.Long">  
+        delete from sensitive_words where id = #{id, jdbcType = BIGINT}   
+    </delete>  
+    
+    <select id="selectByName" parameterType="java.lang.String" 
+        resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        sensitive_words
+        WHERE
+        name = #{name, jdbcType = VARCHAR} 
+    </select>
+
+    <select id="selectById" parameterType="java.lang.Long" 
+        resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        sensitive_words
+        WHERE
+        id = #{id, jdbcType = BIGINT} 
+    </select>
+
+    <update id="updateById">
+        UPDATE
+        sensitive_words
+        SET
+        name = #{name, jdbcType = VARCHAR},
+        creator_id = #{creatorId,jdbcType=BIGINT},
+        create_time = NOW(),
+        update_time = NOW()
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+    
+    <select id="showSensitiveWordsForPageResultCount" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        select
+        count(*)
+        from
+        sensitive_words s
+        left join administer a on s.creator_id = a.id
+        where
+        s.delete_flag = 0
+        <if test="name != null and name != ''">
+            and s.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="creatorName != null and creatorName != ''">
+            and a.user_name like CONCAT('%',CONCAT(#{creatorName},'%'))
+        </if>
+    </select>
+    
+    <!-- 显示企业列表,根据创建时间倒序,根据企业名称搜索 -->
+    <select id="showSensitiveWordsForPageResult" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+            
+        select
+        s.id,
+        s.name,
+        s.creator_id,
+        s.create_time,
+        s.update_time,
+        a.user_name as creatorName
+        from
+        sensitive_words s
+        left join administer a on s.creator_id = a.id
+        where
+        s.delete_flag = 0
+        <if test="name != null and name != ''">
+            and s.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="creatorName != null and creatorName != ''">
+            and a.user_name like CONCAT('%',CONCAT(#{creatorName},'%'))
+        </if>
+
+        order by
+        s.update_time desc,
+        s.create_time DESC,
+        s.id
+        LIMIT
+        #{pageNum},#{pageSize}
+    </select>
+    
+    <select id="getAllSensitiveWords"
+    resultType="java.lang.String">
+        SELECT
+        name
+        FROM
+        sensitive_words
+    </select>
+    
+    
+    <!-- 显示企业列表,根据创建时间倒序,根据企业名称搜索 -->
+    <select id="selectSensitiveWordsByMap" parameterType="java.util.Map"
+            resultMap="ExtendsResultMap">
+        select
+        s.id,
+        s.name,
+        s.creator_id,
+        s.create_time,
+        s.update_time,
+        a.user_name as creatorName
+        from
+        sensitive_words s
+        left join administer a on s.creator_id = a.id
+        where
+        s.delete_flag = 0
+        <if test="name != null and name != ''">
+            and s.name like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="creatorName != null and creatorName != ''">
+            and a.user_name like CONCAT('%',CONCAT(#{creatorName},'%'))
+        </if>
+
+        order by
+        a.update_time desc,
+        a.create_time DESC      
+
+    </select>
+</mapper>

@@ -1,0 +1,277 @@
+/**
+ * Created by yxl on 2015/6/12.
+ */
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+.color-yellow {
+    color: #ffac53;
+}
+
+.navbar {
+    background-color: #5f5f5f;
+}
+
+.ace-nav > li {
+    height: 50px;
+    line-height: 50px;
+}
+
+.btn {
+    padding: 3px 20px;
+    border-width: 1px;
+    border-radius: 2px;
+}
+
+.btn-info {
+    background-color: #3faeee !important;
+}
+
+.btn-bg-white, .btn-bg-white:focus {
+    background-color: #fff !important;
+    color: #3faeee !important;
+    border-color: #3faeee;
+}
+
+.btn-bg-white:hover, .btn-bg-white:active {
+    background-color: transparent !important;
+    border-color: #6fb3e0;
+}
+
+.btn.btn-color-yellow, .btn-color-yellow:focus {
+    border-color: #ffb769;
+    color: #ffb769 !important;
+}
+
+.page-content > .row {
+    color: #666
+}
+
+.page-content .table-search {
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.table {
+    border-bottom: 1px solid #ddd;
+}
+
+.table th, .table td {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.table.table-left th, .table.table-left td {
+    text-align: left
+}
+
+.table tbody > tr > th {
+    padding: 10px 8px;
+}
+
+.table.no-border thead > tr > th, .table.no-border tbody > tr > th, .table.no-border tfoot > tr > th, .table.no-border thead > tr > td, .table.no-border tbody > tr > td, .table.no-border tfoot > tr > td {
+    border-top: 1px solid transparent;
+}
+
+.table th.tableleft, .table td.tableleft {
+    text-align: right;
+    margin-right: 5px;
+}
+
+.tableright {
+    text-align: left;
+}
+
+.data-page {
+    text-align: right
+}
+
+.pagination {
+    margin: 5px 0;
+}
+
+.pagination > li {
+    display: inline-block;
+}
+
+.pagination > li > span {
+    border: none;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.pagination > li.page-code > a {
+    padding: 0px;
+    display: inline-block;
+    height: 32px;
+    line-height: 32px;
+    margin-right: 10px;
+    vertical-align: middle;
+    border: none;
+    color: #393939;
+}
+
+.pagination > li.page-code > a > input {
+    width: 40px;
+    text-align: center;
+    vertical-align: middle;
+    height: 23px;
+    line-height: 16px;
+}
+
+.pagination > li.page-code > a > select {
+    height: 23px;
+    padding: 0;
+    vertical-align: middle;
+}
+
+.pagination .btn-white {
+    padding: 4px 10px !important;
+}
+
+.form-group > div > label {
+    padding-top: 4px;
+    margin-bottom: 4px;
+}
+
+.help-block {
+    margin-bottom: 0
+}
+
+.modal {
+    padding-top: 200px;
+}
+
+.small-modal .modal-dialog {
+    text-align: center;
+    width: 350px;
+}
+
+.my-tabs > li {
+    margin-left: 15px;
+}
+
+.my-tabs > li > a, .my-tabs > li > a:hover, .my-tabs > li > a:focus {
+    background-color: transparent;
+    border: none;
+}
+
+.my-tabs > li.active > a, .my-tabs > li.active > a:hover, .my-tabs > li.active > a:focus {
+    background-color: transparent;
+    border-width: 0 0 2px 0;
+    border-color: #42bdff;
+    color: #42bdff;
+    box-shadow: none;
+}
+
+.tab-content {
+    border: 1px solid #f3f3f3;
+}
+
+.card-more .table-search .control-label {
+    padding-top: 0
+}
+
+.card-more .help-block {
+    margin-left: 65px;
+}
+
+.modal-body .form-horizontal .col-sm-9 {
+    text-align: left
+}
+
+.ace-nav a {
+    color: #bbb !important
+}
+
+.modal-body .table-responsive {
+    height: 200px;
+    overflow-y: auto;
+}
+
+#logo-img {
+    background: url(../images/logo.png);
+    width: 96px;
+    height: 30px;
+}
+
+.prompt {
+    color: #aaa;
+}
+
+span.help-error, label.error {
+    color: #b94a48;
+    padding-left: 5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.navbar-transparent {
+    background: transparent;
+    z-index: 990;
+}
+
+.navbar-toggle {
+    border: 1px solid #E2C9C9;
+}
+
+.navbar-collapse {
+    overflow-x: hidden;
+    overflow-y: visible;
+    max-height: 1000px;
+}
+
+.form-group {
+    margin: 5px 0;
+}
+
+.inline-separate {
+    margin: 0 3px;
+}
+
+@media (max-width: 767px) {
+    .navbar-form {
+        padding-right: 80px;
+    }
+
+    .inline-separate {
+        margin: 15px;
+        display: block;
+    }
+}
+
+@media (max-width: 1271px) {
+    .breakline {
+        display: block;
+        margin-top: 5px;
+    }
+}
+
+@media only screen and (max-width: 991px) {
+    .page-header h1 {
+        padding-left: 80px;
+    }
+}
+
+.icon-bar {
+    border: 1px solid #505050;
+}
+
+select {
+    font-size: 14px;
+    height: 28px;
+    padding: 3px 6px;
+    box-sizing: border-box;
+}
+
+form .btn {
+    top: -1px;
+    height: 28px;
+}
+
+button.btn:active {
+    top: -1px;
+    left: 0;
+}

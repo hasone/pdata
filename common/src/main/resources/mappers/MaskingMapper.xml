@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.MaskingMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.Masking">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="admin_id" property="adminId" jdbcType="BIGINT"/>
+		<result column="crowdfunding_mask" property="crowdfundingMask" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        
+        <result column="mdrc_mask" property="mdrcMask" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, admin_id, crowdfunding_mask, create_time, update_time, mdrc_mask
+    </sql>    
+    
+	<insert id="insert" parameterType="com.cmcc.vrp.province.model.Masking"  useGeneratedKeys="true" keyProperty="id">
+        insert into masking (admin_id, crowdfunding_mask, create_time, update_time, mdrc_mask)
+        values (#{adminId,jdbcType=BIGINT}, #{crowdfundingMask,jdbcType=INTEGER}, NOW(),NOW(),
+        #{mdrcMask,jdbcType=INTEGER})
+    </insert>
+	<select id="getByAdminId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from masking 
+        where admin_id = #{adminId,jdbcType=BIGINT}
+    </select>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.Masking">
+        UPDATE
+        masking
+		<set>
+			<if test="crowdfundingMask != null">
+                crowdfunding_mask = #{crowdfundingMask,jdbcType=INTEGER},
+            </if>           
+           	<if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="mdrcMask != null">
+                mdrc_mask = #{mdrcMask,jdbcType=INTEGER},
+            </if>          
+        </set>
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+</mapper>

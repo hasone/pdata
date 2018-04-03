@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.BlackAndWhiteListMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.BlackAndWhiteList">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="activity_id" property="activityId" jdbcType="BIGINT"/>
+        <result column="activity_type" property="activityType" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="isWhite_flag" property="isWhiteFlag" jdbcType="INTEGER"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        activity_id,
+        activity_type,
+        phone,
+        isWhite_flag,
+        delete_flag
+    </sql>
+
+    <!-- 根据手机号和活动id联合查询 -->
+    <select id="get" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        black_and_white_list
+        where
+        phone = #{phone, jdbcType=VARCHAR} and
+        activity_id = #{activityId, jdbcType=BIGINT} and
+        delete_flag = 0
+    </select>
+
+    <!-- 根据活动id查找所有手机号 -->
+    <select id="getPhonesByActivityId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        black_and_white_list
+        where
+        activity_id = #{activityId, jdbcType=BIGINT}
+        and delete_flag = 0
+    </select>
+
+    <!-- 根据活动id查找所有手机号 -->
+    <select id="getDelPhonesByActivityId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        black_and_white_list
+        where
+        activity_id = #{activityId, jdbcType=BIGINT}
+        and delete_flag = 1
+    </select>
+
+    <!-- 插入单条记录 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.cmcc.vrp.province.model.BlackAndWhiteList">
+        insert into black_and_white_list (
+        phone,
+        activity_type,
+        activity_id,
+        isWhite_flag,
+        delete_flag)
+        values (
+        #{phone,jdbcType=VARCHAR},
+        #{activityType,jdbcType=VARCHAR},
+        #{activityId,jdbcType=BIGINT},
+        #{isWhiteFlag,jdbcType=INTEGER},
+        #{deleteFlag,jdbcType=INTEGER})
+    </insert>
+
+    <!-- 根据手机号和活动id删除 -->
+    <update id="delete">
+        update
+        black_and_white_list
+        set
+        delete_flag = 1
+        where
+        phone = #{phone, jdbcType=VARCHAR} and
+        activity_id = #{activityId, jdbcType=VARCHAR} and
+        delete_flag = 0
+    </update>
+
+    <!-- 根据主键删除 -->
+    <update id="deleteById" parameterType="java.lang.Long">
+        update
+        black_and_white_list
+        set
+        delete_flag = 1
+        where
+        id = #{id, jdbcType=BIGINT} and
+        delete_flag = 0
+    </update>
+
+    <!-- 根据活动id删除 -->
+    <update id="deleteByActivityId" parameterType="java.lang.Long">
+        update
+        black_and_white_list
+        set
+        delete_flag = 1
+        where
+        activity_id = #{activityId, jdbcType=BIGINT} and
+        delete_flag = 0
+    </update>
+
+    <select id="countByActivityId" parameterType="java.lang.Long">
+        SELECT
+        COUNT(activity_id)
+        FROM
+        black_and_white_list
+        WHERE
+        activity_id = #{activityId, jdbcType=BIGINT} and
+        delete_flag = 0
+    </select>
+
+
+    <!-- 更新一条记录 -->
+    <update id="update">
+        update
+        black_and_white_list
+        set
+        delete_flag = 0
+        where
+        phone = #{phone, jdbcType= VARCHAR} and
+        activity_id = #{activityId,jdbcType=BIGINT}
+    </update>
+
+    <!-- 批量更新 -->
+    <!--
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update black_and_white_list
+               <set>
+                isWhite_flag = #{item.isWhiteFlag,jdbcType=INTEGER},
+                delete_flag = #{item.deleteFlag,jdbcType=INTEGER}
+            </set>
+            where
+                phone = #{item.phone, jdbcType=VARCHAR} and
+                activity_id = #{item.activityId,jdbcType=BIGINT} and
+                activity_type = #{item.activityType,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+    -->
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into black_and_white_list (
+        activity_id,
+        activity_type,
+        phone,
+        isWhite_flag,
+        delete_flag) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.activityId,jdbcType=BIGINT},
+            #{item.activityType,jdbcType=VARCHAR},
+            #{item.phone, jdbcType=VARCHAR},
+            #{item.isWhiteFlag,jdbcType=INTEGER},
+            #{item.deleteFlag,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
+    <!-- 批量删除-->
+    <update id="batchDelete">
+        update
+        black_and_white_list
+        set
+        delete_flag = 1
+        where
+        phone in (
+        <foreach collection="phonelist" item="phone" separator=",">
+            #{phone, jdbcType = VARCHAR}
+        </foreach>
+        ) and
+        activity_id = #{activityId,jdbcType=BIGINT} and
+        delete_flag = 0
+    </update>
+
+    <!-- 批量将已删除修改成未删除-->
+    <update id="batchUpdate">
+        update
+        black_and_white_list
+        set
+        delete_flag = 0
+        where
+        phone in (
+        <foreach collection="phonelist" item="phone" separator=",">
+            #{phone, jdbcType = VARCHAR}
+        </foreach>
+        ) and
+        activity_id = #{activityId,jdbcType=BIGINT} and
+        delete_flag = 1
+    </update>
+
+</mapper>

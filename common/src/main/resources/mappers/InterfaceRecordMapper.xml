@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.InterfaceRecordMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.InterfaceRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enterprise_code" property="enterpriseCode" jdbcType="VARCHAR"/>
+        <result column="product_code" property="productCode" jdbcType="VARCHAR"/>
+        <result column="phone_num" property="phoneNum" jdbcType="VARCHAR"/>
+        <result column="serial_num" property="serialNum" jdbcType="VARCHAR"/>
+        <result column="ip_address" property="ipAddress" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="err_msg" property="errMsg" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="charge_time" property="chargeTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="sys_serial_num" property="sysSerialNum" jdbcType="VARCHAR"/>
+        <result column="boss_serial_num" property="bossSerialNum" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="ExtendLogsResultMap" type="com.cmcc.vrp.province.model.InterfaceRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enterprise_code" property="enterpriseCode" jdbcType="VARCHAR"/>
+        <result column="product_code" property="productCode" jdbcType="VARCHAR"/>
+        <result column="phone_num" property="phoneNum" jdbcType="VARCHAR"/>
+        <result column="serial_num" property="serialNum" jdbcType="VARCHAR"/>
+        <result column="ip_address" property="ipAddress" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="err_msg" property="errMsg" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="charge_time" property="chargeTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="sys_serial_num" property="sysSerialNum" jdbcType="VARCHAR"/>
+        <result column="boss_serial_num" property="bossSerialNum" jdbcType="VARCHAR"/>
+
+        <result column="enterpriseName" property="enterpriseName" jdbcType="VARCHAR"/>
+        <result column="productName" property="productName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, enterprise_code, product_code, phone_num, serial_num, ip_address, status, err_msg,
+        create_time, charge_time, delete_flag, sys_serial_num, boss_serial_num
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from interface_record
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from interface_record
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.InterfaceRecord" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into interface_record (id, enterprise_code, product_code,
+        phone_num, serial_num, ip_address,
+        status, err_msg, create_time,
+        charge_time, delete_flag ,sys_serial_num,boss_serial_num, fingerprint)
+        values (#{id,jdbcType=BIGINT}, #{enterpriseCode,jdbcType=VARCHAR}, #{productCode,jdbcType=VARCHAR},
+        #{phoneNum,jdbcType=VARCHAR}, #{serialNum,jdbcType=VARCHAR}, #{ipAddress,jdbcType=VARCHAR},
+        #{status,jdbcType=INTEGER}, #{errMsg,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{chargeTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER}, #{sysSerialNum,jdbcType=VARCHAR},
+        #{bossSerialNum,jdbcType=VARCHAR}, #{fingerprint,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.InterfaceRecord">
+        insert into interface_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="enterpriseCode != null">
+                enterprise_code,
+            </if>
+            <if test="productCode != null">
+                product_code,
+            </if>
+            <if test="phoneNum != null">
+                phone_num,
+            </if>
+            <if test="serialNum != null">
+                serial_num,
+            </if>
+            <if test="ipAddress != null">
+                ip_address,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="errMsg != null">
+                err_msg,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="chargeTime != null">
+                charge_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="sysSerialNum != null">
+                sys_serial_num,
+            </if>
+            <if test="bossSerialNum != null">
+                boss_serial_num,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="enterpriseCode != null">
+                #{enterpriseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="productCode != null">
+                #{productCode,jdbcType=VARCHAR},
+            </if>
+            <if test="phoneNum != null">
+                #{phoneNum,jdbcType=VARCHAR},
+            </if>
+            <if test="serialNum != null">
+                #{serialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="ipAddress != null">
+                #{ipAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="errMsg != null">
+                #{errMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chargeTime != null">
+                #{chargeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="sysSerialNum != null">
+                #{sysSerialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="bossSerialNum != null">
+                #{bossSerialNum,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.InterfaceRecord">
+        update interface_record
+        <set>
+            <if test="enterpriseCode != null">
+                enterprise_code = #{enterpriseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="productCode != null">
+                product_code = #{productCode,jdbcType=VARCHAR},
+            </if>
+            <if test="phoneNum != null">
+                phone_num = #{phoneNum,jdbcType=VARCHAR},
+            </if>
+            <if test="serialNum != null">
+                serial_num = #{serialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="ipAddress != null">
+                ip_address = #{ipAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="errMsg != null">
+                err_msg = #{errMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chargeTime != null">
+                charge_time = #{chargeTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="sysSerialNum != null">
+                sys_serial_num = #{sysSerialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="bossSerialNum != null">
+                boss_serial_num = #{bossSerialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="statusCode != null">
+                status_code = #{statusCode, jdbcType = VARCHAR}
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.InterfaceRecord">
+        update interface_record
+        set enterprise_code = #{enterpriseCode,jdbcType=VARCHAR},
+        product_code = #{productCode,jdbcType=VARCHAR},
+        phone_num = #{phoneNum,jdbcType=VARCHAR},
+        serial_num = #{serialNum,jdbcType=VARCHAR},
+        ip_address = #{ipAddress,jdbcType=VARCHAR},
+        status = #{status,jdbcType=INTEGER},
+        err_msg = #{errMsg,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        charge_time = #{chargeTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        sys_serial_num = #{sysSerialNum,jdbcType=VARCHAR},
+        boss_serial_num = #{bossSerialNum,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="findExistRecord" resultMap="BaseResultMap"
+            parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        interface_record
+        <where>
+            delete_flag=0
+            <if test="enterCode != null">
+                AND enterprise_code = #{enterCode}
+            </if>
+            <if test="prdCode != null">
+                AND product_code = #{prdCode}
+            </if>
+            <if test="phoneNum != null">
+                AND phone_num = #{phoneNum}
+            </if>
+            <if test="serialNum != null">
+                AND serial_num = #{serialNum}
+            </if>
+            <if test="sysSerialNum != null">
+                AND sys_serial_num = #{sysSerialNum}
+            </if>
+        </where>
+    </select>
+
+    <!-- 用于日志管理查询 -->
+    <select id="countListLogs" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM
+        interface_record t1
+        LEFT JOIN
+        enterprises t2 ON t2.code = t1.enterprise_code
+        LEFT JOIN
+        product t3 ON t3.product_code = t1.product_code
+        <where>
+            <if test="startDate != null  and  startDate !='' ">
+                and t1.charge_time &gt;= #{startDate}
+            </if>
+
+            <if test="endDate != null and  endDate !=''">
+                and t1.charge_time &lt;= #{endDate}
+            </if>
+
+            <if test="sysSerialCode != null">
+                and t1.sys_serial_num = #{sysSerialCode,jdbcType=VARCHAR}
+            </if>
+
+            <if test="phoneNum != null">
+                and t1.phone_num = #{phoneNum,jdbcType=VARCHAR}
+            </if>
+
+            <if test="status != null and status = ''">
+                and t1.status = #{status,jdbcType=TINYINT}
+            </if>
+
+            <if test="enterpriseCode != null">
+                and t1.enterprise_code like CONCAT('%',CONCAT(#{enterpriseCode},'%'))
+            </if>
+
+            <if test="enterpriseName != null">
+                and t2.name like CONCAT('%',CONCAT(#{enterpriseName},'%'))
+            </if>
+            <!--
+            <if test="productCode != null and productCode != ''">
+              and t1.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+          </if>
+
+            <if test="productName != null and productName != ''">
+              and t3.name like CONCAT('%',CONCAT(#{productName},'%'))
+          </if>
+          -->
+        </where>
+    </select>
+
+    <select id="listLogs" parameterType="java.util.Map" resultMap="ExtendLogsResultMap">
+        SELECT
+        t1.id,
+        t1.enterprise_code,
+        t1.product_code,
+        t1.phone_num,
+        t1.serial_num,
+        t1.ip_address,
+        t1.status,
+        t1.err_msg,
+        t1.create_time,
+        t1.charge_time,
+        t1.delete_flag,
+        t1.sys_serial_num,
+
+        t2.name as enterpriseName,
+        t3.name as productName
+
+        FROM
+        interface_record t1
+        LEFT JOIN
+        enterprises t2 ON t2.code = t1.enterprise_code
+        LEFT JOIN
+        product t3 ON t3.product_code = t1.product_code
+        <where>
+            <if test="startDate != null  and  startDate !='' ">
+                and t1.charge_time &gt;= #{startDate}
+            </if>
+
+            <if test="endDate != null and  endDate !=''">
+                and t1.charge_time &lt;= #{endDate}
+            </if>
+
+            <if test="sysSerialCode != null">
+                and t1.sys_serial_num = #{sysSerialCode,jdbcType=VARCHAR}
+            </if>
+
+            <if test="phoneNum != null">
+                and t1.phone_num = #{phoneNum,jdbcType=VARCHAR}
+            </if>
+
+            <if test="status != null  and status = ''">
+                and t1.status = #{status,jdbcType=TINYINT}
+            </if>
+
+            <if test="enterpriseCode != null">
+                and t1.enterprise_code like CONCAT('%',CONCAT(#{enterpriseCode},'%'))
+            </if>
+
+            <if test="enterpriseName != null">
+                and t2.name like CONCAT('%',CONCAT(#{enterpriseName},'%'))
+            </if>
+            <!--
+            <if test="productCode != null and productCode != ''">
+              and t1.product_code like CONCAT('%',CONCAT(#{productCode},'%'))
+          </if>
+
+            <if test="productName != null and productName != ''">
+              and t3.name like CONCAT('%',CONCAT(#{productName},'%'))
+          </if>
+           -->
+        </where>
+
+        ORDER BY t1.create_time DESC, t1.charge_time DESC
+
+        <if test="pageSize != null and pageNum!=null">
+            LIMIT #{pageNum}, #{pageSize}
+        </if>
+    </select>
+
+    <!-- 获取所有的记录ID -->
+    <select id="getAllRecordIds" resultType="java.lang.Long">
+        SELECT
+        `id`
+        FROM
+        interface_record
+    </select>
+
+    <!-- 获取所有的记录键值 -->
+    <select id="getAllCacheKeys" resultType="java.lang.String">
+        SELECT
+        CONCAT(enterprise_code, '.', serial_num, '.', phone_num)
+        FROM
+        interface_record
+    </select>
+
+    <update id="batchUpdateStatus" parameterType="java.util.List">
+        UPDATE
+        interface_record
+        SET
+        status = CASE
+        <foreach collection="records" item="record" close="ELSE `status` END,">
+            WHEN id=#{record.id} THEN #{record.status}
+        </foreach>
+        err_msg = CASE
+        <foreach collection="records" item="record" close="ELSE `err_msg` END,">
+            WHEN id=#{record.id} THEN #{record.errMsg}
+        </foreach>
+
+        status_code = CASE
+        <foreach collection="records" item="record" close="ELSE `status_code` END,">
+            WHEN id=#{record.id} THEN #{record.statusCode}
+        </foreach>
+
+        charge_time = CASE
+        <foreach collection="records" item="record" close="ELSE `charge_time` END,">
+            WHEN id=#{record.id} THEN NOW()
+        </foreach>
+        phone_num =CASE
+        <foreach collection="records" item="record" close="ELSE `phone_num` END">
+            WHEN id=#{record.id} THEN #{record.phoneNum}
+        </foreach>
+        WHERE
+        id IN
+        <foreach collection="records" item="record" open="(" close=")" separator=",">
+            #{record.id, jdbcType = BIGINT}
+        </foreach>
+
+    </update>
+    <update id="updateStatusCode">
+        UPDATE
+        interface_record
+        SET
+        status_code = #{statusCode, jdbcType = VARCHAR}
+        WHERE
+        cast(IFNULL(status_code, '0') as SIGNED) &lt; cast(#{statusCode, jdbcType = VARCHAR} as SIGNED)
+        and
+        id = #{id, jdbcType = BIGINT}
+    </update>
+    
+    <select id="selectBySerialNum" resultMap="BaseResultMap" resultType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from interface_record
+        where serial_num = #{serialNum,jdbcType=VARCHAR}
+    </select>
+    
+    
+</mapper>

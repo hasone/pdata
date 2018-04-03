@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.IndividualFlowcoinExchangeMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.IndividualFlowcoinExchange">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="admin_id" property="adminId" jdbcType="BIGINT"/>
+        <result column="count" property="count" jdbcType="INTEGER"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="individual_product_id" property="individualProductId" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="BIGINT"/>
+        <result column="system_serial" property="systemSerial" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, admin_id, count, mobile, individual_product_id, status, create_time, update_time,
+        delete_flag, version, system_serial
+    </sql>
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap"
+               type="com.cmcc.vrp.province.model.IndividualFlowcoinExchange">
+        <result column="product_size" property="productSize" jdbcType="BIGINT"/>
+    </resultMap>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from individual_flowcoin_exchange
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from individual_flowcoin_exchange
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.IndividualFlowcoinExchange" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into individual_flowcoin_exchange (id, admin_id, count,
+        mobile, individual_product_id,
+        status, create_time, update_time,
+        delete_flag, version, system_serial
+        )
+        values (#{id,jdbcType=BIGINT}, #{adminId,jdbcType=BIGINT}, #{count,jdbcType=INTEGER},
+        #{mobile,jdbcType=VARCHAR}, #{individualProductId,jdbcType=BIGINT},
+        #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=INTEGER}, #{version,jdbcType=BIGINT}, #{systemSerial,jdbcType=VARCHAR}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.IndividualFlowcoinExchange"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into individual_flowcoin_exchange
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="adminId != null">
+                admin_id,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="individualProductId != null">
+                individual_product_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+            <if test="systemSerial != null">
+                system_serial,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="adminId != null">
+                #{adminId,jdbcType=BIGINT},
+            </if>
+            <if test="count != null">
+                #{count,jdbcType=INTEGER},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="individualProductId != null">
+                #{individualProductId,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=BIGINT},
+            </if>
+            <if test="systemSerial != null">
+                #{systemSerial,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.IndividualFlowcoinExchange">
+        update individual_flowcoin_exchange
+        <set>
+            <if test="adminId != null">
+                admin_id = #{adminId,jdbcType=BIGINT},
+            </if>
+            <if test="count != null">
+                count = #{count,jdbcType=INTEGER},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="individualProductId != null">
+                individual_product_id = #{individualProductId,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="version != null">
+                version = #{version,jdbcType=BIGINT},
+            </if>
+            <if test="systemSerial != null">
+                system_serial = #{systemSerial,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.IndividualFlowcoinExchange">
+        update individual_flowcoin_exchange
+        set admin_id = #{adminId,jdbcType=BIGINT},
+        count = #{count,jdbcType=INTEGER},
+        mobile = #{mobile,jdbcType=VARCHAR},
+        individual_product_id = #{individualProductId,jdbcType=BIGINT},
+        status = #{status,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        version = #{version,jdbcType=BIGINT},
+        system_serial = #{systemSerial,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateStatus">
+        update individual_flowcoin_exchange
+        set status = #{status,jdbcType=INTEGER},
+        update_time = now()
+        where id = #{id,jdbcType=BIGINT}
+        and delete_flag = 0
+    </update>
+
+    <select id="selectByMap" parameterType="java.util.Map" resultMap="ExtendsResultMap">
+        select
+        ife.id, ife.admin_id, ife.count, ife.mobile, ife.individual_product_id, ife.status, ife.create_time,
+        ife.update_time,
+        ife.delete_flag, ife.version, ife.system_serial,(ip.product_size/1024) as productSize
+        from individual_flowcoin_exchange ife
+        left join individual_product ip on ife.individual_product_id = ip.id
+        where
+        ife.delete_flag = 0
+        <if test="adminId != null">
+            and ife.admin_id = #{adminId}
+        </if>
+        <if test="startDate != null">
+            and Date(ife.create_time) &gt;= Date(#{startDate})
+        </if>
+        <if test="endDate != null">
+            and Date(ife.create_time) &lt;= Date(#{endDate})
+        </if>
+        <if test="mobile != null">
+            and ife.mobile = #{mobile}
+        </if>
+        order by
+        ife.create_time DESC,
+        ife.update_time DESC
+        <if test="pageNum != null and pageSize != null">
+            LIMIT
+            #{pageNum},#{pageSize}
+        </if>
+    </select>
+
+    <select id="countByMap" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+        count(0)
+        from individual_flowcoin_exchange
+        where
+        delete_flag = 0
+        <if test="adminId != null">
+            and admin_id = #{adminId}
+        </if>
+        <if test="startDate != null">
+            and Date(create_time) &gt;= Date(#{startDate})
+        </if>
+        <if test="endDate != null">
+            and Date(create_time) &lt;= Date(#{endDate})
+        </if>
+        <if test="mobile != null">
+            and mobile = #{mobile}
+        </if>
+    </select>
+
+    <select id="selectBySystemSerial" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from individual_flowcoin_exchange
+        where system_serial = #{systemSerial,jdbcType=VARCHAR}
+    </select>
+</mapper>

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmcc.vrp.province.dao.ManagerMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.Manager">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="role_id" jdbcType="BIGINT" property="roleId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="delete_flag" jdbcType="TINYINT" property="deleteFlag"/>
+    </resultMap>
+
+    <resultMap id="childIdMap" type="java.lang.Long">
+        <result column="id" jdbcType="BIGINT" property="id"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, role_id, name, parent_id, create_time, update_time, delete_flag
+    </sql>
+    
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        	<include refid="Base_Column_List"/>
+        from 
+        	manager
+        where 
+        	id = #{id,jdbcType=BIGINT}
+    </select>
+    
+    <select id="getByRoleId" parameterType="java.lang.Long" resultMap="childIdMap">
+    	select
+    		id
+    	from
+    		manager
+    	where 
+    		role_id = #{id,jdbcType=BIGINT}
+    </select>
+    
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from manager
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.Manager" useGeneratedKeys="true" keyProperty="id">
+        insert into manager (id, role_id, name,
+        parent_id, create_time, update_time,
+        delete_flag)
+        values (#{id,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
+        #{parentId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{deleteFlag,jdbcType=TINYINT})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.Manager" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into manager
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="roleId != null">
+                role_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="roleId != null">
+                #{roleId,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.Manager">
+        update manager
+        <set>
+            <if test="roleId != null">
+                role_id = #{roleId,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.Manager">
+        update manager
+        set role_id = #{roleId,jdbcType=BIGINT},
+        name = #{name,jdbcType=VARCHAR},
+        parent_id = #{parentId,jdbcType=BIGINT},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        delete_flag = #{deleteFlag,jdbcType=TINYINT}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectByAdminId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        m.*,CONCAT(m.name,r.name)as extendName
+        from manager m
+        left join admin_manager am on m.id = am.manager_id
+        left join role r on r.role_id = m.role_id
+        where am.admin_id = #{adminId,jdbcType=BIGINT}
+        and am.delete_flag = 0
+    </select>
+
+    <select id="selectByParentIdCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+
+        select
+        count(*)
+        from manager m
+        left join role r on m.role_id = r.role_id
+        where
+        m.parent_id = #{parentId}
+        <if test="name != null and name != ''">
+            and CONCAT(m.name,r.name) like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="roleId != null and roleId != ''">
+            and m.role_id = #{roleId}
+        </if>
+    </select>
+
+    <select id="selectByParentIdForPage" parameterType="java.util.Map" resultType="com.cmcc.vrp.province.model.Manager">
+        select
+        m.id, m.role_id, m.name, m.parent_id, m.create_time as createTime, m.update_time as updateTime,
+        m.delete_flag,r.name as roleName,
+        CONCAT(m.name,r.name)as extendName
+        from manager m
+        left join role r on m.role_id = r.role_id
+        where
+        m.parent_id = #{parentId}
+        <if test="name != null and name != ''">
+            and CONCAT(m.name,r.name) like CONCAT('%',CONCAT(#{name},'%'))
+        </if>
+        <if test="roleId != null and roleId != ''">
+            and m.role_id = #{roleId}
+        </if>
+        ORDER BY
+        m.update_time DESC
+        LIMIT
+        #{pageNum},
+        #{pageSize}
+    </select>
+
+    <select id="selectByParentId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        m.id, m.role_id, m.name, m.parent_id, m.create_time as createTime, m.update_time as updateTime,
+        m.delete_flag,r.name as roleName,
+        CONCAT(m.name,r.name)as extendName
+        from manager m
+        left join role r on m.role_id = r.role_id
+        where m.parent_id = #{parentId}
+        ORDER BY
+        m.update_time DESC
+    </select>
+
+    <!-- 查找上一级节点 -->
+    <select id="selectHigherFatherNodeByParentId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        manager
+        WHERE
+        id = #{parentId,jdbcType=INTEGER}
+    </select>
+
+    <!-- 批量获取管理员节点 -->
+    <select id="getManagers" resultMap="BaseResultMap" parameterType="java.util.List">
+        SELECT
+          <include refid="Base_Column_List" />
+        FROM
+          manager
+        WHERE
+          id in
+          <foreach collection="managerIds" item="managerId" open="(" close=")" separator=",">
+              #{managerId, jdbcType = BIGINT}
+          </foreach>
+    </select>
+
+    <!-- 获取指定节点的直接子节点 -->
+    <select id="getDirectChild" resultMap="childIdMap">
+        SELECT
+          id
+        FROM
+          manager
+        WHERE
+          parent_id in
+          <foreach collection="rootIdList" item="rootId" open="(" close=")" separator=",">
+            #{rootId, jdbcType = BIGINT}
+          </foreach>
+          and id != parent_id
+    </select>
+
+    <select id="selectManagerByadminId" resultMap="BaseResultMap">
+        SELECT
+        m.id,
+        m.role_id,
+        m.name,
+        m.parent_id,
+        m.create_time,
+        m.update_time,
+        m.delete_flag
+        FROM
+        manager m
+        RIGHT JOIN admin_manager admm
+        on m.id = admm.manager_id
+        RIGHT JOIN administer adm
+        ON admm.admin_id = adm.id
+        WHERE
+        admm.delete_flag = 0
+        AND
+        adm.id = #{adminId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectSonIdsByParentId" resultType="java.lang.Long">
+        SELECT id
+        FROM manager
+        WHERE
+        parent_id = #{parentId,jdbcType=INTEGER}
+    </select>
+
+    <select id="getByRoleIdAndName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        manager
+        WHERE
+        role_id = #{roleId, jdbcType = BIGINT} AND
+        `name` = #{name, jdbcType = VARCHAR}
+    </select>
+
+    <select id="getByPhone" resultMap="BaseResultMap">
+        SELECT
+        t2.*
+        from
+        manager t2
+        left join
+        admin_manager t1 on t2.id = t1.manager_id
+        left join
+        administer a on a.id = t1.admin_id
+        where
+        a.mobile_phone = #{phone,jdbcType=VARCHAR} and a.delete_flag = 0 and t1.delete_flag = 0
+    </select>
+
+
+    <select id="selectEntParentNodeByEnterIdOrRoleId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        	from manager m2
+        where
+        	m2.id in
+        	(
+        	  select m.parent_id from ent_manager em inner join manager m on em.manager_id = m.id
+        		where em.enter_id = #{enterId,jdbcType=BIGINT} and em.delete_flag = 0
+        	)
+        <if test="roleId != null and roleId != ''">
+            and m2.role_id = #{roleId,jdbcType=BIGINT}
+        </if>
+    </select>
+    <select id="selectManagerIdByEntIdAndRoleId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select 
+        (case when (select role_id from manager where id=g.parent_id)=#{roleId,jdbcType=BIGINT} then (select id from manager where id=g.parent_id) 
+        when (select role_id from manager where id=g.parent_id)&lt;&gt;#{roleId,jdbcType=BIGINT} then (select t2.id from manager t1 left join manager t2 on t1.parent_id=t2.id where t1.id=g.parent_id) end) 
+         from  manager g where g.id=#{entManageId,jdbcType=BIGINT};
+    </select>
+</mapper>

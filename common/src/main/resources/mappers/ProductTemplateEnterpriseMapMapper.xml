@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ProductTemplateEnterpriseMapMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ProductTemplateEnterpriseMap" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT" />
+    <result column="product_template_id" property="productTemplateId" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap id="ExtendResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ProductTemplateEnterpriseMap">
+    <result column="productTemplateName" property="productTemplateName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, enterprise_id, product_template_id, create_time, update_time, delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_template_enterprise_map
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from product_template_enterprise_map
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <update id="deleteByEntId" parameterType="java.lang.Long">
+  	UPDATE 
+  		product_template_enterprise_map 
+	SET
+		delete_flag=1,
+		update_time = NOW()
+	WHERE
+		enterprise_id = #{enterpriseId,jdbcType=BIGINT}
+		AND delete_flag=0
+  </update>
+  
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.ProductTemplateEnterpriseMap" >
+    insert into product_template_enterprise_map (id, enterprise_id, product_template_id, 
+      create_time, update_time, delete_flag
+      )
+    values (#{id,jdbcType=BIGINT}, #{enterpriseId,jdbcType=BIGINT}, #{productTemplateId,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleteFlag,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.ProductTemplateEnterpriseMap" >
+    insert into product_template_enterprise_map
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id,
+      </if>
+      <if test="productTemplateId != null" >
+        product_template_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="enterpriseId != null" >
+        #{enterpriseId,jdbcType=BIGINT},
+      </if>
+      <if test="productTemplateId != null" >
+        #{productTemplateId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.ProductTemplateEnterpriseMap" >
+    update product_template_enterprise_map
+    <set >
+      <if test="enterpriseId != null" >
+        enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+      </if>
+      <if test="productTemplateId != null" >
+        product_template_id = #{productTemplateId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ProductTemplateEnterpriseMap" >
+    update product_template_enterprise_map
+    set enterprise_id = #{enterpriseId,jdbcType=BIGINT},
+      product_template_id = #{productTemplateId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!--根据产品模板id查找-->
+  <select id="selectByProductTemplateId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT
+      <include refid="Base_Column_List" />
+    FROM
+      product_template_enterprise_map
+    WHERE
+      delete_flag = 0
+      <if test="productTemplateId != null" >
+        AND product_template_id = #{productTemplateId,jdbcType=BIGINT}
+      </if>
+  </select>
+
+  <!--根据产品模板id删除-->
+  <update id="deleteByProductTemplateId" parameterType="java.lang.Long">
+      UPDATE
+        product_template_enterprise_map
+      SET
+        delete_flag = 1,
+        update_time = now()
+      WHERE
+        delete_flag = 0
+        <if test="productTemplateId != null" >
+            AND product_template_id = #{productTemplateId,jdbcType=BIGINT}
+        </if>
+  </update>
+
+  <select id="selectByEntId" parameterType="java.lang.Long" resultMap="ExtendResultMap">
+    SELECT
+      t1.*,
+      t2.name AS productTemplateName
+    FROM
+      product_template_enterprise_map t1
+    LEFT JOIN
+      product_template t2 ON t2.id = t1.product_template_id
+    WHERE
+      t1.delete_flag = 0 AND
+      t2.delete_flag = 0 AND
+      t1.enterprise_id = #{entId, jdbcType=BIGINT}
+  </select>
+
+</mapper>

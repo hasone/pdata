@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ActivityBlackAndWhiteMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ActivityBlackAndWhite">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="activity_id" property="activityId" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="is_white" property="isWhite" jdbcType="INTEGER"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, activity_id, mobile, is_white, delete_flag, create_time, update_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from activity_black_and_white
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from activity_black_and_white
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.ActivityBlackAndWhite">
+        insert into activity_black_and_white (id, activity_id, mobile,
+        is_white, delete_flag, create_time,
+        update_time)
+        values (#{id,jdbcType=BIGINT}, #{activityId,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
+        #{isWhite,jdbcType=INTEGER}, #{deleteFlag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <!--批量插入-->
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into
+        activity_black_and_white
+        (
+        activity_id,
+        mobile,
+        is_white,
+        delete_flag,
+        create_time,
+        update_time
+        )
+        values
+        <foreach collection="records" item="record" separator=",">
+            (
+            #{record.activityId,jdbcType=VARCHAR},
+            #{record.mobile,jdbcType=VARCHAR},
+            #{record.isWhite,jdbcType=INTEGER},
+            #{record.deleteFlag,jdbcType=INTEGER},
+            #{record.createTime,jdbcType=TIMESTAMP},
+            #{record.updateTime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.ActivityBlackAndWhite">
+        insert into activity_black_and_white
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="activityId != null">
+                activity_id,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="isWhite != null">
+                is_white,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="activityId != null">
+                #{activityId,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="isWhite != null">
+                #{isWhite,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.ActivityBlackAndWhite">
+        update activity_black_and_white
+        <set>
+            <if test="activityId != null">
+                activity_id = #{activityId,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="isWhite != null">
+                is_white = #{isWhite,jdbcType=INTEGER},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.ActivityBlackAndWhite">
+        update activity_black_and_white
+        set activity_id = #{activityId,jdbcType=VARCHAR},
+        mobile = #{mobile,jdbcType=VARCHAR},
+        is_white = #{isWhite,jdbcType=INTEGER},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectPhonesByMap" resultType="java.lang.String" parameterType="java.util.Map">
+        select
+        mobile
+        from activity_black_and_white
+        where delete_flag = 0
+        <if test="activityId != null and activityId != ''">
+            and activity_id = #{activityId,jdbcType=VARCHAR}
+        </if>
+        <if test="mobile != null and mobile != ''">
+            and mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="isWhite != null and isWhite != ''">
+            and is_white = #{isWhite,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <update id="deleteByActivityId" parameterType="java.lang.String">
+        UPDATE
+        activity_black_and_white
+        SET
+        delete_flag = 1
+        WHERE
+        activity_id = #{activityId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateIsWhiteByActivityId">
+        UPDATE
+        activity_black_and_white
+        SET
+        is_white = #{isWhite,jdbcType=INTEGER}
+        WHERE
+        activity_id = #{activityId,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

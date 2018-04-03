@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.MdrcCardmakerMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.MdrcCardmaker">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="serial_number" property="serialNumber" jdbcType="VARCHAR"/>
+        <result column="operator_name" property="operatorName" jdbcType="VARCHAR"/>
+        <result column="operator_mobile" property="operatorMobile" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="operator_id" property="operatorId" jdbcType="BIGINT"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="TINYINT"/>
+        <result column="public_key" property="publicKey" jdbcType="BLOB"/>
+        <result column="private_key" property="privateKey" jdbcType="BLOB"/>
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, serial_number, create_time, operator_id, delete_flag, creator_id
+    </sql>
+
+    <select id="selectAllCardmaker" resultMap="BaseResultMap">
+        select
+        	<include refid="Base_Column_List"/>
+        from 
+        	mdrc_cardmaker
+        where
+        	delete_flag = 0 
+    </select>
+
+    <!-- 制卡商唯一性校验 -->
+    <select id="checkUnique" resultMap="BaseResultMap" parameterType="com.cmcc.vrp.province.model.MdrcCardmaker">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        mdrc_cardmaker
+        <where>
+        	delete_flag = 0 
+            <if test="name != null and name != ''">
+                and name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="serialNumber != null and serialNumber != ''">
+                and serial_number = #{serialNumber,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+	<!-- 根据id获取未删除的记录 -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap"
+            parameterType="java.lang.Long">
+        SELECT
+        C.`id`,
+        C.`name`,
+        C.`serial_number`,
+        C.`create_time`,
+        A.`user_name` AS operator_name,
+        A.`mobile_phone` AS
+        operator_mobile,
+        C.`operator_id`,
+        C.`delete_flag`,
+        C.`creator_id`
+        FROM
+        mdrc_cardmaker C
+        LEFT JOIN administer A ON
+        C.operator_id=A.id
+        WHERE C.`id` = #{id,jdbcType=BIGINT} and C.`delete_flag`=0
+    </select>
+    
+    <!-- 根据id获取记录信息，用于记录显示 -->
+    <select id="selectByPrimaryKeyForshow" resultMap="BaseResultMap"
+            parameterType="java.lang.Long">
+        SELECT
+        C.`id`,
+        C.`name`,
+        C.`serial_number`,
+        C.`create_time`,
+        A.`user_name` AS operator_name,
+        A.`mobile_phone` AS
+        operator_mobile,
+        C.`operator_id`,
+        C.`delete_flag`,
+        C.`creator_id`
+        FROM
+        mdrc_cardmaker C
+        LEFT JOIN administer A ON
+        C.operator_id=A.id
+        WHERE C.`id` = #{id,jdbcType=BIGINT} 
+    </select>
+
+    <select id="selectWithKeys" resultMap="BaseResultMap"
+            parameterType="java.util.Map">
+        SELECT
+        C.`id`,
+        C.`name`,
+        C.`serial_number`,
+        C.`create_time`,
+        A.`user_name` AS operator_name,
+        A.`mobile_phone` AS
+        operator_mobile,
+        C.`operator_id`,
+        C.`delete_flag`,
+        C.`public_key`,
+        C.`private_key`,
+        C.`creator_id`
+        FROM
+        mdrc_cardmaker C
+        LEFT JOIN administer A ON
+        C.operator_id=A.id
+        WHERE C.`id` = #{id,jdbcType=BIGINT}
+        <if test="creatorId != null">
+            and C.`creator_id` = #{creatorId,jdbcType=BIGINT}
+        </if>
+    </select>
+
+    <select id="selectByOperatorId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select * from
+        mdrc_cardmaker
+        where operator_id = #{operatorId,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from
+        mdrc_cardmaker
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.MdrcCardmaker">
+        insert into
+        mdrc_cardmaker (id, name, serial_number,
+        create_time,
+        operator_id, delete_flag, public_key, private_key, creator_id)
+        values
+        (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
+        #{serialNumber,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{operatorId,jdbcType=BIGINT}, #{deleteFlag,jdbcType=TINYINT},
+        #{publicKey,jdbcType=BLOB},
+        #{privateKey,jdbcType=BLOB}, #{creatorId,jdbcType=BIGINT}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.MdrcCardmaker">
+        insert into mdrc_cardmaker
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="serialNumber != null">
+                serial_number,
+            </if>
+            <if test="operatorId != null">
+                operator_id,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="public_key != null">
+                public_key,
+            </if>
+            <if test="private_key != null">
+                private_key,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="serialNumber != null">
+                #{serialNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="operatorId != null">
+                #{operatorId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="publicKey != null">
+                #{publicKey,jdbcType=BLOB},
+            </if>
+            <if test="privateKey != null">
+                #{privateKey,jdbcType=BLOB},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId,jdbcType=BLOB},
+            </if>
+        </trim>
+    </insert>
+    <!-- 逻辑删除 -->
+    <update id="deleteCardmaker" parameterType="java.lang.Long">
+    	UPDATE 
+			mdrc_cardmaker
+		SET
+			delete_flag=1
+		WHERE
+			delete_flag= 0 and
+			id = #{id,jdbcType=BIGINT}
+    </update>
+    
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.MdrcCardmaker">
+        update mdrc_cardmaker
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="serialNumber != null">
+                serial_number = #{serialNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="operatorId != null">
+                operator_id = #{operatorId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.MdrcCardmaker">
+        update
+        mdrc_cardmaker
+        set name = #{name,jdbcType=VARCHAR},
+        serial_number = #{serialNumber,jdbcType=VARCHAR},
+        operator_id =
+        #{operatorId,jdbcType=BIGINT},
+        delete_flag =
+        #{deleteFlag,jdbcType=TINYINT},
+        create_time =
+        #{createTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="select" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        C.`id`,
+        C.`name`,
+        C.`serial_number`,
+        C.`create_time`,
+        A.`user_name`
+        AS operator_name,
+        A.`mobile_phone` AS operator_mobile,
+        C.`operator_id`,
+        C.`delete_flag`,
+        C.`creator_id`
+        FROM mdrc_cardmaker C
+        LEFT JOIN
+        administer A ON C.operator_id=A.id 
+        <where>
+        	A.delete_flag = 0 AND C.delete_flag = 0
+            <if test="name != null and name != ''">
+                and C.name LIKE CONCAT('%',CONCAT(#{name},'%'))
+            </if>
+            <if test="serialNumber != null and serialNumber != ''">
+                and C.serial_number LIKE CONCAT('%',CONCAT(#{serialNumber},'%'))
+            </if>
+            <if test="creatorId != null">
+                and C.creator_id = #{creatorId,jdbcType=BIGINT}
+            </if>
+        </where>
+        ORDER BY C.create_time desc
+        <if test="pageNum != null and pageSize != null">
+            LIMIT
+            #{pageNum},
+            #{pageSize}
+        </if>
+    </select>
+
+    <select id="count" resultType="java.lang.Integer" parameterType="java.util.Map">
+        SELECT
+        COUNT(*)
+        FROM
+        mdrc_cardmaker C
+        LEFT JOIN
+        administer A
+        ON
+        C.operator_id=A.id
+        <where>
+        	A.delete_flag = 0
+        	AND
+        	C.delete_flag = 0
+            <if test="name != null and name != ''">
+                and C.name LIKE CONCAT('%',CONCAT(#{name},'%'))
+            </if>
+            <if test="serialNumber != null and serialNumber != ''">
+                and C.serial_number LIKE CONCAT('%',CONCAT(#{serialNumber},'%'))
+            </if>
+            <if test="creatorId != null">
+                and C.creator_id = #{creatorId,jdbcType=BIGINT}
+            </if>
+        </where>
+    </select>
+
+    <select id="countByName" resultType="java.lang.Integer"
+            parameterType="java.lang.String">
+
+        SELECT count(*)
+        FROM mdrc_cardmaker
+        <where>
+        	delete_flag = 0 and
+            mdrc_cardmaker.`name` = #{name}
+        </where>
+    </select>
+
+    <select id="selectMaxSerialNumber" resultType="java.lang.Integer">
+        SELECT
+        MAX(serial_number)
+        FROM mdrc_cardmaker
+    </select>
+
+</mapper>

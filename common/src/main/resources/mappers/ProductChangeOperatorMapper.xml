@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.ProductChangeOperatorMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.ProductChangeOperator">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="prd_id" property="prdId" jdbcType="BIGINT"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+        <result column="discount" property="discount" jdbcType="INTEGER"/>
+        <result column="operator" property="operator" jdbcType="INTEGER"/>
+        <result column="old_product_template_id" property="oldProductTemplateId" jdbcType="BIGINT"/>
+        <result column="new_product_template_id" property="newProductTemplateId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="ExtendResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.ProductChangeOperator">
+        <result column="prdName" property="prdName" jdbcType="VARCHAR"/>
+        <result column="prdCode" property="prdCode" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, prd_id,enter_id,delete_flag,discount,operator,old_product_template_id,
+        new_product_template_id
+    </sql>
+
+    <insert id="batchInsert" parameterType="java.util.Map">
+        insert into 
+        	product_change_operator 
+        	(
+        		enter_id, 
+        		prd_id, 
+        		operator,
+        		delete_flag, 
+        		discount,
+        		old_product_template_id,
+        		new_product_template_id,
+        		create_time,
+        		update_time
+        	)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            	#{item.enterId,jdbcType=BIGINT}, 
+            	#{item.prdId,jdbcType=BIGINT}, 
+            	#{item.operator,jdbcType=INTEGER},
+            	#{item.deleteFlag,jdbcType=INTEGER}, 
+            	#{item.discount,jdbcType=INTEGER},
+            	#{item.oldProductTemplateId,jdbcType=BIGINT},
+            	#{item.newProductTemplateId,jdbcType=BIGINT},
+            	#{item.createTime,jdbcType=TIMESTAMP},
+            	#{item.updateTime,jdbcType=TIMESTAMP}
+           	)
+        </foreach>
+    </insert>
+
+    <select id="getProductChangeRecordByEntId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        t1.*,
+        t2.name AS prdName,
+        t2.product_code AS prdCode,
+        t2.price
+        from
+        product_change_operator t1
+        LEFT JOIN
+        product t2 ON t1.prd_id = t2.id
+        where
+        t1.enter_id = #{entId,jdbcType=BIGINT} and
+        t1.delete_flag = 0
+    </select>
+
+    <update id="deleteProductChangeRecordByEntId" parameterType="java.lang.Long">
+        update 
+        	product_change_operator
+        set 
+        	delete_flag = 1,
+        	update_time = now()
+        where 
+        	enter_id = #{entId,jdbcType=BIGINT} and delete_flag = 0
+    </update>
+
+</mapper>

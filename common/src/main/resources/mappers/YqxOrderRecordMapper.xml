@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.YqxOrderRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.YqxOrderRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="individual_product_id" property="individualProductId" jdbcType="BIGINT" />
+    <result column="vpmn_time" property="vpmnTime" jdbcType="TIMESTAMP" />
+    <result column="discount" property="discount" jdbcType="INTEGER" />
+    <result column="pay_price" property="payPrice" jdbcType="BIGINT" />
+    <result column="serial_num" property="serialNum" jdbcType="VARCHAR" />
+    <result column="trade_status" property="tradeStatus" jdbcType="INTEGER" />
+    <result column="pay_status" property="payStatus" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER" />
+    <result column="charge_status" property="chargeStatus" jdbcType="INTEGER" />
+    <result column="charge_time" property="chargeTime" jdbcType="TIMESTAMP" />
+    <result column="charge_return_time" property="chargeReturnTime" jdbcType="TIMESTAMP" />
+    <result column="charge_msg" property="chargeMsg" jdbcType="VARCHAR" />
+    <result column="refund_status" property="refundStatus" jdbcType="INTEGER" />
+    <result column="refund_approval_time" property="refundApprovalTime" jdbcType="TIMESTAMP" />
+    <result column="pay_transaction_id" property="payTransactionId" jdbcType="VARCHAR" />
+    <result column="approval_refund" property="approvalRefund" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, mobile, individual_product_id, vpmn_time, discount, pay_price, serial_num, trade_status, 
+    pay_status, create_time, update_time, delete_flag, charge_status, charge_time, charge_return_time,
+    charge_msg, refund_status, refund_approval_time, pay_transaction_id, approval_refund
+  </sql>
+  
+  <resultMap id="ExtendResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.YqxOrderRecord" >
+    <result column="productSize" property="productSize" jdbcType="BIGINT" />
+    <result column="doneCode" property="doneCode" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from yqx_order_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from yqx_order_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cmcc.vrp.province.model.YqxOrderRecord" >
+    insert into yqx_order_record (id, mobile, individual_product_id, 
+      vpmn_time, discount, pay_price, 
+      serial_num, trade_status, pay_status, 
+      create_time, update_time, delete_flag,
+      charge_status, charge_time, charge_return_time,
+      charge_msg, refund_status, refund_approval_time,
+      pay_transaction_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{mobile,jdbcType=VARCHAR}, #{individualProductId,jdbcType=BIGINT}, 
+      #{vpmnTime,jdbcType=TIMESTAMP}, #{discount,jdbcType=INTEGER}, #{payPrice,jdbcType=BIGINT},
+      #{serialNum,jdbcType=VARCHAR}, #{tradeStatus,jdbcType=INTEGER}, 
+      #{payStatus,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{deleteFlag,jdbcType=INTEGER}, #{chargeStatus,jdbcType=INTEGER}, #{chargeTime,jdbcType=TIMESTAMP},
+      #{chargeReturnTime,jdbcType=TIMESTAMP}, #{chargeMsg,jdbcType=VARCHAR},
+      #{refundStatus,jdbcType=INTEGER}, #{refundApprovalTime,jdbcType=TIMESTAMP},
+      #{payTransactionId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.YqxOrderRecord" >
+    insert into yqx_order_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="individualProductId != null" >
+        individual_product_id,
+      </if>
+      <if test="vpmnTime != null" >
+        vpmn_time,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+      <if test="payPrice != null" >
+        pay_price,
+      </if>
+      <if test="serialNum != null" >
+        serial_num,
+      </if>
+      <if test="tradeStatus != null" >
+        trade_status,
+      </if>
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+      <if test="chargeStatus != null" >
+        charge_status,
+      </if>
+      <if test="chargeTime != null" >
+        charge_time,
+      </if>
+      <if test="chargeReturnTime != null" >
+        charge_return_time,
+      </if>
+      <if test="chargeMsg != null" >
+        charge_msg,
+      </if>
+      <if test="refundStatus != null" >
+        refund_status,
+      </if>
+      <if test="refundApprovalTime != null" >
+        refund_approval_time,
+      </if>
+      <if test="payTransactionId != null" >
+        pay_transaction_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="individualProductId != null" >
+        #{individualProductId,jdbcType=BIGINT},
+      </if>
+      <if test="vpmnTime != null" >
+        #{vpmnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="payPrice != null" >
+        #{payPrice,jdbcType=BIGINT},
+      </if>
+      <if test="serialNum != null" >
+        #{serialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeStatus != null" >
+        #{tradeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="chargeStatus != null" >
+        #{chargeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="chargeTime != null" >
+        #{chargeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="chargeReturnTime != null" >
+        #{chargeReturnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="chargeMsg != null" >
+        #{chargeMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="refundStatus != null" >
+        #{refundStatus,jdbcType=INTEGER},
+      </if>
+      <if test="refundApprovalTime != null" >
+        #{refundApprovalTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTransactionId != null" >
+        #{payTransactionId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.YqxOrderRecord" >
+    update yqx_order_record
+    <set >
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="individualProductId != null" >
+        individual_product_id = #{individualProductId,jdbcType=BIGINT},
+      </if>
+      <if test="vpmnTime != null" >
+        vpmn_time = #{vpmnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="payPrice != null" >
+        pay_price = #{payPrice,jdbcType=BIGINT},
+      </if>
+      <if test="serialNum != null" >
+        serial_num = #{serialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeStatus != null" >
+        trade_status = #{tradeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      </if>
+      <if test="chargeStatus != null" >
+        charge_status = #{chargeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="chargeTime != null" >
+        charge_time = #{chargeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="chargeReturnTime != null" >
+        charge_return_time = #{chargeReturnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="chargeMsg != null" >
+        charge_msg = #{chargeMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="refundStatus != null" >
+        refund_status = #{refundStatus,jdbcType=INTEGER},
+      </if>
+      <if test="refundApprovalTime != null" >
+        refund_approval_time = #{refundApprovalTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payTransactionId != null" >
+        pay_transaction_id = #{payTransactionId,jdbcType=VARCHAR},
+      </if>
+      <if test="approval_refund != null" >
+        approval_refund = #{approvalRefund,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.YqxOrderRecord" >
+    update yqx_order_record
+    set mobile = #{mobile,jdbcType=VARCHAR},
+      individual_product_id = #{individualProductId,jdbcType=BIGINT},
+      vpmn_time = #{vpmnTime,jdbcType=TIMESTAMP},
+      discount = #{discount,jdbcType=INTEGER},
+      pay_price = #{payPrice,jdbcType=BIGINT},
+      serial_num = #{serialNum,jdbcType=VARCHAR},
+      trade_status = #{tradeStatus,jdbcType=INTEGER},
+      pay_status = #{payStatus,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_flag = #{deleteFlag,jdbcType=INTEGER},
+      charge_status = #{chargeStatus,jdbcType=INTEGER},
+      charge_time = #{chargeTime,jdbcType=TIMESTAMP},
+      charge_return_time = #{chargeReturnTime,jdbcType=TIMESTAMP},
+      charge_msg = #{chargeMsg,jdbcType=VARCHAR},
+      refund_status = #{refundStatus,jdbcType=INTEGER},
+      refund_approval_time = #{refundApprovalTime,jdbcType=TIMESTAMP},
+      approval_refund = #{approvalRefund,jdbcType=INTEGER},
+      pay_transaction_id = #{payTransactionId,jdbcType=VARCHAR}   
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectByMap" resultMap="ExtendResultMap" parameterType="java.util.Map" >
+    select 
+      r.id, r.mobile, r.individual_product_id, r.vpmn_time as vpmnTime, r.discount, r.pay_price,
+      r.serial_num, r.trade_status, r.pay_status, r.create_time as createTime, r.update_time, r.delete_flag, 
+      r.charge_status, r.charge_time, r.charge_return_time, r.charge_msg, r.refund_status, r.refund_approval_time,
+      r.pay_transaction_id, r.approval_refund, p.product_size as productSize, pay.done_code as doneCode
+    from yqx_order_record r
+    LEFT JOIN individual_product p ON p.id = r.individual_product_id
+    LEFT JOIN yqx_pay_record pay on pay.pay_transaction_id = r.pay_transaction_id
+    where r.delete_flag = 0
+    <if test="mobile != null and mobile != ''">
+      and r.mobile = #{mobile, jdbcType=VARCHAR}
+    </if>
+    <if test="orderSerialNum != null and orderSerialNum != ''">
+      and r.serial_num = #{orderSerialNum, jdbcType=VARCHAR}
+    </if>
+    <if test="startTime != null and startTime != ''">
+      and r.create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and r.create_time &lt;= #{endTime}
+    </if>
+    <if test="refundStatus != null">
+      and r.refund_status in
+      <foreach item="item" index="index" collection="refundStatus" open="(" separator="," close=")">  
+           #{item}  
+      </foreach>
+    </if> 
+    <if test="approvalRefund != null">
+      and r.approval_refund = #{approvalRefund}
+    </if> 
+    ORDER BY  r.create_time DESC   
+    <if test="pageNum != null and pageSize != null">
+      LIMIT
+      #{pageNum},#{pageSize}  
+    </if>    
+  </select>
+  
+  <select id="selectBySerialNum" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from yqx_order_record
+    where serial_num = #{serialNum,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="countByMap" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+     count(*)
+    from yqx_order_record r
+    where r.delete_flag = 0
+    <if test="mobile != null and mobile != ''">
+      and r.mobile = #{mobile, jdbcType=VARCHAR}
+    </if>
+    <if test="orderSerialNum != null and orderSerialNum != ''">
+      and r.serial_num = #{orderSerialNum, jdbcType=VARCHAR}
+    </if>
+    <if test="startTime != null and startTime != ''">
+      and r.create_time &gt;= #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''">
+      and r.create_time &lt;= #{endTime}
+    </if>
+    <if test="refundStatus != null">
+      and r.refund_status in
+      <foreach item="item" index="index" collection="refundStatus" open="(" separator="," close=")">  
+          #{item}  
+      </foreach>
+    </if>
+    <if test="approvalRefund != null">
+      and r.approval_refund = #{approvalRefund}
+    </if> 
+  </select>
+</mapper>

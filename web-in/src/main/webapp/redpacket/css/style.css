@@ -1,0 +1,165 @@
+@charset "utf-8";
+/*css reset*/
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td {
+    margin: 0;
+    padding: 0
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    min-width: 320px;
+    padding-bottom: 30px;
+    font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica;
+    font-family: "微软雅黑";
+    font-size: 62.5%;
+    color: #323232;
+    -webkit-text-size-adjust: none;
+    -webkit-user-select: none;
+    line-height: 150%;
+    background-color: #eaeaee;
+}
+
+ul, ol {
+    list-style: none
+}
+
+a, a:visited, a:hover {
+    text-decoration: none;
+    color: #323232
+}
+
+a:active {
+    color: #323232;
+}
+
+img {
+    vertical-align: middle;
+    border: 0;
+}
+
+button, input, select, textarea {
+    vertical-align: middle;
+    outline: none;
+    resize: none;
+    font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+i, em {
+    font-style: normal;
+}
+
+body {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hide {
+    display: none
+}
+
+@media (min-width: 321px) and (max-width: 369px) {
+    body {
+        font-size: 62.5%;
+    }
+}
+
+@media screen and (min-width: 370px) and (max-width: 479px) {
+    body {
+        font-size: 70.5%;
+    }
+}
+
+@media screen and (min-width: 480px) and (max-width: 539px) {
+    body {
+        font-size: 80.5%;
+    }
+}
+
+@media screen and (min-width: 540px) and (max-width: 639px) {
+    body {
+        font-size: 90.5%;
+    }
+}
+
+@media screen and (min-width: 640px) and (max-width: 800px) {
+    body {
+        font-size: 100%;
+    }
+}
+
+@media screen and (min-width: 801px) {
+    html {
+        background-color: #E0DFCC
+    }
+
+    body {
+        font-size: 120%;
+    }
+}
+
+/* 弹框 */
+.window-shade {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0px;
+    opacity: .8;
+    filter: alpha(opacity=80);
+    background: #000;
+}
+
+.box-window {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-color: transparent;
+}
+
+.box-window .box-alert {
+    width: 26.5em;
+    margin: 0 auto;
+}
+
+.box-window .alert-content {
+    margin-top: 100px;
+    font-size: 2em;
+    color: #fca601;
+}
+
+.box-window .alert-content p {
+    line-height: 3em;
+}
+
+.box-window .alert-content img {
+    width: 2.5em;
+    height: 2.5em;
+}
+
+.box-window .iknow {
+    display: block;
+    margin: 40px auto;
+    width: 8em;
+    height: 2em;
+    line-height: 2em;
+    border: solid #fca601 3px;
+    color: #fca601;
+    border-radius: 10px;
+    text-align: center;
+}
+
+
+

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AccountChangeDetailMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.AccountChangeDetail">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="request_id" property="requestId" jdbcType="BIGINT"/>
+        <result column="account_id" property="accountId" jdbcType="BIGINT"/>
+        <result column="count" property="count" jdbcType="DOUBLE"/>
+        <result column="serial_num" property="serialNum" jdbcType="VARCHAR"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="INTEGER"/>
+		<result column="discount_type" property="discountType" jdbcType="INTEGER"/>
+        <result column="discount_value" property="discountValue" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, request_id, account_id, count, serial_num, product_id, delete_flag, discount_type, discount_value
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from account_change_detail
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectByRequestId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from account_change_detail
+        where request_id = #{requestId,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from account_change_detail
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.AccountChangeDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into account_change_detail ( request_id, account_id,
+        count, serial_num, product_id,
+        delete_flag, discount_type, discount_value)
+        values ( #{requestId,jdbcType=BIGINT}, #{accountId,jdbcType=BIGINT},
+        #{count,jdbcType=DOUBLE}, #{serialNum,jdbcType=VARCHAR}, #{productId,jdbcType=BIGINT},
+        #{deleteFlag,jdbcType=INTEGER},
+        #{discountType,jdbcType=INTEGER}, #{discountValue,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.cmcc.vrp.province.model.AccountChangeDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into account_change_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="requestId != null">
+                request_id,
+            </if>
+            <if test="accountId != null">
+                account_id,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="serialNum != null">
+                serial_num,
+            </if>
+            <if test="productId != null">
+                product_id,
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="requestId != null">
+                #{requestId,jdbcType=BIGINT},
+            </if>
+            <if test="accountId != null">
+                #{accountId,jdbcType=BIGINT},
+            </if>
+            <if test="count != null">
+                #{count,jdbcType=DOUBLE},
+            </if>
+            <if test="serialNum != null">
+                #{serialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="productId != null">
+                #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.cmcc.vrp.province.model.AccountChangeDetail">
+        update account_change_detail
+        <set>
+            <if test="requestId != null">
+                request_id = #{requestId,jdbcType=BIGINT},
+            </if>
+            <if test="accountId != null">
+                account_id = #{accountId,jdbcType=BIGINT},
+            </if>
+            <if test="count != null">
+                count = #{count,jdbcType=DOUBLE},
+            </if>
+            <if test="serialNum != null">
+                serial_num = #{serialNum,jdbcType=VARCHAR},
+            </if>
+            <if test="productId != null">
+                product_id = #{productId,jdbcType=BIGINT},
+            </if>
+            <if test="deleteFlag != null">
+                delete_flag = #{deleteFlag,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.cmcc.vrp.province.model.AccountChangeDetail">
+        update account_change_detail
+        set request_id = #{requestId,jdbcType=BIGINT},
+        account_id = #{accountId,jdbcType=BIGINT},
+        count = #{count,jdbcType=DOUBLE},
+        serial_num = #{serialNum,jdbcType=VARCHAR},
+        product_id = #{productId,jdbcType=BIGINT},
+        delete_flag = #{deleteFlag,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

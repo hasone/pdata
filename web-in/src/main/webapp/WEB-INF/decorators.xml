@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<decorators defaultdir="/decorators">
+    <decorator name="basic-theme" page="main.dec">
+        <pattern>*.html</pattern>
+        <pattern>/j_spring_security_check</pattern>
+    </decorator>
+
+    <excludes>
+        <pattern>/manage/virifyCode/*.html</pattern>
+        <pattern>/manage/*/upload.html</pattern>
+        <pattern>/manage/month_record/phones.html</pattern>
+        <pattern>/manage/user/login.html*</pattern>
+        <pattern>/manage/mdrcBatchConfig/doListFile.html*</pattern>
+
+        <pattern>/manage/logsQuery/monthGiveIndex.html*</pattern>
+        <pattern>/manage/logsQuery/interfaceIndex.html*</pattern>
+        <pattern>/manage/logsQuery/redpackegeIndex.html*</pattern>
+        <pattern>/manage/logsQuery/flowCardIndex.html*</pattern>
+        <pattern>/manage/logsQuery/commonGiveIndex.html*</pattern>
+        <pattern>/manage/logsQuery/flowTicketIndex.html*</pattern>
+
+        <pattern>/manage/mdrc/cardinfo/chargeIndex.html*</pattern>
+        
+        <pattern>/manage/mdrc/masking/*</pattern>
+        <pattern>/manage/gdIndex.html*</pattern>
+        
+    </excludes>
+</decorators>

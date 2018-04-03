@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cmcc.vrp.province.dao.AccountMapper">
+    <resultMap id="BaseResultMap" type="com.cmcc.vrp.province.model.Account">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="enter_id" property="enterId" jdbcType="BIGINT"/>
+        <result column="owner_id" property="ownerId" jdbcType="BIGINT"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="count" property="count" jdbcType="REAL"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="min_count" property="minCount" jdbcType="REAL"/>
+        <result column="alert_count" property="alertCount" jdbcType="REAL"/>
+        <result column="stop_count" property="stopCount" jdbcType="REAL"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_flag" property="deleteFlag" jdbcType="TINYINT"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, enter_id, owner_id, product_id, `count`, min_count, alert_count,stop_count,create_time, update_time, delete_flag, version, type
+    </sql>
+
+    <resultMap id="ExtendsResultMap" extends="BaseResultMap" type="com.cmcc.vrp.province.model.Account">
+        <result column="product_size" property="productSize" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <select id="getByOwner" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        account
+        where
+        owner_id = #{ownerId, jdbcType=BIGINT} AND
+        `type` = #{type, jdbcType = INTEGER}
+    </select>
+
+    <!-- 检查产品账户是否存在 -->
+    <select id="checkAccountByEntIdAndProductId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        account
+        where
+        enter_id = #{entId, jdbcType=BIGINT} AND
+        product_id = #{productId,jdbcType=BIGINT}
+    </select>
+
+    <update id="deleteByOwnerId">
+        update
+        account
+        SET
+        delete_flag = 1,
+        update_time = NOW()
+        where owner_id = #{ownerId, jdbcType=BIGINT} AND
+        `type` = #{type, jdbcType = INTEGER}
+    </update>
+
+    <insert id="insert" parameterType="com.cmcc.vrp.province.model.Account"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into account (enter_id, owner_id, product_id, `type`,
+        `count`, min_count, create_time,
+        update_time, delete_flag, version)
+        values (#{enterId,jdbcType=BIGINT},
+        #{ownerId,jdbcType=BIGINT},
+        #{productId,jdbcType=BIGINT},
+        #{type, jdbcType = INTEGER},
+        #{count,jdbcType=REAL}, #{minCount,jdbcType=REAL},
+        NOW(),
+        NOW(),
+        #{deleteFlag,jdbcType=TINYINT},
+        #{version,jdbcType=INTEGER})
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        insert into account (enter_id, owner_id, product_id, `type`,
+        `count`, min_count, create_time,
+        update_time, delete_flag, version)
+        values
+        <foreach collection="records" item="record" separator="," index="index">
+            (#{record.enterId,jdbcType=BIGINT},
+            #{record.ownerId,jdbcType=BIGINT},
+            #{record.productId,jdbcType=BIGINT},
+            #{record.type, jdbcType = INTEGER},
+            #{record.count,jdbcType=REAL},
+            #{record.minCount,jdbcType=REAL},
+            NOW(),
+            NOW(),
+            #{record.deleteFlag,jdbcType=TINYINT},
+            #{record.version,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
+    <update id="updateMinCount">
+        UPDATE
+        account
+        SET
+        `min_count` = #{newMinCount, jdbcType = REAL},
+        update_time = NOW(),
+        version = version + 1
+        WHERE
+        id = #{id, jdbcType = BIGINT} AND
+        version = #{oldVersion, jdbcType = INTEGER}
+    </update>
+
+    <update id="updateCount">
+        UPDATE
+        account
+        SET
+        `count` = `count` + #{delta, jdbcType = REAL},
+        update_time = NOW(),
+        version = version + 1
+        WHERE
+        id = #{id, jdbcType = BIGINT} AND
+        `count` + #{delta, jdbcType = REAL} >= `min_count`
+    </update>
+
+    <update id="forceUpdateCount">
+        UPDATE
+          account
+        SET
+            `count` = `count` + #{delta, jdbcType = REAL},
+            update_time = NOW(),
+            version = version + 1
+        WHERE
+            id = #{id, jdbcType = BIGINT}
+    </update>
+
+    <select id="getByOwnerIdAndPrdId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        account
+        WHERE
+        owner_id = #{ownerId, jdbcType = BIGINT} AND
+        product_id = #{prdId, jdbcType = BIGINT} AND
+        `type` = #{type, jdbcType = INTEGER} AND
+        delete_flag = 0
+    </select>
+
+    <!-- 得到企业活动冻结的资金问题 -->
+    <select id="sumActivitiesFrozenAccount" parameterType="java.lang.Long" resultType="java.lang.Double">
+        SELECT
+        sum(count)
+        FROM
+        account
+        WHERE
+        enter_id = #{entId, jdbcType = BIGINT} AND
+        `type` != -1 AND
+        delete_flag = 0
+    </select>
+
+    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        account
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </select>
+
+    <select id="selectByEntIdAndProIds" resultMap="ExtendsResultMap">
+        SELECT
+        a.id,
+        a.enter_id,
+        a.owner_id,
+        a.product_id,
+        a.count,
+        a.min_count,
+        a.create_time,
+        a.update_time,
+        a.delete_flag,
+        a.version,
+        a.type,
+        p.product_size
+        FROM
+        account a
+        LEFT JOIN
+        product p
+        on a.product_id = p.id
+        WHERE
+        enter_id = #{entId, jdbcType = BIGINT}
+        AND
+        a.delete_flag = 0
+        AND a.type = -1
+        AND a.product_id
+        IN
+        <foreach collection="prizeList" index="index" item="PrizeInfo" open="(" separator="," close=")">
+            #{PrizeInfo.productId}
+        </foreach>
+    </select>
+
+    <select id="selectCurrencyAccount" resultMap="BaseResultMap">
+        SELECT
+        a.id, a.enter_id, a.owner_id, a.product_id, a.`count`, a.min_count, a.create_time, a.update_time, a.delete_flag,
+        a.version, a.type
+        FROM
+        account a
+        left join product p on p.id = a.product_id
+        WHERE
+        a.enter_id = #{entId, jdbcType = BIGINT}
+        AND
+        a.type = -1 AND a.delete_flag = 0 AND p.type =0 AND p.delete_flag=0
+    </select>
+
+    <select id="selectCurrencyAccounts" resultMap="BaseResultMap">
+        SELECT
+          a.id,
+          a.enter_id,
+          a.owner_id,
+          a.product_id,
+          a.`count`,
+          a.min_count,
+          a.create_time,
+          a.update_time,
+          a.delete_flag,
+          a.version,
+          a.type
+        FROM
+          account a
+        left join product p on p.id = a.product_id
+        WHERE
+          a.enter_id in
+          <foreach item="entId" collection="entIds" open="(" close=")" separator=",">
+              #{entId, jdbcType = BIGINT}
+          </foreach>
+        AND
+          a.type = -1
+        AND
+          a.delete_flag = 0
+        AND
+          p.type =0
+        AND
+          p.delete_flag=0
+    </select>
+
+    <update id="updateAlertSelective" parameterType="com.cmcc.vrp.province.model.Account">
+        UPDATE
+        account
+        SET
+        `alert_count` = #{alertCount, jdbcType = REAL},
+		`stop_count` = #{stopCount, jdbcType = REAL}
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+    
+
+    <!-- 根据类型清空账户-->
+    <update id="cleanAccountByTpye" parameterType = "java.lang.Integer">
+        update 
+        	account
+        set
+        	count = 0.00,
+        	min_count = 0.00,
+        	alert_count = 0.00,
+        	stop_count = 0.00,
+        	update_time = now()
+        where 
+        	product_id in (
+        		select id from product where type = #{productType, jdbcType=INTEGER} and delete_flag = 0        		
+        	)
+        and
+        	delete_flag = 0		
+    </update>
+    
+    <select id="getPaypreAccByType" resultMap="BaseResultMap">
+        SELECT
+        a.id, a.enter_id, a.owner_id, a.product_id, a.`count`, a.min_count, a.create_time, a.update_time, a.delete_flag,
+        a.version, a.type
+        FROM
+        account a
+        left join product p on p.id = a.product_id
+        WHERE
+        a.enter_id = #{entId, jdbcType = BIGINT}
+        AND
+        a.type = -1 AND a.delete_flag = 0 AND p.delete_flag=0
+        AND
+        p.type = #{prdType}
+    </select>
+    
+    <update id="updateAlertCount">
+        UPDATE
+        account
+        SET
+        `alert_count` = #{newCount, jdbcType = REAL},
+        update_time = NOW(),
+        version = version + 1
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+    
+    <update id="updateStopCount">
+        UPDATE
+        account
+        SET
+        `stop_count` = #{newCount, jdbcType = REAL},
+        update_time = NOW(),
+        version = version + 1
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+    
+    <update id="updateMinCount2">
+        UPDATE
+        account
+        SET
+        `min_count` = #{newCount, jdbcType = REAL},
+        update_time = NOW(),
+        version = version + 1
+        WHERE
+        id = #{id, jdbcType = BIGINT}
+    </update>
+</mapper>

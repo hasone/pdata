@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <aop:aspectj-autoproxy/>
+
+    <context:component-scan base-package="com.cmcc.vrp" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
+
+    <mvc:annotation-driven conversion-service="conversionService">
+        <mvc:async-support task-executor="asyncRequestThreadPool" default-timeout="10000"/>
+
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.GsonHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <bean id="conversionService"
+          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.cmcc.vrp.util.StringToDateConverter"/>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="controllerAspect" class="com.cmcc.vrp.province.webin.controller.aop.ControllerAspect"></bean>
+  
+    <!-- 任务线程池 -->
+    <bean id="asyncRequestThreadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!-- 核心线程数，默认为1 -->
+        <property name="corePoolSize" value="3000"/>
+        <!-- 队列最大长度，一般需要设置值>=notifyScheduledMainExecutor.maxNum；默认为Integer.MAX_VALUE
+            <property name="queueCapacity" value="1000" /> -->
+        <!-- 线程池维护线程所允许的空闲时间，默认为60s -->
+        <property name="keepAliveSeconds" value="300"/>
+        <!-- 线程池对拒绝任务（无线程可用）的处理策略，目前只支持AbortPolicy、CallerRunsPolicy；默认为后者 -->
+        <property name="rejectedExecutionHandler">
+            <!-- AbortPolicy:直接抛出java.util.concurrent.RejectedExecutionException异常 -->
+            <!-- CallerRunsPolicy:主线程直接执行该任务，执行完之后尝试添加下一个任务到线程池中，可以有效降低向线程池内添加任务的速度 -->
+            <!-- DiscardOldestPolicy:抛弃旧的任务、暂不支持；会导致被丢弃的任务无法再次被执行 -->
+            <!-- DiscardPolicy:抛弃当前任务、暂不支持；会导致被丢弃的任务无法再次被执行 -->
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"/>
+        </property>
+    </bean>
+
+    <!-- xml escape -->
+    <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
+
+    <!-- 配置freeMarker -->
+    <bean id="freemarkerConfig"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+
+        <!-- 配置freeMarker的模板路径 -->
+        <property name="templateLoaderPath">
+            <value>/freeMarker/</value>
+        </property>
+
+        <property name="freemarkerVariables">
+            <map>
+                <entry key="xml_escape" value-ref="fmXmlEscape"/>
+            </map>
+        </property>
+
+        <!-- 配置freeMarker的设置 -->
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">0</prop>
+                <prop key="default_encoding">UTF-8</prop>
+                <prop key="output_encoding">UTF-8</prop>
+                <prop key="locale">zh_CN</prop>
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <prop key="time_format">HH:mm:ss</prop>
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+                <prop key="number_format">#</prop>
+                <!-- 设置数字格式 以免出现 000.00 -->
+            </props>
+        </property>
+    </bean>
+
+    <!-- 配置urlBasedViewResolver视图解析器 -->
+    <bean id="urlBasedViewResolver"
+          class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"></property>
+    </bean>
+
+    <!-- 配置freeMarker视图解析器 -->
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=""/>
+        <property name="order" value="1"/>
+        <property name="viewNames" value="*.ftl"/>
+        <property name="requestContextAttribute" value="rc"/>
+        <property name="contentType" value="text/html; charset=utf-8"/>
+        <property name="cache" value="true"/>
+        <property name="exposeSessionAttributes" value="true"/>
+    </bean>
+
+    <!-- savagechen11 add spring session -->
+    <!-- <bean class="com.cmcc.vrp.province.security.MySessionListener" /> -->
+
+    <!--基于注解 拦截器 ,分页页面的翻页功能拦截-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/manage/*/index.html*"/>
+            <mvc:mapping path="/manage/*/*/index.html*"/>
+            <mvc:mapping path="/manage/giveRecordManager/giveResult.html*"/>
+            <mvc:mapping path="/manage/mdrc/cardmaker/list.html*"/>
+            <mvc:mapping path="/manage/month_record/pager.html*"/>
+            <mvc:mapping path="/manage/mdrcBatchConfig/listRecord.html*"/>
+            <bean class="com.cmcc.vrp.province.security.ControllerInterceptor">
+            </bean>
+        </mvc:interceptor>
+        
+        <!-- 拦截获取服务器当前时间，限制次数，其他也可用 -->
+     	<mvc:interceptor>
+        	<mvc:mapping path="/validate/time.html"/>
+        	<bean class="com.cmcc.vrp.ec.controller.aop.RequestLimitIPInterceptor"></bean>
+   		 </mvc:interceptor>
+    </mvc:interceptors>
+</beans>

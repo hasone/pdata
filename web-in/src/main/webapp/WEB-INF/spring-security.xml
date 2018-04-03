@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+    <!-- 定义上下文返回的消息的国际化。 -->
+    <beans:bean id="messageSource"
+                class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <beans:property name="basename" value="classpath:conf/messages_zh_CN"/>
+    </beans:bean>
+
+    <!-- 登录认证过滤器-->
+    <beans:bean id="usernamePasswordAuthenticationFilter"
+                class="com.cmcc.vrp.province.security.RandomCodeAuthenticationFilter">
+        <beans:property name="authenticationManager"
+                        ref="authenticationManager"/>
+
+        <beans:property name="authenticationSuccessHandler">
+            <beans:bean
+                    class="com.cmcc.vrp.province.security.LoginSuccessHandle">
+            </beans:bean>
+        </beans:property>
+        <beans:property name="authenticationFailureHandler">
+            <beans:bean
+                    class="com.cmcc.vrp.province.security.LoginFailureHandler"/>
+        </beans:property>
+    </beans:bean>
+
+    <http pattern="/js/**" security="none"/>
+    <http pattern="/sign/**" security="none"/>
+    <http pattern="/manage/user/login.html" security="none"/>
+    <http pattern="/manage/user/loginout.html" security="none"/>
+	<http pattern="/manage/user/gdGoBack.html" security="none"/>
+    <http pattern="/open/**" security="none"/>
+    <http pattern="/manage/mdrc/template/upload.html" security="none"/>
+    <http pattern="/manage/message/sendOutLoginMessage.html" security="none"/>
+    <http pattern="/manage/hack/**" security="none"/>
+    <http pattern="/manage/enterprise/getDistrictAjax.html" security="none"/>
+    <http pattern="/manage/enterprise/qualification.html" security="none"/>
+    <http pattern="/manage/enterprise/saveQualification.html" security="none"/>
+    <http pattern="/manage/enterprise/editQualification.html" security="none"/>
+    <http pattern="/manage/enterprise/exportTemplate.html" security="none"/>
+    <http pattern="/manage/enterprise/downloadFile.html" security="none"/>
+    <http pattern="/manage/enterprise/getImage.html" security="none"/>
+    <http pattern="/manage/userInfo/checkPasswordUpdateTime.html" security="none"/>
+    <http pattern="/manage/potentialCustomer/query.html" security="none"/>
+    <http pattern="/manage/mdrc/active/save.html" security="none"/>
+    <!-- 营销卡充值 -->
+    <http pattern="/manage/mdrc/cardinfo/chargeIndex.html" security="none"/>
+    <http pattern="/manage/mdrc/cardinfo/submit.html" security="none"/>
+    <http pattern="/manage/mdrc/cardinfo/success.html" security="none"/>
+    <http pattern="/manage/mdrc/cardinfo/qustions.html" security="none"/>
+	<http pattern="/manage/mdrc/cardinfo/checkMobile.html" security="none"/>
+	
+    <!-- 显示营销模板图片 -->
+    <http pattern="/manage/mdrc/cardmake/getImage.html" security="none"/>
+    <http pattern="/manage/mdrc/template/getFileS3.html" security="none"/>
+
+    <!-- 流量券充值 -->
+    <http pattern="/manage/flowcard/charge/*" security="none"/>
+    <http pattern="/manage/flowcard/charge/list/*" security="none"/>
+    <http pattern="/vi/*" security="none"/>
+
+    <!-- 二维码充值 -->
+    <http pattern="/manage/qrcode/charge/*" security="none"/>
+
+    <!-- 流量券、二维码通用 -->
+    <http pattern="/manage/flowcard/searchProduct.html" security="none"/>
+    <http pattern="/manage/flowcard/getBalanceAjax.html" security="none"/>
+    <http pattern="/manage/flowcard/getProductAjax.html" security="none"/>
+    <http pattern="/manage/flowcard/uploadPhones.html" security="none"/>
+    <http pattern="/manage/flowcard/downloadPhones.html" security="none"/>
+    <http pattern="/manage/giveRuleManager/uploadPhones.html" security="none"/>
+    
+    <!-- 广东众筹 -->
+    <http pattern="/manage/crowdFunding/charge.html" security="none"/>
+    <http pattern="/manage/wechat/auth.html" security="none"/>
+    <http pattern="/manage/crowdFunding/getFlow.html" security="none"/>
+    <http pattern="/manage/crowdFunding/getImage.html" security="none"/>
+    <http pattern="/manage/crowdFunding/getWinRecords.html" security="none"/>
+    <http pattern="/manage/crowdFunding/chargeAjax.html" security="none"/>
+    <http pattern="/manage/crowdFunding/downloadPhoneList.html" security="none"/>
+    <http pattern="/manage/crowdFunding/downloadFile.html" security="none"/>
+    <http pattern="/manage/crowdFunding/createCrowdFunding.html" security="none"/>
+    <http pattern="/manage/crowdFunding/approvalCrowdFunding.html" security="none"/>
+    <http pattern="/manage/crowdFunding/maskingAjax.html" security="none"/>
+
+    <!-- 企业开户字段属性查询  -->
+    <http pattern="/manage/entPropsInfo/query.html" security="none"/>
+    
+    <!-- 四川个人红包  -->
+    <http pattern="/individual/flowredpacket/*" security="none"/>
+    
+    <!-- 广东微信公众号 -->
+    <http pattern="/wx/**" security="none"/>
+    
+    <!-- 云企信 -->
+    <http pattern="/yqx/**" security="none"/>
+    
+    <!-- 支付-->
+    <http pattern="/payplatform/**" security="none"/>
+    
+    <!-- 获取平台产品和boss产品关联 -->
+    <http pattern="/manage/platformProduct/getRelation.html" security="none" />
+    
+    <!-- 广东单点登录-->
+    <http pattern="/gd/sso/**" security="none"/>
+    
+    <!-- 充值分析-->
+    <http pattern="/manage/dailyStatistic/**" security="none"/>
+
+    <http auto-config="true">
+        <!-- 主页 -->
+        <intercept-url pattern="/manage/index.html" access="ROLE_USER_INFO"/>
+        <intercept-url pattern="/manage/gdIndex.html" access="ROLE_USER_INFO"/>
+        
+
+        <!-- 用户管理 -->
+        <intercept-url pattern="/manage/user/**" access="ROLE_USER"/>
+
+        <!-- 角色管理 -->
+        <intercept-url pattern="/manage/role/**" access="ROLE_ROLE"/>
+
+        <!-- 企业开户信息 -->
+        <intercept-url pattern="/manage/entPropsInfo/**" access="ROLE_ENT_PROPS_INFO"/>
+
+        <!-- 企业管理 -->
+        <intercept-url pattern="/manage/enterprise/showApprovalDetail.html"
+                       access="ROLE_POTENTIAL_CUSTOMER,ROLE_ENTERPRISE,ROLE_ENTERPRISE_NEW"/>
+        <intercept-url pattern="/manage/enterprise/**" access="ROLE_ENTERPRISE,ROLE_ENTERPRISE_NEW"/>
+        <intercept-url pattern="/manage/potentialCustomer/**" access="ROLE_POTENTIAL_CUSTOMER,ROLE_ENTERPRISE_NEW"/>
+        
+        <!-- 平台产品管理 -->
+        <intercept-url pattern="/manage/platformProduct/**" access="ROLE_PRODUCT_PLATFORM, ROLE_PRODUCT_ORDER, ROLE_ENTERPRISE_PRODUCTCHANGE"/>
+
+        <!-- 流量券 -->
+        <intercept-url pattern="/manage/flowcard/**" access="ROLE_FLOW_CARD"/>
+
+        <!-- 新大转盘 -->
+        <intercept-url pattern="/manage/lottery/**" access="ROLE_LOTTERY_TEMPLATE"/>
+
+        <!-- 新红包 -->
+        <intercept-url pattern="/manage/redpacket/**" access="ROLE_REDPACKET"/>
+
+        <!-- 新砸金蛋 -->
+        <intercept-url pattern="/manage/goldenegg/**" access="ROLE_GOLDENBALL"/>
+
+        <!-- 二维码 -->
+        <intercept-url pattern="/manage/qrcode/**" access="ROLE_QRCODE"/>
+        
+        <!-- 流量众筹 -->
+        <intercept-url pattern="/manage/crowdFunding/**" access="ROLE_FLOW_CROWD_FUNDING,ROLE_CROWDFUNDING_ABILITY_CONFIG"/>
+        
+        <!-- 流量企业流量包查询 -->
+        <intercept-url pattern="/manage/entproquery/**" access="ROLE_FLOWCARD"/>
+        <intercept-url pattern="/manage/entproquery/**" access="ROLE_REDPACKET"/>
+        <intercept-url pattern="/manage/entproquery/**" access="ROLE_REDPACKET_COMMON_GIVE"/>
+        <intercept-url pattern="/manage/entproquery/**" access="ROLE_REDPACKET_MONTH_GIVE"/>
+        <intercept-url pattern="/manage/entproquery/**" access="ROLE_FLOW_QUERY"/>
+        <intercept-url pattern="/manage/entproquery/**" access="ROLE_LOTTERY_TEMPLATE"/>
+
+        <!-- 流量卡模板 -->
+        <intercept-url pattern="/manage/rechargecard/**" access="ROLE_RECHARGECARD"/>
+
+        <!-- 红包模板管理 -->
+        <intercept-url pattern="/manage/rule_template/**" access="ROLE_REDPACKET_TEMPLATE"/>
+
+        <!-- 短信模板管理 -->
+        <intercept-url pattern="/manage/rule_sms_template/**" access="ROLE_SMS_TEMPLATE"/>
+
+        <!-- 对账管理-->
+        <intercept-url pattern="/manage/check_account/**" access="ROLE_CHECK_ACCOUNT"/>
+        <intercept-url pattern="/manage/check_account/**" access="ROLE_CHECK_RECORD"/>
+
+        <!-- 包月赠送管理 -->
+        <intercept-url pattern="/manage/month_rule/**" access="ROLE_MONTH_GIVE"/>
+        <intercept-url pattern="/manage/month_record/**" access="ROLE_MONTH_GIVE"/>
+
+        <!-- 普通赠送 -->
+        <intercept-url pattern="/manage/giveRecordManager/**" access="ROLE_GIVE"/>
+        <intercept-url pattern="/manage/giveRuleManager/**" access="ROLE_GIVE"/>
+        <intercept-url pattern="/manage/month_record/**" access="ROLE_GIVE"/>
+        <!-- 上传文件部分需用到 -->
+
+        <!-- 个人信息管理 -->
+        <intercept-url pattern="/manage/userInfo/**" access="ROLE_USER_INFO"/>
+
+        <!-- 配置项管理 -->
+        <intercept-url pattern="/manage/globalConfig/**" access="ROLE_GLOBAL_CONFIG"/>
+
+        <intercept-url pattern="/manage/labelConfig/**" access="ROLE_LABEL_CONFIG"/>
+        <!-- 营销卡制卡管理 -->
+        <intercept-url pattern="/manage/mdrc/batchconfig/**" access="ROLE_MDRC_CFG"/>
+        
+        <intercept-url pattern="/manage/mdrc/cardinfo/**" access="ROLE_MDRC_CFG"/>
+
+        <!-- 营销卡激活申请 -->
+        <intercept-url pattern="/manage/mdrc/active/**" access="ROLE_MDRC_ACTIVE_REQUEST, ROLE_MDRC_CFG"/>
+        <!-- 营销卡制卡申请 -->
+        <intercept-url pattern="/manage/mdrc/cardmake/**" access="ROLE_MDRC_CARDMAKE_REQUEST"/>
+        <!-- 营销卡充值记录-->
+        <intercept-url pattern="/manage/mdrc/charge/**" access="ROLE_MDRC_CHARGE"/>
+
+        <intercept-url pattern="/manage/mdrc/product/**" access="ROLE_MDRC_PRODUCT"/>
+
+        <!-- 营销卡数据下载 -->
+        <intercept-url pattern="/manage/mdrc/download/**" access="ROLE_MDRC_DATADL"/>
+
+        <!-- 营销卡制卡商管理 -->
+        <intercept-url pattern="/manage/mdrc/cardmaker/**" access="ROLE_MDRC_CARDMAKER_MGMT"/>
+        
+        <!-- 营销卡统计 -->
+        <intercept-url pattern="/manage/mdrc/statistics/**" access="ROLE_MDRC_DATA_STAT"/>
+        
+
+        <!-- 动态验证码查询 -->
+        <intercept-url pattern="/manage/query/**" access="ROLE_QUERY_VERIFY_CODE"/>
+
+        <!-- 权限管理 -->
+        <intercept-url pattern="/manage/authorityManage/**" access="ROLE_AUTHORITY"/>
+
+        <!-- 充值统计 -->
+        <intercept-url pattern="/manage/statisticCharge" access="ROLE_STATISTIC_CHARGE,ROLE_STATISTIC_CHARGE_PROVINCE"/>
+        
+        <!-- 制卡商管理
+        <intercept-url pattern="/manage/mdrc/cardmaker/**" access="ROLE_MDRC_CARDMAKER_MGMT"/> -->
+
+        <!-- 营销卡模板管理 -->
+        <intercept-url pattern="/manage/mdrc/template/index.html" access="ROLE_MDRC_TEMPLATE"/>
+
+        <!-- 产品变更 -->
+        <intercept-url pattern="/manage/enterProductChange/**" access="ROLE_ENTERPRISE_PRODUCTCHANGE"/>
+
+        <!-- 企业信息变更 -->
+        <intercept-url pattern="/manage/historyEnterprise/modifyEnterprise.html" access="ROLE_ENTERPRISE_CHANGE"/>
+
+        <!-- 企业流控 -->
+        <intercept-url pattern="/manage/entFlowControl/index.html" access="ROLE_ENTERPRISE_FLOWCONTROL"/>
+        
+        <!-- 客户经理企业账单 -->
+        <intercept-url pattern="/manage/entBill/index.html" access="ROLE_ENTERPRISE_BILL_KHJL"/>
+
+        <!-- 个人-业务查询 -->
+        <intercept-url pattern="/individual/query/**"
+                       access="ROLE_INDIVIDUAL_QUERY_FLOW, ROLE_INDIVIDUAL_QUERY_FLOWCOIN"/>
+
+        <!-- 个人-流量币（购买、兑换） -->
+        <intercept-url pattern="/individual/flowcoin/**"
+                       access="ROLE_INDIVIDUAL_EXCHANGE, ROLE_INDIVIDUAL_FLOWCOIN_PURCHASE"/>
+
+        <!-- 个人-红包 -->
+        <intercept-url pattern="/manage/individual/redpacket/**" access="ROLE_INDIVIDUAL_REDPACKAGE"/>
+
+        <!-- 个人-赠送 -->
+        <intercept-url pattern="/individual/flowcoinpresent/**" access="ROLE_INDIVIDUAL_FLOWCOIN_PRESENT"/>
+
+        <!-- 个人-账户管理 -->
+        <intercept-url pattern="/individual/userInfo/**" access="ROLE_INDIVIDUAL_ACCOUNT"/>
+        
+        <!-- 广东众筹会员列表 -->
+        <intercept-url pattern="/manage/membership/**" access="ROLE_MEMBERSHIP_LIST,ROLE_MEMBERSHIP_EXCHANGE_LIST"/>
+        
+        <!-- 四川红包后台列表 -->
+        <intercept-url pattern="/manage/scredpacket/**" access="ROLE_SCREDPACKET_ORDER_LIST,ROLE_SCREDPACKET_REDPACKET_LIST"/>
+
+        <!-- 云企信支付对账 -->
+        <intercept-url pattern="/manage/yqx/order/payReconcileIndex.html" access="ROLE_YQX_PAYRECONCILE"/>
+        <intercept-url pattern="/manage/yqx/order/payReconcileSearch.html" access="ROLE_YQX_PAYRECONCILE"/>
+        <intercept-url pattern="/manage/yqx/order/downloadReconcileData.html" access="ROLE_YQX_PAYRECONCILE"/>
+        <intercept-url pattern="/manage/yqx/order/payBillIndex.html" access="ROLE_YQX_PAYRECONCILE"/>
+        <intercept-url pattern="/manage/yqx/order/payBillSearch.html" access="ROLE_YQX_PAYRECONCILE"/>
+        <intercept-url pattern="/manage/yqx/order/downloadBillData.html" access="ROLE_YQX_PAYRECONCILE"/>
+        
+        <!-- 云企信后台管理-异常订单和订单管理 -->
+        <intercept-url pattern="/manage/yqx/order/**" access="ROLE_YQX_ORDER_MANAGE,ROLE_YQX_ORDER_ERROR_MANAGE"/>
+        
+        
+
+
+        <!-- 制卡数据下载 -->
+        <!--<intercept-url pattern="/manage/mdrcBatchConfig/listRecord.html" access="ROLE_MDRC_DATADL"/>     列表 -->
+        <!-- <intercept-url pattern="/manage/mdrcBatchConfig/doListFile.html"
+                       access="ROLE_MDRC_DATADL"/>    操作：下载文件链接 -->
+        <!--<intercept-url pattern="/manage/mdrcBatchConfig/downloadFile.html"
+                       access="ROLE_MDRC_DATADL"/>    弹出框中的下载 -->
+
+        <!-- 制卡规则管理  
+        <intercept-url pattern="/manage/mdrcBatchConfig/**" access="ROLE_MDRC_CFG"/>
+        <intercept-url pattern="/manage/mdrccardinfo/barStatistics.html" access="ROLE_MDRC_CFG"/>
+        <intercept-url pattern="/manage/mdrccardinfo/pieStatistics.html" access="ROLE_MDRC_CFG"/>
+        <intercept-url pattern="/manage/mdrccardinfo/index.html" access="ROLE_MDRC_CFG"/>
+        <intercept-url pattern="/manage/mdrccardinfo/preActivate.html" access="ROLE_MDRC_CFG"/>-->
+
+        <!-- 营销卡企业账户管理
+        <intercept-url pattern="/manage/mdrcEnterprises/**" access="ROLE_MDRC_CFG"/> -->
+
+        <!-- 企业充值审核 -->
+        <intercept-url pattern="/manage/accountChange/**"
+                       access="ROLE_ACCOUNT_CHANGE_REQUEST, ROLE_ACCOUNT_CHANGE_APPROVAL, ROLE_ACCOUNT_CHANGE_RECORD"/>
+            
+        <!-- 产品转化类型设置 -->        
+        <intercept-url pattern="/manage/productConverter/**" access="ROLE_PRODUCT_CONVERTER" />            
+              
+		<!-- 产品模板 -->        
+        <intercept-url pattern="/manage/productTemplate/**" access="ROLE_PRODUCT_TEMPLATE" />            
+		<!-- 供应商财务记录 -->
+		<intercept-url pattern="/manage/supplierFinance/**" access="ROLE_SUPPLIER_FINANCE"/>
+		<!-- 供应商管理 -->
+		<intercept-url pattern="/manage/supplier/**" access="ROLE_PRODUCT_SUPPLIER"/>
+		<!-- 供应商限额管理 -->
+		<intercept-url pattern="/manage/supplierLimit/**" access="ROLE_SUPPLIER_LIMIT_MANAGE"/>
+		
+		<!-- 云企信退款 -->
+        <intercept-url pattern="/manage/payplatform/yqxRefundPage.html" access="ROLE_YQX_REFUND"/>
+        <intercept-url pattern="/manage/payplatform/yqxRefundPageAjax.html" access="ROLE_YQX_REFUND"/>
+        <intercept-url pattern="/manage/payplatform/yqxRefundIndex.html" access="ROLE_YQX_REFUND"/>
+        <intercept-url pattern="/manage/payplatform/yqxRefundIndexSearch.html" access="ROLE_YQX_REFUND"/>
+        
+
+		
+        <!-- 自定义的拦截器，用于判断短信验证码 -->
+        <custom-filter ref="usernamePasswordAuthenticationFilter" before="FORM_LOGIN_FILTER"/>
+        <custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="usernamePasswordAuthenticationFilter"/>
+
+        <!-- 指定登陆页面 -->
+        <form-login login-page="/manage/user/login.html"
+                    authentication-success-handler-ref="mySuccessHandler"
+                    authentication-failure-handler-ref="myFailureHandler"/>
+        <logout logout-success-url="/manage/user/logout.html" invalidate-session="true"/>
+
+        <!-- Session 超时默认跳转页面 -->
+        <session-management invalid-session-url="/manage/user/login.html">
+            <!-- 同一账号只能登录一人 -->
+            <concurrency-control max-sessions="1"
+                                 error-if-maximum-exceeded="true"/>
+        </session-management>
+    </http>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="authenticationProvider">
+        </authentication-provider>
+    </authentication-manager>
+
+    <!-- <beans:bean id="authenticationProvider"
+        class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <beans:property name="userDetailsService" ref="customUserDatailsService" />
+        <beans:property name="hideUserNotFoundExceptions"
+            value="false" />
+        去掉自动密码Md5  <beans:property name="passwordEncoder" ref="passwordEncode" />
+    </beans:bean> -->
+
+    <beans:bean id="authenticationProvider"
+                class="com.cmcc.vrp.province.security.MyDaoAuthenticationProvider">
+        <beans:property name="userDetailsService" ref="customUserDatailsService"/>
+        <beans:property name="hideUserNotFoundExceptions"
+                        value="false"/>
+    </beans:bean>
+
+
+    <beans:bean id="customUserDatailsService"
+                class="com.cmcc.vrp.province.security.UserGrantedServiceImpl"/>
+
+    <beans:bean id="UserAuthorityDetail"
+                class="com.cmcc.vrp.province.security.UserAuthorityDetailImpl"/>
+
+    <!-- 配置密码加密类  MD5 -->
+    <beans:bean id="passwordEncode"
+                class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
+
+    <!-- 配置登陆成功或失败以后的操作 -->
+    <beans:bean id="mySuccessHandler"
+                class="com.cmcc.vrp.province.security.LoginSuccessHandle"/>
+    <beans:bean id="myFailureHandler"
+                class="com.cmcc.vrp.province.security.LoginFailureHandler"/>
+
+    <!-- csrf filter -->
+    <beans:bean name="csrfFilter" class="org.springframework.security.web.csrf.CsrfFilter">
+        <beans:constructor-arg name="csrfTokenRepository">
+            <beans:bean class="org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository"/>
+        </beans:constructor-arg>
+
+        <!-- 配置需要进行CSRF防御的地址 -->
+        <beans:property name="requireCsrfProtectionMatcher" ref="andRequestMatcher"/>
+    </beans:bean>
+
+    <beans:bean name="andRequestMatcher" class="org.springframework.security.web.util.matcher.AndRequestMatcher">
+        <beans:constructor-arg name="requestMatchers">
+            <beans:list>
+                <!-- 需要排队的URLs -->
+                <beans:bean class="com.cmcc.vrp.province.security.CsrfRequestMatcher">
+                    <beans:property name="excludeUrls">
+                        <beans:list>
+                            <beans:value>/auth.html</beans:value>
+                            <beans:value>/api/charge.html</beans:value>
+                            <beans:value>/api/individual/charge.html</beans:value>
+                            <beans:value>/api/phoneQuery/sichuan.html</beans:value>
+                            <beans:value>/api/phoneQuery/gdcrowdfunding.html</beans:value>
+
+                            <!-- 山东平台的回调 -->
+                            <beans:value>/charge/callback.html</beans:value>
+
+                            <!-- core平台的回调 -->
+                            <beans:value>/charge/core/callback.html</beans:value>
+
+                            <!-- 上海月呈平台的回调 -->
+                            <beans:value>/charge/shyc/callback.html</beans:value>
+
+                            <!-- 北京云漫平台的回调 -->
+                            <beans:value>/charge/bjym/callback.html</beans:value>
+
+                            <!--卓望平台的回调 -->
+                            <beans:value>/charge/zw/callback.html</beans:value>
+
+                            <beans:value>/henan/charge/callback.html</beans:value>
+                            <beans:value>/guangxi/charge/callback.html</beans:value>
+                            <beans:value>/manage/mdrc/template/upload.html</beans:value>
+                            
+                            <!-- 山东云平台的回调 -->
+                            <beans:value>/charge/sd/callback.html</beans:value>
+                            
+                            <beans:value>/uploadFile.html</beans:value>
+                            <beans:value>/gdzc/notify.html</beans:value>
+                            <beans:value>/gdzc/payBack.html</beans:value>
+                            
+                            <!-- 微信的响应 -->
+                            <beans:value>/wx/api/getInviteMsg.html</beans:value>
+                            <beans:value>/wx/api/getBindMsg.html</beans:value>
+                            
+                            <!-- 黑龙江流量平台回调 -->
+                            <beans:value>/charge/hlj/callback.html</beans:value>
+                            
+                             <!-- 支付回调 -->
+                            <beans:value>/manage/payplatform/payCallbackAsync.html</beans:value>
+                            <beans:value>/manage/payplatform/refundAsync.html</beans:value>
+                            
+                            
+                            <!-- 云企信用户接口-->
+                            <beans:value>/yqx/user/loginReq.html</beans:value>
+
+                            <!-- 云企信EC回调 -->
+                            <beans:value>/charge/yqx/callback.html</beans:value>
+                            
+                            <!-- 广东通知接口 -->
+                            <beans:value>/gd/ecSyncInfo.html</beans:value>
+                            <beans:value>/gd/entSrvState.html</beans:value>
+                            <beans:value>/gd/entSrvReg.html</beans:value>
+                            
+                            <!-- 广东单点登录 -->
+                            <beans:value>/gd/sso/loginReq.html</beans:value>
+
+                            <!-- 营销卡充值提交 -->
+                            <beans:value>/manage/mdrc/cardinfo/submit.html</beans:value>
+                            
+                            <!-- 江苏欧飞平台的回调 -->
+                            <beans:value>/charge/jsof/callback.html</beans:value>
+                        </beans:list>
+                    </beans:property>
+                </beans:bean>
+
+                <!-- 不带指定头的请求 -->
+                <beans:bean class="org.springframework.security.web.util.matcher.NegatedRequestMatcher">
+                    <beans:constructor-arg>
+                        <beans:bean class="org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher">
+                            <beans:constructor-arg name="expectedHeaderName" value="4GGOGO-Auth-Token"/>
+                        </beans:bean>
+                    </beans:constructor-arg>
+                </beans:bean>
+
+                <!-- GET/OPTIONS/TRACE等请求 -->
+                <beans:bean class="org.springframework.security.web.csrf.CsrfFilter$DefaultRequiresCsrfMatcher"/>
+            </beans:list>
+        </beans:constructor-arg>
+    </beans:bean>
+</beans:beans>
